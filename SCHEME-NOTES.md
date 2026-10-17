@@ -29,6 +29,8 @@ Do not code from this notation: the exact *public statement* for π0, the witnes
 
 **Partial π1 witness research:** The [research-only π1 relation inspector](research/PI1-WITNESS-RELATION.md) now checks the seven displayed source equations (ciphertext e/v, recipient encryption key consistency, ψ's opening and the auxiliary CRS group). It deliberately receives the private witness and is **not** zero-knowledge confirmation. The final paper's proof transcript, concurrent-ZK compilation and affirmative disavowal remain unresolved; no DCS verifier is available.
 
+**Disavowal source progress:** Found Camenisch–Shoup's [complete 2003 paper](https://www.shoup.net/papers/verenc.pdf), which Xia's thesis cites for affirmative invalidity proof. [DISAVOWAL-BRANCHES.md](research/DISAVOWAL-BRANCHES.md) identifies **four** distinct source-defined failure branches and the essential exact integer interval proof. Their conditions now have 11 independently checked **toy local predicate** fixtures at n=253 in [disavow-branches.mjs](research/disavow-branches.mjs). This is not interactive disavowal: the checker knows the private decryption key and has no sound OR proof or zero-knowledge transcript. The final 2016 paper still requires independent comparison.
+
 ## A concrete instantiation is NOT just three interchangeable existing labs
 
 The concrete paper instantiation couples:

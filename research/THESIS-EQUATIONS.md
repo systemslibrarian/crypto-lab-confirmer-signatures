@@ -31,6 +31,10 @@ The regression suite tests/cs-paillier-research.test.mjs independently checks th
 
 [pi0-equality.mjs](pi0-equality.mjs) now exercises the thesis §6.5.2 equations `W1=yS1^η1 h^ω`, `W2=yC1^η2 h^ω`, `c=H(W1||W2)`, `D=ω+c*r`, and `D1/D2=η1/η2+c*t1/t2`, with a separate public verifier recomputing `W1'=yS1^D1 h^D e1^(-c)` and `W2'=yC1^D2 h^D e2^(-c)`. **12 added regression tests** include an independently rederived transcript and negative claims showing that proof alone does not check ψ or ciphertext v. Local tests total 29 across ECDSA, labeled encryption and π0 arithmetic. Full source-faithful NIZK/soundness/concurrent ZK remains **NOT implemented**; exact citations, parameters and reasons appear in [PI0-RELATION.md](PI0-RELATION.md).
 
+## π1 relation progress — no interactive confirmer yet
+
+The new [π1 witness inspector](pi1-relation.mjs) evaluates the seven relations displayed in Chapter 6 §6.5.2 of the 2013 thesis (plus a separately executed decrypt). Nine new fixtures show genuine algebraic consistency and named failures under modified ciphertext, key, label, commitment and message; [PI1-WITNESS-RELATION.md](PI1-WITNESS-RELATION.md) records the source equations and parameter incompatibilities. All 38 local tests pass. **The checker is handed the secret witness**, so it supplies NO interactive protocol, NO zero knowledge and NO non-transferability claim. §6.5.2's printed verifier response range needs resolution before implementing an actual interactive π1 transcript.
+
 ## Six critical issues still open
 
 1. **The 2013 and 2016 constructions must be reconciled.** Thesis Chapter 6 is directly useful, but the final paper is the selected specification; obtain and compare final equations and errata before DCS implementation.

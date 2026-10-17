@@ -70,6 +70,14 @@ test('verified tag and claim do not establish public proof or zero-knowledge by 
  assert.equal(d.measurements.r,'7');
  assert.match(d.security,/RESEARCH PREDICATE ONLY/);
 });
+test('a group claim alone cannot distinguish integers differing by its order',()=>{
+ const s=make();
+ const allegedOtherOpening=s.r+order;
+ assert.notEqual(allegedOtherOpening,s.r);
+ assert.equal(modPow(generator,allegedOtherOpening%order,prime),s.claim);
+ assert.equal(diagnoseToyDisavowal(s).branch,'MATCH');
+ // Exact integer interval and plaintext-bound proofs require separate protocol work.
+});
 test('branch diagnostics only report a failed local predicate, not an interactive disavowal proof',()=>{
  const s=make();const d=diagnoseToyDisavowal({...s,claim:modPow(generator,s.r+1n,prime)});
  assert.equal(d.branch,'CASE_4_GROUP_MISMATCH');

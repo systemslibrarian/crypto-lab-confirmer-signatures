@@ -8,9 +8,9 @@ Yingjie Xia, Xuejiao Liu, Fubiao Xia and Guilin Wang, *A reduction of security n
 
 **Why this candidate:** Unlike ordinary sign-then-encrypt, the paper explicitly describes a **full-verification** construction in which either the signer or designated confirmer can confirm **or disavow** an alleged signature. The paper distinguishes unforgeability, invisibility and non-transferability, and describes a generic construction using a binding commitment, a public-key encryption scheme secure against chosen-ciphertext attacks, and an ordinary signature. Its concrete implementation uses BLS signatures, Camenisch–Shoup-style labeled Paillier encryption, and Pedersen commitments. This stack is mathematically heavier than ECDSA; that cost is justified only if the complete protocol and proof relations can be implemented and independently checked.
 
-### Algebraic relation to implement (high-level, NOT a substitute for equations)
+### 2013 thesis construction sketch — NOT verified as final 2016 syntax
 
-The source describes committing to message **m** with randomness **r** to obtain **φ**, encrypting the same opening randomness for both signer and confirmer, then signing the commitment:
+Fubiao Xia's **2013 doctoral thesis**, Chapter 6, describes committing to message **m** with randomness **r**, encrypting the same opening for both parties, signing the commitment and also issuing `π0`. The **2016 article's accessible introduction** lists only `(φ,c1,c2,σ)` as its high-level object; whether the final paper's actual §6–§7 algorithms include `π0` is **not established** by that introduction. This five-component sketch is thus **thesis-specific research notation**:
 
 ```text
 ψ   ← Commit(m; r)
@@ -22,7 +22,9 @@ cC  ← Encrypt(pkC, r)
 DCS ← (ψ, σ, cS, cC, π0)
 ```
 
-**Source correction (2026-10-17):** The paper's §6 generic `DCSSign` includes a required initial non-interactive consistency proof `π0` in the output `(ψ,σ,cS,cC,π0)`. The earlier four-object sketch was incomplete. This high-level transcription is cross-referenced in [SCHEME-NOTES.md](SCHEME-NOTES.md); the full proof/witness equations are still unverified and the research gate remains CLOSED.\n\nThe lines above summarize the idea **only**. They are *not an implementation recipe*: exact encodings, domains, ciphertext labels, equations, proof statements, signature binding and challenge distributions have to come **verbatim in meaning** from the chosen publication. Never replace paper-defined signed/transcript inputs with this informal tuple.
+**Source reconciliation (2026-10-17):** The complete thesis includes an initial `π0`. It was incorrect to claim from that fact alone that the final 2016 algorithm **must** include the identical proof. The journal's own accessible introduction is shorter and cannot decide the question either way. Resolve it from the final paper's full algorithms before implementing DCS. See [SOURCE-RECONCILIATION.md](research/SOURCE-RECONCILIATION.md). The mathematics/release gate remains CLOSED.
+
+The lines above summarize the idea **only**. They are *not an implementation recipe*: exact encodings, domains, ciphertext labels, equations, proof statements, signature binding and challenge distributions have to come **verbatim in meaning** from the chosen publication. Never replace paper-defined signed/transcript inputs with this informal tuple.
 
 The verifier may check that σ is a conventional valid signature on φ without learning an opening for φ to message m. **Confirmation** must be an actual source-defined interactive proof that an authorized party knows an opening consistent with m **and** the encrypted randomness, not a UI declaration or a decrypted signature printed for the verifier. **Disavowal** must be a distinct source-defined sound proof that the relevant validity relation does *not* hold. A failed confirmation or a withheld response is **not** disavowal.
 

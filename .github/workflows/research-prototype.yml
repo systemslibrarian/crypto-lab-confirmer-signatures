@@ -30,7 +30,7 @@ jobs:
           set -o pipefail
           node --test tests/*.test.mjs | tee /tmp/research-tests.tap
           # Count distinct tests, not a green job that ran zero tests.
-          grep -Eq '^# tests (49|[5-9][0-9]|[1-9][0-9]{2,})$' /tmp/research-tests.tap
+          grep -Eq '^# tests (5[2-9]|[6-9][0-9]|[1-9][0-9]{2,})$' /tmp/research-tests.tap
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
@@ -62,4 +62,5 @@ jobs:
           grep -q 'RESEARCH ONLY' research/disavow-branches.mjs
           grep -q 'NOT A DISAVOWAL PROOF' research/disavow-branches.mjs
           grep -q 'NOT an affirmative proof' research/DISAVOWAL-BRANCHES.md
+          grep -q 'OPEN SPECIFICATION DISCREPANCY' research/SOURCE-RECONCILIATION.md
           echo 'Research-only guard holds: no complete DCS, no Pages publisher'

@@ -10,7 +10,8 @@ This repository records the development brief and the cryptographic selection ga
 
 - **[Chapter 01 — ordinary signature prototype](prototype/)** — executable WebCrypto P-256/SHA-256, Bob/Dave public verification, tamper experiment; no DCS claimed. Serve locally on localhost; no Pages deployment. Tests: `node --test tests/baseline.test.mjs`, plus GitHub Actions desktop/mobile browser checks.
 - [`PRODUCT-VISION.md`](PRODUCT-VISION.md) — intended visitor journey, educational outcome, interaction flow, and go/no-go criterion.
-- [`SCHEME-NOTES.md`](SCHEME-NOTES.md) — source-backed DCS skeleton including the mandatory initial NIZK `π0`; exact confirmation/disavowal proofs remain open.
+- [`SCHEME-NOTES.md`](SCHEME-NOTES.md) — the **2013-thesis-specific** five-part issuing sketch including `π0`; exact 2016 issuance, confirmation and disavowal remain unverified.
+- [`research/SOURCE-RECONCILIATION.md`](research/SOURCE-RECONCILIATION.md) — the 2013 five-part tuple versus the shorter 2016 introductory summary; records why neither can substitute for full final-spec review.
 - [`brief.md`](brief.md) — required full build and teaching brief.
 - [`RESEARCH-GATE.md`](RESEARCH-GATE.md) — scheme-selection prerequisites, literature and acceptance criteria.
 - [Crypto Lab master template](https://github.com/systemslibrarian/crypto-lab/blob/main/audits/_MASTER-TEMPLATE.md) — binding Build → Teach → Look → Accessibility → README → Deploy standard, to apply after research passes.

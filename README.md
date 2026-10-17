@@ -4,6 +4,8 @@
 
 **Planned visitor experience: _Signature Gate — Who Gets to Verify?_** Alice signs a fictional confidential agreement, Carol provides an interactive mathematical confirmation or disavowal, Bob evaluates the proof, and Dave illustrates when evidence is publicly transferable. The user should see why ordinary signature validity, controlled verification, and truth of a signed statement are separate properties.
 
+**Research progress:** Fubiao Xia's [2013 doctoral thesis](https://etheses.bham.ac.uk/4579/1/Xia13PhD.pdf), a closely related full-verification DCS construction by a coauthor of the 2016 paper, supplies explicit labeled-encryption, confirmation and disavowal formulas. We have implemented and locally tested the **intentionally insecure n=253 Camenisch–Shoup-style labeled encryption arithmetic** in [research/cs-paillier.mjs](research/cs-paillier.mjs). See [research/THESIS-EQUATIONS.md](research/THESIS-EQUATIONS.md) for which protocol equations and assumptions still require independent checking. **This is not a DCS implementation.**
+
 This repository records the development brief and the cryptographic selection gate for a proposed interactive lab on designated confirmer signatures. Genuine confirmation **and disavowal** protocols must come from a reviewed, published construction and pass independent mathematical checks. A normal signature hidden by encryption is not automatically a designated confirmer signature.
 
 - **[Chapter 01 — ordinary signature prototype](prototype/)** — executable WebCrypto P-256/SHA-256, Bob/Dave public verification, tamper experiment; no DCS claimed. Serve locally on localhost; no Pages deployment. Tests: `node --test tests/baseline.test.mjs`, plus GitHub Actions desktop/mobile browser checks.

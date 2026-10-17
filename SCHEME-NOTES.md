@@ -27,6 +27,8 @@ DCS  = (ψ, σ, cS, cC, π0)
 
 Do not code from this notation: the exact *public statement* for π0, the witness/witness relations, ranges, encryption-label handling, group validation, soundness and non-transferability model must all be taken from and independently checked against the complete article.
 
+**Partial π1 witness research:** The [research-only π1 relation inspector](research/PI1-WITNESS-RELATION.md) now checks the seven displayed source equations (ciphertext e/v, recipient encryption key consistency, ψ's opening and the auxiliary CRS group). It deliberately receives the private witness and is **not** zero-knowledge confirmation. The final paper's proof transcript, concurrent-ZK compilation and affirmative disavowal remain unresolved; no DCS verifier is available.
+
 ## A concrete instantiation is NOT just three interchangeable existing labs
 
 The concrete paper instantiation couples:

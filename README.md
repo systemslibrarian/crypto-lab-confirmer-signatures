@@ -1,12 +1,14 @@
 # Confirmer Signatures — Crypto Lab (Research Gate)
 
-**Research only. No executable designated confirmer signature is claimed, and no live demonstration is currently approved.**
+**Research status:** Chapter 01's **ordinary P-256 ECDSA baseline is implemented and tested**. There is **no executable designated confirmer signature**, and no completed DCS site, confirmation, disavowal or catalog card is approved.
 
 **Planned visitor experience: _Signature Gate — Who Gets to Verify?_** Alice signs a fictional confidential agreement, Carol provides an interactive mathematical confirmation or disavowal, Bob evaluates the proof, and Dave illustrates when evidence is publicly transferable. The user should see why ordinary signature validity, controlled verification, and truth of a signed statement are separate properties.
 
 This repository records the development brief and the cryptographic selection gate for a proposed interactive lab on designated confirmer signatures. Genuine confirmation **and disavowal** protocols must come from a reviewed, published construction and pass independent mathematical checks. A normal signature hidden by encryption is not automatically a designated confirmer signature.
 
+- **[Chapter 01 — ordinary signature prototype](prototype/)** — executable WebCrypto P-256/SHA-256, Bob/Dave public verification, tamper experiment; no DCS claimed. Serve locally on localhost; no Pages deployment. Tests: `node --test tests/baseline.test.mjs`, plus GitHub Actions desktop/mobile browser checks.
 - [`PRODUCT-VISION.md`](PRODUCT-VISION.md) — intended visitor journey, educational outcome, interaction flow, and go/no-go criterion.
+- [`SCHEME-NOTES.md`](SCHEME-NOTES.md) — source-backed DCS skeleton including the mandatory initial NIZK `π0`; exact confirmation/disavowal proofs remain open.
 - [`brief.md`](brief.md) — required full build and teaching brief.
 - [`RESEARCH-GATE.md`](RESEARCH-GATE.md) — scheme-selection prerequisites, literature and acceptance criteria.
 - [Crypto Lab master template](https://github.com/systemslibrarian/crypto-lab/blob/main/audits/_MASTER-TEMPLATE.md) — binding Build → Teach → Look → Accessibility → README → Deploy standard, to apply after research passes.

@@ -27,6 +27,10 @@ The code in research/cs-paillier.mjs uses deliberately tiny safe primes **p=11, 
 
 The regression suite tests/cs-paillier-research.test.mjs independently checks the arithmetic equations and exercises invalid elements, out-of-domain inputs and altered values. It contains no official DCS test vectors and is **not** evidence of a secure labeled encryption implementation. The research module uses SHA-256 over an explicit encoding as a **local implementation choice** for the label hash, not an assertion that the thesis mandates this encoding or that it is adequate for a full proof.
 
+## Verified arithmetic progress — partial π0 relation (not a full proof)
+
+[pi0-equality.mjs](pi0-equality.mjs) now exercises the thesis §6.5.2 equations `W1=yS1^η1 h^ω`, `W2=yC1^η2 h^ω`, `c=H(W1||W2)`, `D=ω+c*r`, and `D1/D2=η1/η2+c*t1/t2`, with a separate public verifier recomputing `W1'=yS1^D1 h^D e1^(-c)` and `W2'=yC1^D2 h^D e2^(-c)`. **12 added regression tests** include an independently rederived transcript and negative claims showing that proof alone does not check ψ or ciphertext v. Local tests total 29 across ECDSA, labeled encryption and π0 arithmetic. Full source-faithful NIZK/soundness/concurrent ZK remains **NOT implemented**; exact citations, parameters and reasons appear in [PI0-RELATION.md](PI0-RELATION.md).
+
 ## Six critical issues still open
 
 1. **The 2013 and 2016 constructions must be reconciled.** Thesis Chapter 6 is directly useful, but the final paper is the selected specification; obtain and compare final equations and errata before DCS implementation.

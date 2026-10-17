@@ -34,6 +34,10 @@ This is progress on the visitor vision, **not a change in the DCS acceptance gat
 - David Chaum, *Designated Confirmer Signatures*, EUROCRYPT 1994, DOI: [10.1007/BFb0053427](https://doi.org/10.1007/BFb0053427). Foundational definition and protocols; obtain complete text and independently review proof equations before implementation.
 - *Designated confirmer threshold signature and its applications in blockchains*, Cybersecurity (2024), [DOI and article](https://link.springer.com/article/10.1186/s42400-024-00256-2). A documented family combining threshold signatures, encryption, and Sigma protocols, with confirmation/disavowal proof details to study; not assume its threshold implementation can be simplified without changing the claim.
 
+## Primary-source research progress
+
+The 2013 [Fubiao Xia thesis](https://etheses.bham.ac.uk/4579/1/Xia13PhD.pdf) (Chapter 6, including equation-level proof material) is now available as a near-primary source to the 2016 construction. A deliberately insecure test harness for its labeled Paillier arithmetic is implemented and independently checked in [research/](research/). **The proof equations, final-paper differences, initial π0 commitment binding, disavowal, concurrent zero-knowledge compiler and full parameter assumptions are NOT resolved.** Source discovery does not pass the research gate. See [research/THESIS-EQUATIONS.md](research/THESIS-EQUATIONS.md).
+
 ## Gate evidence to record before building
 
 - [ ] Full cited paper, exact protocol algorithms/parameter sets, known test-vector inputs/outputs or independent reference implementation recorded.

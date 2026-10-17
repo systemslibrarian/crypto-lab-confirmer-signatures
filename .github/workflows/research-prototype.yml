@@ -1,15 +1,17 @@
-name: Research prototype - ordinary signature only
+name: Research-only ordinary signature and toy arithmetic
 on:
   pull_request:
     branches: [main]
     paths:
       - 'prototype/**'
+      - 'research/**'
       - 'tests/**'
       - '.github/workflows/research-prototype.yml'
   push:
     branches: [main]
     paths:
       - 'prototype/**'
+      - 'research/**'
       - 'tests/**'
       - '.github/workflows/research-prototype.yml'
 permissions:
@@ -23,8 +25,36 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Published ECDSA verification vectors, adversarial inputs and round trips
-        run: node --test tests/baseline.test.mjs
+      - name: Published ECDSA vectors and tiny labeled-Paillier arithmetic regression tests
+        run: |
+          set -o pipefail
+          node --test tests/*.test.mjs | tee /tmp/research-tests.tap
+          grep -Eq '^# tests (1[7-9]|[2-9][0-9]+)
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser-only test dependencies
+        run: |
+          python -m pip install playwright==1.57.0
+          python -m playwright install chromium
+      - name: Run the actual interactive lesson at desktop and mobile sizes
+        run: python -m unittest discover -s tests -p 'browser_flow.py' -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: signature-gate-stage-one-screenshots
+          path: test-results/
+          if-no-files-found: ignore
+      - name: The prototype must never be mistaken for DCS or a Pages publisher
+        run: |
+          test ! -f .github/workflows/deploy.yml
+          ! grep -Eiq 'import .*from .*(sign-then-encrypt-dcs|fake-confirm|fake-disavow)' prototype/app.mjs
+          grep -q 'does <b>not</b> implement a designated confirmer signature' prototype/index.html
+          grep -q 'RESEARCH-GATED' prototype/index.html
+          grep -q 'NOT A COMPLETE DCS IMPLEMENTATION' research/THESIS-EQUATIONS.md
+          grep -q 'deliberately TINY' research/cs-paillier.mjs
+          echo 'Research-only scope gate held: no DCS claims or deployment'
+ /tmp/research-tests.tap
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'

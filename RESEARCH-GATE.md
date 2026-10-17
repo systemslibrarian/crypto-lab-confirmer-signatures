@@ -17,6 +17,14 @@ A chosen, published and fully specified scheme must provide:
 7. Negative controls: wrong message, wrong keys, altered proof messages, mismatched groups, malformed points, replayed challenge, and aborted sessions all fail closed.
 8. Threat-model honesty: a simulator can show transcript non-transferability only under a paper's security definition; one-browser role separation is NOT deployment-grade trust isolation.
 
+## What has been implemented — and what has not
+
+- **Implemented and tested:** [Chapter 01 ordinary-signature comparison](prototype/) uses real WebCrypto P-256 ECDSA/SHA-256. Alice signs fictional bytes; Bob and Dave independently import the exported public key and verify; tampered messages and wrong keys reject. Published RFC 6979 P-256/SHA-256 verification fixture and browser interaction checks pass.
+- **NOT implemented:** the source-defined DCS constructor, initial NIZK `π0`, paper-faithful `Confirm`, affirmative `Disavow`, transcript non-transferability and public conversion. None is simulated as if proven.
+- **Mandatory specification correction:** the full DCS must include `π0` tying the signer/confirmer ciphertext witnesses to each other and the commitment. See [SCHEME-NOTES.md](SCHEME-NOTES.md). A four-part tuple lacking `π0` must not pass the DCS review.
+
+This is progress on the visitor vision, **not a change in the DCS acceptance gate.**
+
 ## Published foundations and candidate decision
 
 **Research triage completed; implementation gate still closed.** [SCHEME-SELECTION.md](SCHEME-SELECTION.md) compares the 2016 full-verification construction with the 2024 threshold construction and the Camenisch–Shoup building blocks. The 2016 full-verification DCS is the **primary paper candidate**, not yet a selected *implementation*; exact equations and an independent proof oracle are still missing. The 2024 threshold construction's abort-on-invalid path does **not** establish the affirmative disavowal proof demanded by this brief. No implementation or deployment has been approved.

@@ -23,6 +23,8 @@ DCS  = (ψ, σ, cS, cC, π0)
 
 **Critical correction:** The earlier scheme sketch in [SCHEME-SELECTION.md](SCHEME-SELECTION.md) listed `(ψ,cS,cC,σ)` but omitted `π0`. That omission is not merely a missing animation. The source makes the initial NIZK necessary to tie the ciphertext witnesses to each other and to the commitment. **Any build lacking π0 must fail the acceptance gate.**
 
+**Equation-level progress, not full π0:** The [2013 thesis §6.5.2 subrelation](research/PI0-RELATION.md) has now been exercised with actual toy modular arithmetic in [pi0-equality.mjs](research/pi0-equality.mjs). **The displayed π0 proof equations there compare the encrypted e components but do not take ψ as an input**, despite the source's generic prose saying π0 ties the openings to ψ. Changing ψ can leave that narrower relation verified. The complete protocol cannot be certified before this discrepancy is resolved from the full 2016 text and the other checking stages. No production-security claim follows from the tiny toy tests.
+
 Do not code from this notation: the exact *public statement* for π0, the witness/witness relations, ranges, encryption-label handling, group validation, soundness and non-transferability model must all be taken from and independently checked against the complete article.
 
 ## A concrete instantiation is NOT just three interchangeable existing labs

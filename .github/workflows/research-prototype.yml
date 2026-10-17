@@ -25,12 +25,12 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: '22'
-      - name: Published ECDSA vector and research-only labeled-Paillier / π0 tests
+      - name: Published ECDSA vector and research-only labeled-Paillier / pi0 tests
         run: |
           set -o pipefail
           node --test tests/*.test.mjs | tee /tmp/research-tests.tap
-          # 9 ordinary signature + 8 labeled Paillier + 12 equality-proof tests.
-          grep -Eq '^# tests (29|[3-9][0-9]|[1-9][0-9]{2,})
+          # Count distinct tests, not a green job that ran zero tests.
+          grep -Eq '^# tests (29|[3-9][0-9]|[1-9][0-9]{2,})$' /tmp/research-tests.tap
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
@@ -57,30 +57,4 @@ jobs:
           grep -q 'deliberately TINY' research/cs-paillier.mjs
           grep -q 'RESEARCH ONLY' research/pi0-equality.mjs
           grep -q 'DOES NOT authenticate' research/pi0-equality.mjs
-          echo 'Research-only guard holds: no complete DCS, no Pages publisher'
- /tmp/research-tests.tap
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.12'
-      - name: Install browser-only test dependencies
-        run: |
-          python -m pip install playwright==1.57.0
-          python -m playwright install chromium
-      - name: Run actual ordinary signature browser lesson on desktop and mobile
-        run: python -m unittest discover -s tests -p 'browser_flow.py' -v
-      - uses: actions/upload-artifact@v7
-        if: always()
-        with:
-          name: signature-gate-stage-one-screenshots
-          path: test-results/
-          if-no-files-found: ignore
-      - name: Refuse any fake DCS or research-site deployment
-        run: |
-          set -eu
-          test ! -f .github/workflows/deploy.yml
-          ! grep -Eiq 'import .*from .*(sign-then-encrypt-dcs|fake-confirm|fake-disavow)' prototype/app.mjs
-          grep -q 'does <b>not</b> implement a designated confirmer signature' prototype/index.html
-          grep -q 'RESEARCH-GATED' prototype/index.html
-          grep -q 'NOT a complete DCS construction' research/THESIS-EQUATIONS.md
-          grep -q 'deliberately TINY' research/cs-paillier.mjs
           echo 'Research-only guard holds: no complete DCS, no Pages publisher'

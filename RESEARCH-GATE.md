@@ -17,7 +17,11 @@ A chosen, published and fully specified scheme must provide:
 7. Negative controls: wrong message, wrong keys, altered proof messages, mismatched groups, malformed points, replayed challenge, and aborted sessions all fail closed.
 8. Threat-model honesty: a simulator can show transcript non-transferability only under a paper's security definition; one-browser role separation is NOT deployment-grade trust isolation.
 
-## Published foundations to evaluate (no design chosen yet)
+## Published foundations and candidate decision
+
+**Research triage completed; implementation gate still closed.** [SCHEME-SELECTION.md](SCHEME-SELECTION.md) compares the 2016 full-verification construction with the 2024 threshold construction and the Camenisch–Shoup building blocks. The 2016 full-verification DCS is the **primary paper candidate**, not yet a selected *implementation*; exact equations and an independent proof oracle are still missing. The 2024 threshold construction's abort-on-invalid path does **not** establish the affirmative disavowal proof demanded by this brief. No implementation or deployment has been approved.
+
+## Published foundations to evaluate
 
 - David Chaum, *Designated Confirmer Signatures*, EUROCRYPT 1994, DOI: [10.1007/BFb0053427](https://doi.org/10.1007/BFb0053427). Foundational definition and protocols; obtain complete text and independently review proof equations before implementation.
 - *Designated confirmer threshold signature and its applications in blockchains*, Cybersecurity (2024), [DOI and article](https://link.springer.com/article/10.1186/s42400-024-00256-2). A documented family combining threshold signatures, encryption, and Sigma protocols, with confirmation/disavowal proof details to study; not assume its threshold implementation can be simplified without changing the claim.

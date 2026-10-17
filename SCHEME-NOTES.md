@@ -6,9 +6,9 @@
 
 Yingjie Xia, Xuejiao Liu, Fubiao Xia, Guilin Wang, *A reduction of security notions in designated confirmer signatures*, Theoretical Computer Science **618** (2016), 1–20, [DOI: 10.1016/j.tcs.2015.12.025](https://doi.org/10.1016/j.tcs.2015.12.025). The publisher's article contains **§6 generic construction, §7 concrete instantiation, Appendix A security analysis**. The complete equation-by-equation protocol and proof implementation has NOT been independently transcribed or checked yet.
 
-### The generic issuing relation — source-backed structure
+### The 2013 thesis issuing relation — NOT verified as the 2016 final syntax
 
-A signature on a message `m` is **not** merely `Sig(m)` encrypted for Carol. The journal article describes a statistically hiding, computationally binding commitment to `m` with opening randomness `r`, separately encrypts that opening for the signer and the confirmer, and includes a non-interactive proof that these objects agree. Abstracting the paper's symbols (without asserting a byte-level serialization):
+A signature on a message `m` is **not** merely `Sig(m)` encrypted for Carol. The **2013 thesis Chapter 6** describes a message commitment to `m` with opening randomness `r`, separately encrypts that opening for signer and confirmer, and explicitly includes an initial non-interactive consistency proof `π0`. The **accessible 2016 article introduction**, however, summarizes its output using only four components `(φ,c1,c2,σ)` and speaks of a subsequent interactive proof. This is a version/summary discrepancy, **not proof that π0 is absent from or mandatory in the final 2016 algorithms**. See [SOURCE-RECONCILIATION.md](research/SOURCE-RECONCILIATION.md). The following five-part notation is the **2013 thesis sketch**, not a verified transcription of the final 2016 scheme:
 
 ```text
 ψ    = Com(m; r)                 message commitment
@@ -21,7 +21,7 @@ cC   = Enc(pk_confirmer, r)      confirmer-readable encryption of same opening
 DCS  = (ψ, σ, cS, cC, π0)
 ```
 
-**Critical correction:** The earlier scheme sketch in [SCHEME-SELECTION.md](SCHEME-SELECTION.md) listed `(ψ,cS,cC,σ)` but omitted `π0`. That omission is not merely a missing animation. The source makes the initial NIZK necessary to tie the ciphertext witnesses to each other and to the commitment. **Any build lacking π0 must fail the acceptance gate.**
+**Version-specific rule:** The complete **2013 thesis construction** includes `π0` in its issued object; omitting that object would not implement the 2013 scheme. Whether the final **2016** scheme adds the same component must be checked against the complete journal §6–§7, not inferred from an introduction or thesis. Our toy `π0` currently checks only a narrower encrypted-equality subrelation and **does not verify the public message commitment ψ**.
 
 **Equation-level progress, not full π0:** The [2013 thesis §6.5.2 subrelation](research/PI0-RELATION.md) has now been exercised with actual toy modular arithmetic in [pi0-equality.mjs](research/pi0-equality.mjs). **The displayed π0 proof equations there compare the encrypted e components but do not take ψ as an input**, despite the source's generic prose saying π0 ties the openings to ψ. Changing ψ can leave that narrower relation verified. The complete protocol cannot be certified before this discrepancy is resolved from the full 2016 text and the other checking stages. No production-security claim follows from the tiny toy tests.
 

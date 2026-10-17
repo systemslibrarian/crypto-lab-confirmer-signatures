@@ -30,7 +30,7 @@ jobs:
           set -o pipefail
           node --test tests/*.test.mjs | tee /tmp/research-tests.tap
           # Count distinct tests, not a green job that ran zero tests.
-          grep -Eq '^# tests (29|[3-9][0-9]|[1-9][0-9]{2,})$' /tmp/research-tests.tap
+          grep -Eq '^# tests (3[8-9]|[4-9][0-9]|[1-9][0-9]{2,})$' /tmp/research-tests.tap
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
@@ -57,4 +57,6 @@ jobs:
           grep -q 'deliberately TINY' research/cs-paillier.mjs
           grep -q 'RESEARCH ONLY' research/pi0-equality.mjs
           grep -q 'DOES NOT authenticate' research/pi0-equality.mjs
+          grep -q 'NOT interactive confirmation' research/pi1-relation.mjs
+          grep -q 'NOT a confirmation protocol' research/PI1-WITNESS-RELATION.md
           echo 'Research-only guard holds: no complete DCS, no Pages publisher'

@@ -35,6 +35,10 @@ The regression suite tests/cs-paillier-research.test.mjs independently checks th
 
 The new [π1 witness inspector](pi1-relation.mjs) evaluates the seven relations displayed in Chapter 6 §6.5.2 of the 2013 thesis (plus a separately executed decrypt). Nine new fixtures show genuine algebraic consistency and named failures under modified ciphertext, key, label, commitment and message; [PI1-WITNESS-RELATION.md](PI1-WITNESS-RELATION.md) records the source equations and parameter incompatibilities. All 38 local tests pass. **The checker is handed the secret witness**, so it supplies NO interactive protocol, NO zero knowledge and NO non-transferability claim. §6.5.2's printed verifier response range needs resolution before implementing an actual interactive π1 transcript.
 
+## Full source for affirmative disavowal located (no protocol implementation yet)
+
+Camenisch and Shoup's [author-hosted 2003 full paper](https://www.shoup.net/papers/verenc.pdf), §7.3 (printed pp.31–33), contains the explicit four-way OR argument for ciphertext invalidity or wrong discrete-log relation and shows why an **exact integer interval proof** is needed to prevent modulus-alias errors. The [DISAVOWAL-BRANCHES.md](DISAVOWAL-BRANCHES.md) research note separates all four cases, distinguishes malformed-input rejection from affirmative proof, and documents the required OR proof compiler and parameter assumptions. **Eleven new tests** now exercise only the local predicates using the toy key, bringing the research test count to **49**. The genuine witness-hiding interactive OR proof, exact interval proof, concurrent zero knowledge, 2016-paper reconciliation and DCS disavowal **remain blocked**.
+
 ## Six critical issues still open
 
 1. **The 2013 and 2016 constructions must be reconciled.** Thesis Chapter 6 is directly useful, but the final paper is the selected specification; obtain and compare final equations and errata before DCS implementation.

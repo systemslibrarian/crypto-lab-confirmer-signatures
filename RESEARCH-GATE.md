@@ -20,7 +20,8 @@ A chosen, published and fully specified scheme must provide:
 ## What has been implemented — and what has not
 
 - **Implemented and tested:** [Chapter 01 ordinary-signature comparison](prototype/) uses real WebCrypto P-256 ECDSA/SHA-256. Alice signs fictional bytes; Bob and Dave independently import the exported public key and verify; tampered messages and wrong keys reject. Published RFC 6979 P-256/SHA-256 verification fixture and browser interaction checks pass.
-- **NOT implemented:** the source-defined DCS constructor, initial NIZK `π0`, paper-faithful `Confirm`, affirmative `Disavow`, transcript non-transferability and public conversion. None is simulated as if proven.
+- **Added as research algebra, NOT a protocol:** [pi0-equality.mjs](research/pi0-equality.mjs) reproduces the §6.5.2 *e-component equality-of-encrypted-opening subrelation* with a distinct public verifier and positive/negative arithmetic fixtures. This partial calculation does **not** prove that the message commitment ψ opens with the same r, that u/v ciphertext fields are valid, or that the complete initial NIZK is sound or non-transferable; see [PI0-RELATION.md](research/PI0-RELATION.md).
+- **NOT implemented:** the **complete** source-defined DCS constructor, paper-faithful complete initial NIZK `π0`, actual `Confirm`, affirmative `Disavow`, transcript non-transferability and public conversion. No toy verifier is allowed to report a DCS verdict.
 - **Mandatory specification correction:** the full DCS must include `π0` tying the signer/confirmer ciphertext witnesses to each other and the commitment. See [SCHEME-NOTES.md](SCHEME-NOTES.md). A four-part tuple lacking `π0` must not pass the DCS review.
 
 This is progress on the visitor vision, **not a change in the DCS acceptance gate.**

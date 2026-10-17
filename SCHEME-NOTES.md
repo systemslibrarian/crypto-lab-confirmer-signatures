@@ -45,6 +45,14 @@ The existing [Commit Gate](https://github.com/systemslibrarian/crypto-lab-commit
 5. **Non-transferability:** A statement about what the recipient/observer can subsequently prove in the paper's security model—not a browser CSS visibility setting and not automatically implied by an ordinary ZK claim.
 6. **Conversion or extraction:** If the paper defines this operation, implement and describe its effect on transferability separately. Do not silently disclose the underlying signature as part of “confirmation.”
 
+## New primary-source progress and published ambiguities
+
+An institution-hosted complete **2013 Fubiao Xia doctoral thesis**, [Designated Confirmer Signatures: Modelling, Design and Analysis](https://etheses.bham.ac.uk/4579/1/Xia13PhD.pdf), Chapters 6.2–6.5, contains detailed formulas for a closely related generic full-verification construction, with explicit sign/confirm/disavow and labeled Camenisch–Shoup encryption formulas. See [research/THESIS-EQUATIONS.md](research/THESIS-EQUATIONS.md) for extraction and mathematics still requiring reconciliation against the final 2016 paper. This supersedes the claim that no complete primary-source mathematics is available, **not** the requirement for independent review.
+
+The thesis contains at least two load-bearing apparent inconsistencies: its concrete encryption description begins with Enc(yS,m) / Enc(yC,m) but exponentiates h^r; and π0's written proof equation visibly binds the ciphertext openings to each other without explicitly naming the public Pedersen commitment ψ, despite describing that stronger binding in prose. Do not fill these gaps by guesswork.
+
+A tiny labeled-Paillier arithmetic demonstration now lives at [research/cs-paillier.mjs](research/cs-paillier.mjs). It passes local arithmetic checks but uses trivially factorable n=253, implements **no** DCS construction, and proves no security theorem.
+
 ## Required mathematical extraction tasks before any DCS code
 
 - [ ] Read the **complete text, equations and any errata** of §6, §7 and Appendix A, including the `π0` proof construction and exact domain/serialization conventions. Publisher overview text alone is insufficient.

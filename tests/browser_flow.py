@@ -148,6 +148,7 @@ class BrowserFlow(unittest.TestCase):
                     page.locator('#forge').click()
                     page.wait_for_function("document.querySelector('#attack-result').textContent.includes('FALSE PROOF PASSED')")
                     self.assertIn('The result passed',page.locator('#prediction-feedback').inner_text())
+                    page.locator('.attack-details summary').click()
                     self.assertIn('challenge: MATCH',page.locator('#attack-proof').inner_text())
                     page.locator('#fresh-challenge').click()
                     page.wait_for_function("document.querySelector('#attack-result').textContent.includes('REJECTED')")

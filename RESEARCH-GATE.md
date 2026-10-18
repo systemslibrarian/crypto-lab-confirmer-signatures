@@ -28,6 +28,10 @@ A chosen, published and fully specified scheme must provide:
 
 This is progress on the visitor vision, **not a change in the DCS acceptance gate.**
 
+### Interactive π1/π2 mathematics progress (research-only)
+
+The new [three-move toy transcript](research/pi1-interactive-toy.mjs) now separates private prover masks/witnesses from a genuine public-only verifier for the **seven** equations displayed in the 2013 thesis, Chapter 6 §6.5.2. [Research notes](research/PI1-TRANSCRIPT.md) document deliberately factorable groups, a two-bit verifier challenge, a **successful zero-challenge counterexample**, replayability, a disputed range-bound line, absent concurrency compiler and the unresolved 2013/2016 correspondence. This is **not** cryptographically sound confirmation, the affirmative disavowal OR proof, a full DCS or permission to publish the web exhibit. All prior release gates remain closed.
+
 ## Published foundations and candidate decision
 
 **Research triage completed; implementation gate still closed.** [SCHEME-SELECTION.md](SCHEME-SELECTION.md) compares the 2016 full-verification construction with the 2024 threshold construction and the Camenisch–Shoup building blocks. The 2016 full-verification DCS is the **primary paper candidate**, not yet a selected *implementation*; exact equations and an independent proof oracle are still missing. The 2024 threshold construction's abort-on-invalid path does **not** establish the affirmative disavowal proof demanded by this brief. No implementation or deployment has been approved.

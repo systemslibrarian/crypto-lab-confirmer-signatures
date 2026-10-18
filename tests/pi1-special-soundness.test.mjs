@@ -74,11 +74,11 @@ test('changing the public message or commitment invalidates at least one branch'
 test('a changed ciphertext label, tag or public encryption key breaks a transcript',()=>{
  const f=fork();
  const bads=[
-  {...f.statement,label:'altered'},
-  {...f.statement,ciphertext:{...f.statement.ciphertext,e:f.statement.ciphertext.e*(n+1n)%M}},
-  {...f.statement,publicKey:{...f.statement.publicKey,y2:f.statement.publicKey.y2*2n%M}}
+  ['modified label',{...f.statement,label:'altered'}],
+  ['modified ciphertext e',{...f.statement,ciphertext:{...f.statement.ciphertext,e:f.statement.ciphertext.e*(n+1n)%M}}],
+  ['modified public y2',{...f.statement,publicKey:{...f.statement.publicKey,y2:f.statement.publicKey.y2*2n%M}}]
  ];
- for(const statement of bads)assert.throws(()=>extractToyPi1Fork({...f,statement}),/public-only equations/);
+ for(const [name,statement] of bads)assert.throws(()=>extractToyPi1Fork({...f,statement}),/public-only equations/,name);
 });
 test('malformed, non-bigint, out-of-range or missing challenge branches cannot claim recovery',()=>{
  const f=fork();

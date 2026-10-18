@@ -92,5 +92,41 @@ class BrowserFlow(unittest.TestCase):
         finally:
             page.close()
 
+
+    def test_source_symbolic_or_confirmation_both_roles_and_missing_disavowal(self):
+        for width in (390, 1270):
+            with self.subTest(width=width):
+                page = self.browser.new_page(viewport={'width': width, 'height': 900}, reduced_motion='reduce')
+                errors=[]
+                page.on('pageerror', lambda err: errors.append(str(err)))
+                try:
+                    page.goto(self.origin+'symbolic/', wait_until='networkidle')
+                    self.assertEqual(page.locator('h1').count(),1)
+                    self.assertIn('NOT SECURE CRYPTOGRAPHY', page.locator('#scope').inner_text())
+                    self.assertIn('does not implement disavowal', page.locator('#disavow').inner_text())
+                    self.assertTrue(page.locator('#issue').is_disabled())
+                    page.locator('#keys').click()
+                    page.get_by_text('Toy keys generated',exact=False).wait_for()
+                    page.locator('#issue').click()
+                    page.get_by_text('Source-structured symbolic signature issued',exact=False).wait_for()
+                    self.assertIn('Format proof: PASS',page.locator('#issue-data').inner_text())
+                    self.assertIn('Confirmer extraction check: PASS',page.locator('#issue-data').inner_text())
+                    page.locator('#carol').click()
+                    page.wait_for_function("document.querySelector('#proof-data').textContent.includes('groupPairing1: MATCH')")
+                    self.assertIn('equations',page.locator('#verdict').inner_text())
+                    self.assertIn('groupKey2: MATCH',page.locator('#proof-data').inner_text())
+                    page.locator('#alice').click()
+                    page.wait_for_function("document.querySelector('#proof-data').textContent.includes('Alice (signer)')")
+                    self.assertIn('groupKey1: MATCH',page.locator('#proof-data').inner_text())
+                    page.locator('#change').click()
+                    page.wait_for_function("document.querySelector('#verdict').textContent.includes('NOT a mathematical disavowal')")
+                    page.locator('#message').fill('Different fictional agreement')
+                    self.assertTrue(page.locator('#carol').is_disabled())
+                    self.assertTrue(page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'))
+                    self.assertEqual(errors,[])
+                    page.screenshot(path=str(ROOT / f'test-results/signature-gate-symbolic-{width}.png'),full_page=True)
+                finally:
+                    page.close()
+
 if __name__ == '__main__':
     unittest.main()

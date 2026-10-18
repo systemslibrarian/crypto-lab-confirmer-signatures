@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {webcrypto} from 'node:crypto';
-import {keygen,issue,validFormat,extract,statement,confirmBegin,verifierChallenge,confirmRespond,confirmVerify,mod,SYMBOLIC,securityLimit} from '../research/dcs-uv-symbolic.mjs';
+import {keygen,issue,validFormat,extract,statement,confirmBegin,verifierChallenge,confirmRespond,confirmVerify,confirmVerifyEnvelope,mod,SYMBOLIC,securityLimit} from '../research/dcs-uv-symbolic.mjs';
 if(!globalThis.crypto)globalThis.crypto=webcrypto;
 const keys=()=>keygen({signerSecret:73n,confirmerSecret:29n});
 const init=async()=>{const k=keys();const d=await issue({message:'Fictional library agreement',keys:k,r:21n,k:37n});return {keys:k,publicData:d};};
@@ -99,4 +99,27 @@ test('symbolic group representation exposes keys, cannot support actual DCS secu
  const k=keys();assert.equal(k.signerPublic,k.signerSecret);
  assert.equal(k.confirmerPublic,k.confirmerSecret);
  assert.match(securityLimit,/NOT cryptographic proof security/);
+});
+
+test('bound verifier derives statement from signed-ElGamal object rather than trusting supplied A/B fields',async()=>{
+ const {keys:k,publicData:d}=await init();const {transcript:t}=await one('confirmer',d,k,57n);
+ const verified=await confirmVerifyEnvelope({publicData:d,firstMessage:t.firstMessage,challenge:t.challenge,response:t.response});
+ assert.equal(verified.equationsHold,true);
+ const wrongMessage=await confirmVerifyEnvelope({publicData:{...d,message:'Different claim'},firstMessage:t.firstMessage,challenge:t.challenge,response:t.response});
+ assert.equal(wrongMessage.equationsHold,false);
+ const wrongSignature=await confirmVerifyEnvelope({publicData:{...d,signature:{...d.signature,s:mod(d.signature.s+1n)}},firstMessage:t.firstMessage,challenge:t.challenge,response:t.response});
+ assert.equal(wrongSignature.equationsHold,false);
+});
+test('negative claim: if prover chooses verifier challenge AFTER first message, a false statement can pass',async()=>{
+ const {publicData:d}=await init();const bad={...d,message:'Forged message'};
+ assert.equal(await validFormat(bad),true);
+ const s=await statement(bad), c=39n, c1=17n,c2=mod(c-c1),b1=8n,b2=9n;
+ const f={
+  z1:mod(s.B1*b1+s.A1*c1),z2:mod(s.D1*b1+s.C1*c1),
+  z3:mod(s.B2*b2+s.A2*c2),z4:mod(s.D2*b2+s.C2*c2)
+ };
+ const forged=await confirmVerifyEnvelope({publicData:bad,firstMessage:f,challenge:c,response:{b1,b2,c1,c2}});
+ assert.equal(forged.equationsHold,true);
+ // This is NOT an honest 3-move exchange. Challenge must be selected by Bob
+ // after receiving the prover commitment, not selected by the adversary.
 });

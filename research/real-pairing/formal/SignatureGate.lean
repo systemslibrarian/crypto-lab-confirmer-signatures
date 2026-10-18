@@ -160,7 +160,11 @@ theorem uniformEquiv {α : Type*} [Fintype α] [Nonempty α] (e : α ≃ α) :
   ext y
   rw [PMF.map_apply]
   rw [← e.symm.tsum_eq (fun a => if y = e a then PMF.uniformOfFintype α a else 0)]
-  simp [PMF.uniformOfFintype_apply, eq_comm]
+  simp only [Equiv.apply_symm_apply, PMF.uniformOfFintype_apply]
+  rw [tsum_eq_single y]
+  · simp
+  · intro a ha
+    simp [Ne.symm ha]
 
 /-- Joint bijection, including the dependence of the response translation on a. -/
 def honestRandomnessEquiv (x ratio c : F) (hr : ratio≠0) :

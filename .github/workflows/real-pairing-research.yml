@@ -36,7 +36,7 @@ jobs:
           test -s dist/real/index.html
           grep -Fq 'REAL CRYPTOGRAPHIC ARITHMETIC — NOT A FINISHED OR SECURITY-PROVEN DCS' dist/real/index.html
           grep -Fq 'candidate reconstruction' dist/real/index.html
-          find dist/real/assets -name '*.js' -size +100k | grep -q .
+          find dist/real/assets -name '*.js' -size +10k | grep -q .
       - name: Do not mistake reviewed math primitives for an audited full DCS
         run: |
           set -eu

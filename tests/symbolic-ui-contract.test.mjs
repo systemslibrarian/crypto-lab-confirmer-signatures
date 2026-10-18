@@ -14,3 +14,16 @@ test('browser uses ONLY one linked module and real verifier equations',()=>{
  const adapter=read('prototype/symbolic/dcs-uv-symbolic.mjs');
  assert.match(adapter,/research\/dcs-uv-symbolic\.mjs/);
 });
+
+test('the interactive attack lab explains challenge ordering without claiming DCS security',()=>{
+ const html=read('prototype/symbolic/index.html');
+ const js=read('prototype/symbolic/app.mjs');
+ for(const id of ['forge','fresh-challenge','attack-result','attack-proof','prediction-feedback'])
+  assert.match(html,new RegExp('id="'+id+'"'));
+ assert.match(html,/deliberately incorrect message order/);
+ assert.match(js,/forgeWithKnownChallenge/);
+ assert.match(js,/confirmVerifyEnvelope/);
+ assert.match(js,/challenge===forgery.chosenChallenge/);
+ assert.match(js,/NOT valid confirmation/);
+ assert.match(html,/does <b>not<\/b> implement disavowal/);
+});

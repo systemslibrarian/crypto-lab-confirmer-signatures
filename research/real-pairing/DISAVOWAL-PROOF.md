@@ -90,8 +90,8 @@ The extracted x is a witness to the intended inequality relation.
 
 Consequently a first message for a FALSE statement can have accepting responses
 for at most one overall challenge. For a fresh uniform challenge in F_q the
-soundness error is at most 1/q. The existing browser challenge helper samples
-F_q* instead; its bound is 1/(q-1). Neither statement holds when an adversary
+soundness error is at most 1/q. The browser challenge helper now also samples the full field, including zero.
+This bound does not hold when an adversary
 chooses the challenge after constructing its responses.
 
 `disavow-extraction.mjs` implements the extractor, re-verifies both transcripts
@@ -143,16 +143,28 @@ attack on a real issued object and checks several even challenge boundaries.
 
 - Independent mathematical review of this proof and reconciliation with the
   publication's intended correction; no publisher or author endorsement claimed.
-- Mechanized proof checking if the deliverable is to be described as formally
-  machine-verified. These Node tests are executable examples and regressions.
+- A fully mechanized proof if the deliverable is to be described as formally
+  verified. [Symbolic algebra certificates](reference/check_algebra.py) check
+  polynomial components and small-field extraction cases; they do not formalize
+  the nonzero, distribution, composition or security-game arguments.
 - Malicious-verifier/concurrent zero knowledge and full DCS non-transferability;
   the straight-line fixed-challenge simulator above proves neither.
 - A reduction for the complete Type-3 DCS construction, including invisibility,
   key registration, issuance, conversion and the original security-game adversaries.
 - Protocol encoding, network/session security, implementation side channels,
-  and independently reviewed interoperability vectors.
+  and independent review of the [cross-library interoperability vectors](reference/).
 
 **Established here:** a written completeness, two-special-soundness and special
 HVZK argument for the specified local prime-order protocol, with executable
 extraction and attack regression tests. **Not established:** a verified correction
 of the complete published DCS scheme or production security.
+
+## Additional implementation boundary checks
+
+Full-field sampling permits zero responses and identity commitments. Noble
+rejects zero in `multiply()` and identity in `assertValidity()` by default. The
+local verifier explicitly permits identity proof commitments, while registered
+keys remain nonidentity; zero scalar multiplication is handled as the identity.
+Regression tests force all confirmation masks and the challenge to zero. These
+are valid protocol boundary values, not reasons to silently exclude zero from
+the claimed distribution.

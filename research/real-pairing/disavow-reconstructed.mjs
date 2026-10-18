@@ -42,6 +42,7 @@ function betaValid(b){
 function sourcePointValid(p,base,nonidentity=false){
  try{
   if(!(p instanceof base.constructor))return false;
+  if(p.is0())return !nonidentity;
   p.assertValidity();
   return !nonidentity||!p.equals(base.subtract(base));
  }catch{return false;}

@@ -49,10 +49,14 @@ export function isTargetGroup(value,{nonidentity=false}={}){
 }
 const utf8=s=>encoder.encode(s);
 const bytes=n=>n.toBytes();
-const isG1=p=>p && typeof p.multiply==='function' &&
-  typeof p.toBytes==='function' && !p.equals(bls.G1.Point.ZERO);
-const isG2=p=>p && typeof p.multiply==='function' &&
-  typeof p.toBytes==='function' && !p.equals(bls.G2.Point.ZERO);
+function nonzeroPoint(p,base){
+ try{if(!(p instanceof base.constructor)||p.is0())return false;p.assertValidity();return true;}
+ catch{return false;}
+}
+const isG1=p=>nonzeroPoint(p,G1);
+const isG2=p=>nonzeroPoint(p,G2);
+// Noble's constant-time multiply rejects zero; field responses may equal zero.
+export const pointTimes=(p,s)=>s===0n?p.subtract(p):p.multiply(s);
 export const isNonIdentityPair=x=>!GT.eql(x,GT.ONE);
 function pushPart(arr,source){
  const b=typeof source==='string'?utf8(source):
@@ -112,8 +116,8 @@ export async function verifyDualPublicKey(p){
      !isG1(p.proof?.R1)||!isG2(p.proof?.R2))return false;
   const z=assertScalar(p.proof.z,true);
   const c=await hashScalar('dual-key-bind-v1',p.yc1,p.yc2,p.proof.R1,p.proof.R2);
-  return G1.multiply(z).equals(p.proof.R1.add(p.yc1.multiply(c))) &&
-         G2.multiply(z).equals(p.proof.R2.add(p.yc2.multiply(c)));
+  return pointTimes(G1,z).equals(p.proof.R1.add(pointTimes(p.yc1,c))) &&
+         pointTimes(G2,z).equals(p.proof.R2.add(pointTimes(p.yc2,c)));
  }catch{return false;}
 }
 /**
@@ -153,7 +157,7 @@ export async function verifyFormat(publicData){
     proof:publicData.confirmerKeyProof
   });
   if(!ok)return false;
-  const recovered=publicData.confirmerPublicG1.multiply(t).subtract(sigma1.multiply(s));
+  const recovered=pointTimes(publicData.confirmerPublicG1,t).subtract(pointTimes(sigma1,s));
   return s===(await hashScalar('signed-elgamal-format-v1',recovered,sigma1,sigma2));
  }catch{return false;}
 }

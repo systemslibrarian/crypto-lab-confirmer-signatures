@@ -13,7 +13,7 @@
  *   e(σ2,yc)/e(σ1,g) == e(H(m),yc)^xs and ys=G2^xs.
  */
 import {
- Q,G1,G2,GT,SCHEME,SCOPE,mod,randomScalar,gtPow,gtEq,gtMul,
+ Q,G1,G2,GT,SCHEME,SCOPE,mod,randomFieldScalar,isTargetGroup,gtPow,gtEq,gtMul,
  publicStatement,verifyFormat
 } from './core.mjs';
 const spent=new WeakSet();
@@ -49,7 +49,7 @@ export async function beginConfirmation({publicData,privateKeys,role='confirmer'
     !correctRealWitness(s,secret,real))
    throw new Error('Cannot honestly confirm an invalid alleged signature');
  const fake=3-real;
- const a=randomScalar(),fakeB=randomScalar(),fakeC=randomScalar();
+ const a=randomFieldScalar(),fakeB=randomFieldScalar(),fakeC=randomFieldScalar();
  const z={};
  for(const j of [1,2]){
   const {B,C,D}=branchS(s,j);
@@ -68,7 +68,7 @@ export async function beginConfirmation({publicData,privateKeys,role='confirmer'
  });
 }
 export function chooseVerifierChallenge(){
- return randomScalar();
+ return randomFieldScalar();
 }
 /** One-use private response. Only b1,b2,c1,c2 are disclosed to Bob. */
 export function respondConfirmation(session,c){
@@ -87,7 +87,12 @@ export function checkConfirmationStatement(s,firstMessage,c,response){
   ensureChallenge(c);
   if(!s||!firstMessage||!response)return failure;
   const z=firstMessage;
-  if(!GT.eql(z.z1,z.z1)||!GT.eql(z.z3,z.z3))return failure;
+  if(![s.A,s.B1,s.B2,z.z1,z.z3].every(value=>isTargetGroup(value)))return failure;
+  for(const [p,base,nonzero] of [[s.C1,G1,true],[s.D1,G1,true],[s.C2,G2,true],[s.D2,G2,true],
+    [z.z2,G1,false],[z.z4,G2,false]]){
+   if(!(p instanceof base.constructor))return failure;
+   if(p.is0()){if(nonzero)return failure;}else p.assertValidity();
+  }
   for(const field of ['b1','b2','c1','c2'])
    if(typeof response[field]!=='bigint'||response[field]<0n||response[field]>=Q)return failure;
   const checks={challenge:mod(response.c1+response.c2)===c};
@@ -118,7 +123,7 @@ export async function verifyConfirmation({publicData,firstMessage,challenge,resp
  */
 export async function simulateConfirmation({publicData}={}){
  const s=await publicStatement(publicData);
- const b1=randomScalar(),b2=randomScalar(),c1=randomScalar(),c2=randomScalar();
+ const b1=randomFieldScalar(),b2=randomFieldScalar(),c1=randomFieldScalar(),c2=randomFieldScalar();
  const firstMessage=Object.freeze({
   z1:gtMul(gtPow(s.B1,b1),gtPow(s.A,c1)),
   z2:times(s.D1,b1).add(times(s.C1,c1)),

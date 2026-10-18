@@ -43,15 +43,21 @@ jobs:
         working-directory: research/real-pairing
         run: |
           set -euo pipefail
-          npm install --no-audit --no-fund --ignore-scripts
+          npm ci --no-audit --no-fund --ignore-scripts
           npm test
           npm run build
       - uses: actions/setup-python@v6
         with: { python-version: '3.12' }
       - name: Browser test dependencies
         run: |
-          python -m pip install playwright==1.57.0
+          python -m pip install playwright==1.57.0 -r research/real-pairing/reference/requirements.txt
           python -m playwright install chromium
+      - name: Reproduce vectors and check with a separate library and symbolic algebra
+        run: |
+          set -euo pipefail
+          node research/real-pairing/reference/generate-vectors.mjs --check
+          python -m unittest discover -s research/real-pairing/reference -p 'test_reference.py' -v
+          python research/real-pairing/reference/check_algebra.py
       - name: Play genuine ECDSA and source-specific symbolic OR math at both widths
         run: python -m unittest discover -s tests -p 'browser_flow.py' -v
       - name: Execute REAL pairing experience in actual mobile and desktop browsers
@@ -130,6 +136,9 @@ jobs:
                 curl -fsSL --connect-timeout 7 --max-time 15 -H 'Cache-Control: no-cache' "${SITE}real/?audit=${GITHUB_SHA}-${i}" -o /tmp/real-preview.html
                 grep -Fq 'REAL CRYPTOGRAPHIC ARITHMETIC — NOT A FINISHED OR SECURITY-PROVEN DCS' /tmp/real-preview.html
                 grep -Fq 'candidate reconstruction' /tmp/real-preview.html
+                grep -Fq 'id="challenge-eve"' /tmp/real-preview.html
+                grep -Fq 'id="download"' /tmp/real-preview.html
+                grep -Fq 'Can you trust' /tmp/real-preview.html
                 real_asset="$(node -p 'JSON.parse(require("fs").readFileSync("/tmp/revision.json","utf8")).real_asset')"
                 real_expected="$(node -p 'JSON.parse(require("fs").readFileSync("/tmp/revision.json","utf8")).real_sha256')"
                 curl -fsSL --connect-timeout 7 --max-time 25 -H 'Cache-Control: no-cache' "${SITE}real/assets/${real_asset}?audit=${GITHUB_SHA}-${i}" -o /tmp/served-real.js

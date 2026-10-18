@@ -53,7 +53,7 @@ class RealPairingBrowser(unittest.TestCase):
                     page.goto(self.origin,wait_until='networkidle')
                     page.add_script_tag(path=str(ROOT/'research/real-pairing/node_modules/axe-core/axe.min.js'))
                     self.assertEqual(page.locator('h1').count(),1)
-                    self.assertIn('NOT A FINISHED OR SECURITY-PROVEN DCS',page.locator('#research-scope').text_content())
+                    self.assertIn('These checks do not establish the security of the complete designated-confirmer signature scheme.',page.locator('#research-scope').text_content())
                     expect(page.locator('#chapter-1')).to_be_disabled()
                     self.access(page)
                     page.screenshot(path=str(ROOT/f'test-results/dcs-real-pairing-{width}-start.png'),full_page=True)

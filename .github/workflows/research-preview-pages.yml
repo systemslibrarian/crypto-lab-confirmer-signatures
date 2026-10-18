@@ -61,6 +61,10 @@ jobs:
           cmp -s research/dcs-uv-symbolic.mjs dist/symbolic/dcs-uv-symbolic.mjs
           grep -Fq 'NOT SECURE CRYPTOGRAPHY OR A FINISHED DESIGNATED CONFIRMER SIGNATURE' dist/symbolic/index.html
           grep -Fq 'does <b>not</b> implement disavowal' dist/symbolic/index.html
+          grep -Fq 'id="attack-lab"' dist/symbolic/index.html
+          grep -Fq 'id="forge"' dist/symbolic/index.html
+          grep -Fq 'forgeWithKnownChallenge' dist/symbolic/dcs-uv-symbolic.mjs
+          grep -Fq 'interactive 2013 OR-confirmation workbench' dist/index.html
           touch dist/.nojekyll
           SYMBOLIC_SHA="$(sha256sum dist/symbolic/dcs-uv-symbolic.mjs | cut -d' ' -f1)"
           printf '{"source_sha":"%s","scope":"ecdsa-and-insecure-symbolic-2013-research-only","repository":"%s","symbolic_sha256":"%s"}\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$SYMBOLIC_SHA" > dist/revision.json
@@ -99,6 +103,9 @@ jobs:
                 curl -fsSL --connect-timeout 7 --max-time 15 -H 'Cache-Control: no-cache' "${SITE}symbolic/?audit=${GITHUB_SHA}-${i}" -o /tmp/symbolic-preview.html
                 grep -Fq 'NOT SECURE CRYPTOGRAPHY OR A FINISHED DESIGNATED CONFIRMER SIGNATURE' /tmp/symbolic-preview.html
                 grep -Fq 'does <b>not</b> implement disavowal' /tmp/symbolic-preview.html
+                grep -Fq 'id="attack-lab"' /tmp/symbolic-preview.html
+                grep -Fq 'id="forge"' /tmp/symbolic-preview.html
+                grep -Fq 'interactive 2013 OR-confirmation workbench' /tmp/preview.html
                 curl -fsSL --connect-timeout 7 --max-time 15 -H 'Cache-Control: no-cache' "${SITE}symbolic/dcs-uv-symbolic.mjs?audit=${GITHUB_SHA}-${i}" -o /tmp/served-symbolic.mjs
                 expected="$(node -p 'JSON.parse(require("fs").readFileSync("/tmp/revision.json","utf8")).symbolic_sha256')"
                 actual="$(sha256sum /tmp/served-symbolic.mjs | cut -d' ' -f1)"

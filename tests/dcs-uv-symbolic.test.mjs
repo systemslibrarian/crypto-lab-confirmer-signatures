@@ -161,3 +161,16 @@ test('random preselected challenges verify false proofs only at the chosen chall
   assert.equal((await confirmVerifyEnvelope({publicData:f.publicData,firstMessage:f.firstMessage,challenge:mod(f.chosenChallenge+1n),response:f.response})).equationsHold,false);
  }
 });
+
+test('printed 2013 disavowal beta ratio equals group identity for EVERY valid toy key',()=>{
+ const one=1n;
+ for(let x=1n;x<SYMBOLIC.order;x++){
+  const publicKey=mod(one*x),generator=one;
+  const ratio=mod(generator*x-publicKey);
+  assert.equal(ratio,0n);
+  for(const a of [1n,13n,1018n])assert.equal(mod(ratio*a),0n);
+ }
+ // Both roles have C=g^x and D=g. Hence the displayed beta != identity
+ // gate cannot hold under this literal formula for any correctly made key.
+ // This is a research blocker, NOT permission to invent a correction.
+});

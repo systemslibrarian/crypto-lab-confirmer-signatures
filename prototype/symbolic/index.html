@@ -15,6 +15,8 @@
    label{display:block;font-weight:650;margin:.7rem 0 .3rem}textarea{width:100%;max-width:100%;border:1px solid #7893a0;border-radius:8px;background:#06161b;color:var(--ink);padding:.6rem;font:inherit;min-height:100px}button{background:var(--accent);border:1px solid var(--accent);color:#081a21;font-weight:750;padding:.75rem 1rem;border-radius:8px;margin:.3rem .25rem .25rem 0;cursor:pointer;min-height:44px}button:disabled{opacity:.45;cursor:not-allowed}button.secondary{background:transparent;color:var(--accent)}button:focus-visible,a:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #f8d88d;outline-offset:3px}
    .receipt{background:#06161b;border:1px solid #44626d;border-radius:7px;padding:.8rem;overflow-wrap:anywhere;font:13px/1.7 ui-monospace,monospace;white-space:pre-wrap;max-height:290px;overflow-y:auto} .status{border-left:4px solid var(--accent);padding:.6rem 1rem;background:#113541} .status[data-tone="warn"]{border-color:#f7d19a}.status[data-tone="bad"]{border-color:#f4a58c}
    .tag{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:750}details{padding:1rem;border-radius:8px;border:1px solid var(--line)}summary{cursor:pointer;font-weight:700;color:var(--accent)}ul{padding-left:1.1rem}footer{border-top:1px solid var(--line);font-size:.88rem;color:var(--muted)}@media(max-width:730px){.steps{grid-template-columns:1fr}section.card.full{grid-column:auto}}
+
+   .attack-lab{border-top:3px solid #eec489 !important}.attack-timeline{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem;margin:1rem 0}.attack-timeline>div{border:1px solid #547481;background:#092029;border-radius:8px;padding:.9rem;display:grid;gap:.3rem}.attack-timeline strong{font-size:.92rem;color:#e0f6fc}.attack-timeline span{font-size:.83rem;color:var(--muted)}.predict{border:1px solid var(--line);border-radius:8px;padding:.7rem 1rem;margin:1rem 0}.predict legend{padding:0 .4rem}.predict label{font-weight:500;display:inline-flex;align-items:center;gap:.4rem;margin:.3rem 1rem .3rem 0;cursor:pointer}.predict input{accent-color:var(--accent);width:18px;height:18px}.attack-actions{display:flex;flex-wrap:wrap;gap:.4rem}.attack-details{margin:1rem 0}.attack-details .receipt{margin-top:.8rem}.attack-lab .status[data-tone="warn"]{background:#382c17;color:#fff2cd}.attack-lab .status[data-tone="bad"]{background:#382023;color:#fff0e4} @media(max-width:750px){.attack-timeline{grid-template-columns:1fr}.attack-actions button{width:100%}}
   </style>
 </head>
 <body>
@@ -45,8 +47,27 @@
   <p id="verdict" class="status" role="status" aria-live="polite" data-tone="neutral">No proof transcript yet.</p>
   <div id="proof-data" class="receipt" aria-label="Public proof transcript">The signer and confirmer can each prove a source-defined relationship using an interactive OR proof.</div>
  </section>
+ <section class="card full attack-lab" id="attack-lab" aria-labelledby="attack-title">
+  <p class="tag">03 / Try to cheat · The challenge order matters</p>
+  <h2 id="attack-title">Can Eve fool Bob without Alice or Carol's secret key?</h2>
+  <p>Eve changes Alice's statement. She cannot honestly confirm the forged statement. But what if Eve <b>chooses Bob's challenge before writing her first proof message</b>? Try the actual symbolic arithmetic, not a canned animation.</p>
+  <div class="attack-timeline" aria-label="The incorrect order of proof messages">
+   <div><strong>1 · Eve picks a challenge</strong><span>She knows the answer Bob is supposed to choose later.</span></div>
+   <div><strong>2 · Eve fabricates proof numbers</strong><span>She computes the first message backward from that challenge.</span></div>
+   <div><strong>3 · Bob tests the arithmetic</strong><span>See what happens when he uses Eve's number instead of choosing his own.</span></div>
+  </div>
+  <fieldset class="predict"><legend><b>Your prediction:</b> Will the forged proof pass Bob's arithmetic check when Eve chooses his challenge first?</legend>
+   <label><input type="radio" name="forgery-predict" value="pass" checked> It will pass</label>
+   <label><input type="radio" name="forgery-predict" value="reject"> It will fail</label>
+  </fieldset>
+  <div class="attack-actions"><button id="forge" type="button" disabled>Try Eve's challenge-first trick</button><button id="fresh-challenge" class="secondary" type="button" disabled>Bob: require a different challenge</button></div>
+  <p id="attack-result" class="status" role="status" aria-live="polite" data-tone="neutral">Issue Alice's symbolic signature to unlock the attack experiment.</p>
+  <p id="prediction-feedback" class="muted" role="status" aria-live="polite">Predict first, then see the independent verifier's computed result.</p>
+  <details class="attack-details"><summary>Inspect Eve's actual forged transcript and Bob's five equation checks</summary><pre id="attack-proof" class="receipt" aria-label="Forgery proof evidence">No attack transcript yet.</pre></details>
+  <p class="muted">This is a <strong>deliberately incorrect message order</strong> in a toy group of order 1019. The arithmetic may pass when Eve picks the challenge, but that does not establish a valid three-message proof. A proper verifier must send a fresh unpredictable challenge after the prover commits. Nothing here is a secure designated confirmer signature.</p>
+ </section>
  <section class="card full" aria-labelledby="different-title">
-  <p class="tag">03 / What's still missing?</p><h2 id="different-title">Rejecting a proof is not proving a signature was forged</h2>
+  <p class="tag">04 / What's still missing?</p><h2 id="different-title">Rejecting a proof is not proving a signature was forged</h2>
   <p id="disavow">The published scheme also requires an <b>affirmative disavowal proof</b>. This experiment does <b>not</b> implement disavowal. When Alice or Carol cannot prove validity, Bob has learned nothing conclusive about invalidity. We will not substitute a status button for the missing proof.</p>
   <details><summary>Inspect the source equations and security limits</summary>
    <ul>

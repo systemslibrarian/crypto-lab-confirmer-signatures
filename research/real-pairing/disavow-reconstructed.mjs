@@ -23,7 +23,7 @@
  * Separate mathematician/author review is REQUIRED before release as DCS.
  */
 import {
- Q,G1,G2,GT,SCOPE,mod,randomScalar,gtPow,gtMul,gtDiv,gtEq,
+ Q,G1,G2,GT,SCOPE,mod,randomScalar,randomFieldScalar,isTargetGroup,gtPow,gtMul,gtDiv,gtEq,
  pairing,publicStatement,verifyFormat
 } from './core.mjs';
 const spent=new WeakSet();
@@ -37,7 +37,14 @@ const branchS=(s,j)=>j===1?
 const gtRatio=(B,A,x)=>gtDiv(gtPow(B,x),A);
 function challengeOk(c){return typeof c==='bigint'&&c>=0n&&c<Q;}
 function betaValid(b){
- try{return !GT.eql(b,GT.ONE)&&GT.eql(gtPow(b,Q),GT.ONE)}catch{return false;}
+ return isTargetGroup(b,{nonidentity:true});
+}
+function sourcePointValid(p,base,nonidentity=false){
+ try{
+  if(!(p instanceof base.constructor))return false;
+  p.assertValidity();
+  return !nonidentity||!p.equals(base.subtract(base));
+ }catch{return false;}
 }
 /**
  * Prover starts ONLY when private witness matches registered public key and
@@ -56,8 +63,8 @@ export async function beginDisavow({publicData,privateKeys,role='confirmer'}={})
  const ratio=gtRatio(B,s.A,x);
  if(!betaValid(ratio))throw new Error('Alleged signature satisfies role validity; cannot honestly disavow');
  const fake=3-real;
- const a=randomScalar(),e=randomScalar(),ePrime=randomScalar();
- const cFake=randomScalar(),bFake1=randomScalar(),bFake2=randomScalar();
+ const a=randomScalar(),e=randomFieldScalar(),ePrime=randomFieldScalar();
+ const cFake=randomFieldScalar(),bFake1=randomFieldScalar(),bFake2=randomFieldScalar();
  const betaReal=gtPow(ratio,a);
  const betaFake=gtPow(pairing(G1,G2),randomScalar());
  if(!betaValid(betaReal)||!betaValid(betaFake))throw new Error('Nontrivial disavowal base missing');
@@ -103,8 +110,12 @@ export function checkDisavowStatement(s,z,c,response){
   checks:Object.freeze({invalidInput:false}),security:SCOPE});
  try{
   if(!s||!z||!response||!challengeOk(c))return fail;
+  if(!isTargetGroup(s.A)||!isTargetGroup(s.B1)||!isTargetGroup(s.B2)||
+     !sourcePointValid(s.C1,G1,true)||!sourcePointValid(s.C2,G2,true)||
+     !sourcePointValid(s.D1,G1,true)||!sourcePointValid(s.D2,G2,true))return fail;
   for(const j of [1,2]){
-   if(!betaValid(z['beta'+j]))return fail;
+   if(!betaValid(z['beta'+j])||!isTargetGroup(z['zPair'+j])||
+      !sourcePointValid(z['zKey'+j],j===1?G1:G2))return fail;
    for(const f of ['b'+j+'1','b'+j+'2','c'+j])
      if(!challengeOk(response[f]))return fail;
   }
@@ -139,20 +150,22 @@ export async function verifyDisavow({publicData,firstMessage,challenge,response}
  * valid or invalid statement by choosing challenge and responses first.
  * It does NOT establish an actual Bob->Alice/Carol interaction.
  */
-export async function simulateDisavow({publicData}={}){
+export async function simulateDisavow({publicData,challenge=randomFieldScalar()}={}){
+ if(!challengeOk(challenge))throw new RangeError('Verifier challenge outside subgroup order');
  const s=await publicStatement(publicData);
  const z={},response={};
+ const c1=randomFieldScalar();
  for(const j of [1,2]){
   const {B,C,D}=branchS(s,j);
   const beta=gtPow(pairing(G1,G2),randomScalar());
-  const b1=randomScalar(),b2=randomScalar(),cj=randomScalar();
+  const b1=randomFieldScalar(),b2=randomFieldScalar(),cj=j===1?c1:mod(challenge-c1);
   response['b'+j+'1']=b1;response['b'+j+'2']=b2;response['c'+j]=cj;
   z['beta'+j]=beta;
   z['zKey'+j]=times(D,b1).subtract(times(C,b2));
   z['zPair'+j]=gtMul(gtPow(beta,cj),gtDiv(gtPow(B,b1),gtPow(s.A,b2)));
  }
  return Object.freeze({firstMessage:Object.freeze(z),
-  challenge:mod(response.c1+response.c2),
+  challenge,
   response:Object.freeze(response),simulated:true,
   disclosure:'Simulator chose the challenge itself. This is not live disavowal.'});
 }

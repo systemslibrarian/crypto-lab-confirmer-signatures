@@ -10,7 +10,7 @@
 - Signed ElGamal as in Wang–Xia–Zhao (2011) / Xia (2013): σ₁ = r·Y꜀₁, σ₂ = σ+r·G₁, signature-format challenge s=H₀(k·Y꜀₁,σ₁,σ₂), response t=k+s·r. The H₀ encoding/domain is an explicitly noted LOCAL choice. The format proof DOES NOT reveal whether a message's underlying BLS signature is valid.
 - Carol's private extraction σ = σ₂ − x꜀⁻¹·σ₁ followed by a fresh, independent pairing validity test.
 - Both positive OR-verification branches from §5.5: A=e(σ₂,Y꜀₂)/e(σ₁,G₂), B₁=e(H(m),Yₛ₂), B₂=e(H(m),Y꜀₂), with A=B₁^x꜀ OR A=B₂^xₛ and the corresponding public-key equations. Real first-message commitments, a verifier-supplied challenge and independent response checking.
-- A separately declared **research candidate** of the inequality/disavowal OR relation. It uses a correction DERIVED from the intended inequality statement, not a protocol that can legitimately be attributed verbatim to the source's published Figure 4/5 or Figure 5.3/5.4. Independent arithmetic fixtures test completeness for honest toy decisions and rejection for dishonest changes; a formal security proof has NOT been established.
+- A separately declared **research candidate** of the inequality/disavowal OR relation. It uses a correction DERIVED from the intended inequality statement, not a protocol that can legitimately be attributed verbatim to the source's published Figure 4/5 or Figure 5.3/5.4. Independent arithmetic fixtures test completeness for honest toy decisions and rejection for dishonest changes; a written completeness, two-special-soundness and special honest-verifier zero-knowledge argument is now available in [DISAVOWAL-PROOF.md](DISAVOWAL-PROOF.md), with executable witness extraction. It is not independently reviewed or mechanically verified, and is not a full DCS security proof.
 
 ## Why Type-3 is an ADAPTATION, not the 2011/2013 implementation
 
@@ -47,7 +47,7 @@ For the **actual intended inequality** A≠B^x, an algebraically consistent cand
   z_pair = beta^c · B^b₁ / A^b₂,
 with b₁=e−c·x·a and b₂=e'−c·a.
 
-Those equalities hold and are independently verified by the research code. This is an ORIGINAL RECONSTRUCTION of an intended proof statement, NOT an erratum, publisher-approved repair, or a substitute for cryptographic proof review. Its independent soundness under all allowed malicious strategies has not been formally established, and no concurrent-zero-knowledge or invisible-signature security claim can follow automatically.
+Those equalities hold and are independently verified by the research code. This is an ORIGINAL RECONSTRUCTION of an intended proof statement, NOT an erratum, publisher-approved repair, or a substitute for cryptographic proof review. The local prime-order protocol now has a written two-special-soundness and special-HVZK argument, with an executable extractor and an order-two attack regression; see [DISAVOWAL-PROOF.md](DISAVOWAL-PROOF.md). Independent review, malicious/concurrent-verifier security and full DCS security remain open.
 
 ## What a visitor can learn without being misled
 

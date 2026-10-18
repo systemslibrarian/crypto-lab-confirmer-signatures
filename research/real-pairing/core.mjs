@@ -28,15 +28,24 @@ function assertScalar(x,allowZero=false){
    throw new RangeError('Scalar outside BLS12-381 subgroup');
  return x;
 }
-export function randomScalar(){
+export function randomScalar({nonzero=true}={}){
  for(let i=0;i<1000;i++){
   const buf=new Uint8Array(32);
   if(!globalThis.crypto?.getRandomValues)throw new Error('Secure randomness unavailable');
   crypto.getRandomValues(buf);
   const x=BigInt('0x'+Array.from(buf,b=>b.toString(16).padStart(2,'0')).join(''));
-  if(x>0n&&x<Q)return x;
+  if(x<Q&&(!nonzero||x>0n))return x;
  }
  throw new Error('Unable to sample field scalar');
+}
+// Masks and simulated responses range over the ENTIRE field, including zero.
+export const randomFieldScalar=()=>randomScalar({nonzero:false});
+/** Raw exponent: reducing Q modulo Q would make membership testing vacuous. */
+export function isTargetGroup(value,{nonidentity=false}={}){
+ try{
+  return GT.isValid(value)&&!GT.eql(value,GT.ZERO)&&
+    (!nonidentity||!GT.eql(value,GT.ONE))&&GT.eql(GT.pow(value,Q),GT.ONE);
+ }catch{return false;}
 }
 const utf8=s=>encoder.encode(s);
 const bytes=n=>n.toBytes();

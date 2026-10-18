@@ -24,9 +24,11 @@ jobs:
           sh /tmp/elan-init.sh -y --no-modify-path --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Resolve pinned mathematics library
-        run: lake update
+        run: |
+          lake update
+          git diff --exit-code -- lake-manifest.json
       - name: Download compiled mathematics dependencies
-        run: lake exe cache get Mathlib/Tactic/FieldSimp.lean Mathlib/Tactic/LinearCombination.lean Mathlib/Tactic/Ring.lean Mathlib/Algebra/Field/Basic.lean
+        run: lake exe cache get Mathlib.Tactic.FieldSimp Mathlib.Tactic.LinearCombination Mathlib.Tactic.Ring Mathlib.Algebra.Field.Basic
       - name: Check theorem proofs with the Lean kernel
         run: lake build
       - name: Print and restrict theorem axiom dependencies

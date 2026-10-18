@@ -130,7 +130,10 @@ export async function confirmBegin({publicData,keys,role}={}){
     privateState:Object.freeze({branch,secret,a,bOther,cOther,used:false})
   });
 }
-export function verifierChallenge(){return sample()-1n;}
+export function verifierChallenge(){
+  const b=new Uint8Array(2), size=Number(Q), limit=65536-(65536%size);
+  for(;;){crypto.getRandomValues(b);const n=(b[0]<<8)|b[1];if(n<limit)return BigInt(n%size);}
+}
 export function confirmRespond(session,challenge){
   if(!session?.privateState)throw new Error('Missing signer/confirmer proof session');
   const priv=session.privateState;if(spent.has(priv))throw new Error('First-message randomness already spent');

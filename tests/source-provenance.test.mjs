@@ -4,24 +4,27 @@ import {readFileSync,existsSync} from 'node:fs';
 const root=new URL('../',import.meta.url);
 const read=path=>readFileSync(new URL(path,root),'utf8');
 
-test('source note distinguishes 2013 five-part scheme from abbreviated 2016 introduction',()=>{
+test('2016 source §6–7 corrects its abbreviated introduction without inventing exact proof security',()=>{
  const s=read('research/SOURCE-RECONCILIATION.md');
  assert.match(s,/OPEN SPECIFICATION DISCREPANCY/);
- assert.match(s,/2013 thesis[\s\S]*?five listed objects/);
+ assert.match(s,/2013 thesis[\s\S]*?Five listed objects/i);
  assert.match(s,/2016 journal \*\*introduction summary\*\*/);
- assert.match(s,/does \*\*not\*\* prove/);
+ assert.match(s,/§7\.2[\s\S]*?π0/);
+ assert.match(s,/\*\*does not\*\* prove omission of π0/);
+ assert.match(s,/full protocol implementation\/release gate remains CLOSED/);
 });
-test('all authoring entry points preserve paper-specific scheme provenance',()=>{
+test('research code and source notes do not claim an independently reviewed complete 2016 DCS',()=>{
  const gate=read('RESEARCH-GATE.md'),selection=read('SCHEME-SELECTION.md');
  const scheme=read('SCHEME-NOTES.md'),readme=read('README.md');
- assert.match(gate,/Open 2013\/2016 syntax discrepancy/);
+ assert.match(gate,/Issuance inventory reconciled; remaining 2013\/2016 proof fidelity open/);
  assert.match(selection,/2013 thesis construction sketch/);
- assert.match(scheme,/NOT verified as the 2016 final syntax/);
+ assert.match(scheme,/NOT verified as complete 2016 protocol/);
  assert.match(readme,/SOURCE-RECONCILIATION\.md/);
+ assert.match(gate,/research gate CLOSED/);
 });
-test('source discrepancy does not authorize a live or complete DCS',()=>{
+test('partial source transcription never authorizes full DCS Pages publication',()=>{
  const s=read('research/SOURCE-RECONCILIATION.md');
- assert.match(s,/implementation\/release gate remains \*\*CLOSED\*\*/);
+ assert.match(s,/full protocol implementation\/release gate remains CLOSED/);
  assert.equal(existsSync(new URL('.github/workflows/deploy.yml',root)),false);
  const page=read('prototype/index.html');
  assert.match(page,/The separate protocol where Carol proves a signature valid or invalid is <b>not yet implemented<\/b>/);

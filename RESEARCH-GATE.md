@@ -1,6 +1,6 @@
 # Designated Confirmer Signatures — research gate (NOT YET PASSED)
 
-**Status: research only, 2026-10-17. No implementation, production claim, test vector, or Pages deployment is approved.**
+**Status: DCS research gate CLOSED. No complete designated-confirmer implementation, production security claim, DCS catalog card, or DCS deployment is approved. A separate, conspicuously labeled Chapter 01 ordinary-ECDSA-only research preview may be served by Pages; it cannot unlock any DCS chapter.**
 
 This repository will not advertise ordinary signed-then-encrypted content as a designated confirmer signature. A browser animation with a button marked “confirm” does not establish either soundness or non-transferability.
 
@@ -54,6 +54,10 @@ The 2013 [Fubiao Xia thesis](https://etheses.bham.ac.uk/4579/1/Xia13PhD.pdf) (Ch
 - [ ] Replay/session binding and exact signed statement encoding fixed in specification.
 - [ ] Rust/TypeScript or independent implementation oracle available to catch self-consistent algebraic errors.
 - [ ] Independent security review completed before any claim of full DCS correctness.
+
+## Narrowly permitted research preview (not DCS)
+
+To prevent a 404 for visitors inspecting progress, the separate [research-preview-pages.yml](.github/workflows/research-preview-pages.yml) is allowed to serve *only* four files copied verbatim from `prototype/`: `index.html`, `style.css`, `app.mjs` and `crypto.mjs`, plus `.nojekyll` and source-SHA `revision.json`. The workflow runs the research tests, exercises real P-256 signing in Chromium at desktop/mobile widths, and checks the served revision and the prominent `does not implement a designated confirmer signature` warning. It never copies `research/` toy proofs or provides Sign/Confirm/Disavow controls. **A successful preview publish is not a successful DCS publish**, and the main Crypto Lab catalogue must NOT gain a Confirmer Signatures card yet. If Pages is disabled at the repository settings level, the preview remains unavailable until its source is configured to GitHub Actions.
 
 ## Required delivery gate
 

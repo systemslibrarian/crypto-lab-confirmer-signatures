@@ -6,7 +6,7 @@ What is real: Alice creates a fresh non-extractable WebCrypto ECDSA P-256 key, s
 
 What is **not** implemented: DCS signing, authorized confirmation, affirmative disavowal, zero-knowledge proof, non-transferability, conversion, role-isolation or any production security guarantee. Research Steps 02–04 are visibly locked; Step 05 is only a conceptual distinction between cryptographic authenticity and factual truth. An ordinary signature is publicly verifiable by design.
 
-To try locally: serve the repository root on localhost (for example `python3 -m http.server 8000`) and visit `http://localhost:8000/prototype/`. The Web Crypto API requires a secure context (HTTPS or localhost). Nothing is deployed to GitHub Pages from this folder and no main Crypto Lab card is authorized.
+To try locally: serve the repository root on localhost (for example `python3 -m http.server 8000`) and visit `http://localhost:8000/prototype/`. Web Crypto requires a secure context (HTTPS or localhost). A separate, strictly **research-only** GitHub Pages preview is intended at https://systemslibrarian.github.io/crypto-lab-confirmer-signatures/ after the Pages GitHub Actions publisher succeeds; its `revision.json` pins the exact commit. The research preview ships only ordinary-signature Chapter 01, **not** the toy DCS algebra, full confirmer protocols or main Crypto Lab catalog card. If that URL gives 404, verify the GitHub Pages Settings source and the research preview workflow.
 
 Run unit tests with `node --test tests/baseline.test.mjs` (Node 22+). Run browser tests through the research branch's CI. Full Crypto Lab Vite/TypeScript template adoption remains conditional on the paper-accurate DCS implementation gate.
 

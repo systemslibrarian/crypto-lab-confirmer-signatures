@@ -4,3 +4,6 @@ dist/
 test-results/
 __pycache__/
 *.pyc
+
+.lake/
+.venv/

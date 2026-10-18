@@ -1,0 +1,44 @@
+name: Candidate disavowal — Lean proof kernel
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'research/real-pairing/formal/**'
+      - '.github/workflows/confirmer-formal-proof.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: research/real-pairing/formal
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install pinned Lean toolchain
+        run: |
+          set -euo pipefail
+          curl -fsSL https://raw.githubusercontent.com/leanprover/elan/v4.1.2/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --no-modify-path --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Resolve pinned mathematics library
+        run: lake update
+      - name: Download compiled mathematics dependencies
+        run: lake exe cache get Mathlib/Tactic/FieldSimp.lean Mathlib/Tactic/LinearCombination.lean Mathlib/Tactic/Ring.lean Mathlib/Algebra/Field/Basic.lean
+      - name: Check theorem proofs with the Lean kernel
+        run: lake build
+      - name: Print and restrict theorem axiom dependencies
+        run: |
+          set -euo pipefail
+          lake env lean CheckAxioms.lean | tee axioms.txt
+          python3 check_axioms.py axioms.txt
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: candidate-disavowal-lean-check
+          path: |
+            research/real-pairing/formal/axioms.txt
+            research/real-pairing/formal/lake-manifest.json
+          if-no-files-found: ignore

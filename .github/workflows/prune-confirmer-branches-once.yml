@@ -1,0 +1,59 @@
+name: One-time cleanup of obsolete Confirmer Signatures branches
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/prune-confirmer-branches-once.yml'
+permissions:
+  contents: write
+  pull-requests: read
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Delete only the explicitly reviewed obsolete refs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          repo="$GITHUB_REPOSITORY"
+          open_refs="$(gh api "repos/$repo/pulls?state=open&per_page=100" --jq '.[].head.ref')"
+          failures=0
+          while IFS= read -r ref; do
+            [ -n "$ref" ] || continue
+            if printf '%s\n' "$open_refs" | grep -Fxq "$ref"; then
+              echo "PROTECTED: $ref still has an open PR"
+              failures=$((failures+1))
+              continue
+            fi
+            if gh api -X DELETE "repos/$repo/git/refs/heads/$ref" >/dev/null; then
+              echo "DELETED: $ref"
+            else
+              echo "FAILED to remove: $ref"
+              failures=$((failures+1))
+            fi
+          done <<'BRANCHES'
+          chatgpt/clear-visitor-proof-basics-20261018
+          chatgpt/cs-verifiable-disavowal-research-20261017
+          chatgpt/define-visitor-experience-20261017
+          chatgpt/implement-signature-gate-chapter-01-20261017
+          chatgpt/ordinary-signature-research-preview-20261018
+          chatgpt/paper-selection-gate-20261017
+          chatgpt/pi0-equality-thesis-20261017
+          chatgpt/pi1-interactive-toy-transcript-20261018
+          chatgpt/pi1-special-soundness-toy-20261018
+          chatgpt/pi1-witness-relation-20261017
+          chatgpt/reconcile-2013-2016-notation-20261017
+          chatgpt/record-dcs-proof-preconditions-20261017
+          chatgpt/thesis-backed-cs-paillier-20261017
+          research/confirmers-first
+          BRANCHES
+          after="$(gh api --paginate "repos/$repo/branches?per_page=100" --jq '.[].name')"
+          remaining="$(printf '%s\n' "$after" | grep -v '^main$' || true)"
+          if [ -n "$remaining" ]; then
+            printf 'Non-main branches still present:\n%s\n' "$remaining"
+            exit 1
+          fi
+          [ "$failures" -eq 0 ]
+          echo 'Branch cleanup verified: only main remains.'

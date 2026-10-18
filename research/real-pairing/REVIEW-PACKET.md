@@ -21,6 +21,7 @@ reviewable, falsifiable claim, not a declaration that the complete DCS is secure
 | --- | --- | --- |
 | Typeset source, exact equation changes | [DISAVOWAL-PROOF.md](DISAVOWAL-PROOF.md) | Source diagnosis and candidate correction |
 | Completeness, extraction, simulation argument | Same note | Local prime-order relation, under explicit assumptions |
+| Lean kernel proof and axiom gate | [formal](formal/) | Field-model completeness, extraction, OR soundness and exact joint honest-branch sampling; concrete groups and full DCS games are outside the model |
 | Real-group implementation | [disavow-reconstructed.mjs](disavow-reconstructed.mjs) | Executable candidate equations |
 | Two-transcript extractor | [disavow-extraction.mjs](disavow-extraction.mjs) | Rechecks both transcripts and recovered witness |
 | Separate-library verifier and public vectors | [reference](reference/) | Reproducible agreement and negative controls |
@@ -40,7 +41,9 @@ inequality equation. Changing beta alone would be insufficient.
 From `research/real-pairing`, run `npm ci --ignore-scripts`, `npm test`,
 `node reference/generate-vectors.mjs --check`, and `npm run build`.
 Follow [the Python instructions](reference/README.md) for the separate verifier
-and symbolic checks. CI also plays both roles through both protocols on desktop
+and symbolic checks, and the [Lean instructions](formal/) for the kernel-checked
+model. Pages publication requires the formal proof and axiom gate to pass on the
+same commit. CI also plays both roles through both protocols on desktop
 and mobile, exports an actual browser transcript, and checks it with Python.
 
 Try malformed points, noncanonical scalars, identity commitments, order-two beta,
@@ -52,7 +55,8 @@ an authenticated interactive proof.
 ## Claims that are still open
 
 - Author/publisher reconciliation of the proposed correction.
-- A fully mechanized proof of the protocol and security games.
+- Extend the kernel-checked field model to the concrete group interpretation,
+  code refinement, full OR transcript distribution and security games.
 - Malicious-verifier or concurrent zero knowledge and DCS non-transferability.
 - A complete Type-3 reduction, including invisibility, key registration,
   issuance and conversion. The symmetric-pairing theorem does not transfer

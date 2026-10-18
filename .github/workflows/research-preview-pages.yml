@@ -8,6 +8,7 @@ on:
       - 'research/dcs-uv-symbolic.mjs'
       - 'research/real-pairing/**'
       - '.github/workflows/research-preview-pages.yml'
+      - '.github/workflows/confirmer-formal-proof.yml'
   push:
     branches: [main]
     paths:
@@ -15,6 +16,7 @@ on:
       - 'research/dcs-uv-symbolic.mjs'
       - 'research/real-pairing/**'
       - '.github/workflows/research-preview-pages.yml'
+      - '.github/workflows/confirmer-formal-proof.yml'
   workflow_dispatch:
 
 permissions:
@@ -27,6 +29,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  check-formal-model:
+    uses: ./.github/workflows/confirmer-formal-proof.yml
+
   prove-scope-and-build:
     runs-on: ubuntu-latest
     timeout-minutes: 23
@@ -93,7 +98,7 @@ jobs:
           printf '{"source_sha":"%s","scope":"ecdsa-symbolic-and-real-pairing-research-only","repository":"%s","symbolic_sha256":"%s","real_asset":"%s","real_sha256":"%s"}\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$SYMBOLIC_SHA" "$REAL_ASSET_NAME" "$REAL_SHA" > dist/revision.json
           test ! -e dist/research
           test ! -e dist/tests
-          echo "Research preview ready: no full DCS or affirmative disavowal is claimed."
+          echo "Research preview ready: candidate inequality evidence is scoped; no complete or security-proven DCS is claimed."
       - uses: actions/configure-pages@v6
         if: github.event_name != 'pull_request'
       - uses: actions/upload-pages-artifact@v5
@@ -102,7 +107,7 @@ jobs:
 
   publish-preview:
     if: github.event_name != 'pull_request'
-    needs: prove-scope-and-build
+    needs: [prove-scope-and-build, check-formal-model]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment:
@@ -138,6 +143,8 @@ jobs:
                 grep -Fq 'candidate reconstruction' /tmp/real-preview.html
                 grep -Fq 'id="challenge-eve"' /tmp/real-preview.html
                 grep -Fq 'id="download"' /tmp/real-preview.html
+                grep -Fq 'id="formal-evidence"' /tmp/real-preview.html
+                grep -Fq 'Kernel-checked mathematics' /tmp/real-preview.html
                 grep -Fq 'Can you trust' /tmp/real-preview.html
                 real_asset="$(node -p 'JSON.parse(require("fs").readFileSync("/tmp/revision.json","utf8")).real_asset')"
                 real_expected="$(node -p 'JSON.parse(require("fs").readFileSync("/tmp/revision.json","utf8")).real_sha256')"

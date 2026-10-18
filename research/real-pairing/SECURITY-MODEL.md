@@ -10,7 +10,7 @@
 - Signed ElGamal as in Wang–Xia–Zhao (2011) / Xia (2013): σ₁ = r·Y꜀₁, σ₂ = σ+r·G₁, signature-format challenge s=H₀(k·Y꜀₁,σ₁,σ₂), response t=k+s·r. The H₀ encoding/domain is an explicitly noted LOCAL choice. The format proof DOES NOT reveal whether a message's underlying BLS signature is valid.
 - Carol's private extraction σ = σ₂ − x꜀⁻¹·σ₁ followed by a fresh, independent pairing validity test.
 - Both positive OR-verification branches from §5.5: A=e(σ₂,Y꜀₂)/e(σ₁,G₂), B₁=e(H(m),Yₛ₂), B₂=e(H(m),Y꜀₂), with A=B₁^x꜀ OR A=B₂^xₛ and the corresponding public-key equations. Real first-message commitments, a verifier-supplied challenge and independent response checking.
-- A separately declared **research candidate** of the inequality/disavowal OR relation. It uses a correction DERIVED from the intended inequality statement, not a protocol that can legitimately be attributed verbatim to the source's published Figure 4/5 or Figure 5.3/5.4. Independent arithmetic fixtures test completeness for honest research instances and rejection for dishonest changes; a written completeness, two-special-soundness and special honest-verifier zero-knowledge argument is now available in [DISAVOWAL-PROOF.md](DISAVOWAL-PROOF.md), with executable witness extraction. It is not independently reviewed or mechanically verified, and is not a full DCS security proof.
+- A separately declared **research candidate** of the inequality/disavowal OR relation. It uses a correction DERIVED from the intended inequality statement, not a protocol that can legitimately be attributed verbatim to the source's published Figure 4/5 or Figure 5.3/5.4. Independent arithmetic fixtures test completeness for honest research instances and rejection for dishonest changes; a written completeness, two-special-soundness and special honest-verifier zero-knowledge argument is now available in [DISAVOWAL-PROOF.md](DISAVOWAL-PROOF.md), with executable witness extraction. The [Lean field model](formal/) now kernel-checks completeness, extraction and OR soundness, plus exact joint honest-branch sampling. Concrete-group interpretation, code refinement and the full OR distribution/security games are not formalized. It remains unreviewed by an external expert and is not a full DCS security proof.
 
 ## Reproducibility and review status
 
@@ -19,8 +19,10 @@ reconstructs the public statement and checks actual browser exports. Six fixed
 vectors cover both roles, both relations and both known-challenge simulators;
 three pairing anchors make the libraries’ normalization convention explicit.
 Symbolic certificates check eight polynomial identities, alongside exhaustive
-small-field extraction checks. These are machine-checked components, not a
-formalized security theorem or independent expert audit. The same research
+small-field extraction checks. The separate [Lean model](formal/) proves scoped
+field-algebra theorems and one exact joint sampling distribution; publication
+requires its kernel and axiom checks to pass on the same commit. None of this is a
+full DCS security theorem or independent expert audit. The same research
 effort produced both implementations. The [review packet](REVIEW-PACKET.md)
 lists the unresolved claims and exact reproduction commands.
 
@@ -43,7 +45,7 @@ The source writes a symmetric bilinear map e:G×G→Gₜ. BLS12-381 is an asymme
 | BLS signature | Boneh–Lynn–Shacham short signatures and hash-to-curve; Wang et al. (2011), §2 | Genuine BLS12-381 G₁/G₂ points, bilinearity and modified-message negative fixtures | Source-paper symmetric instantiation; exact author encoding |
 | Signed ElGamal | Wang–Xia–Zhao (2011), §4 and Xia (2013), Ch. 5 | Actual issuance, format validation, Carol decryption, independently checked pairing | Proof its Type-3 adaptation meets the paper's security model |
 | Unified OR confirmation | 2011 paper's Figs. 2–3, Xia (2013) Figs. 5.1–5.2 | Both role secrets yield accepted five-equation public checks; false claim is refused | Malicious-verifier/concurrent-ZK compiler and proof security |
-| Disavowal | 2011 paper's Figs. 4–5, Xia (2013) Figs. 5.3–5.4 | Source contradiction is regression-tested; independent *candidate* inequality OR algebra accepts false statements and rejects honest false denials of valid ones | A verified corrected published transcript, complete formal soundness/ZK/non-transferability proof and independent review |
+| Disavowal | 2011 paper's Figs. 4–5, Xia (2013) Figs. 5.3–5.4 | Source contradiction is regression-tested; candidate inequality relation has kernel-checked field-model completeness and OR special soundness, a sampling theorem, real-group extraction and adversarial tests | Author reconciliation, concrete-group/code refinement, full OR distribution and malicious/concurrent ZK/non-transferability proofs, independent review |
 | Recorded transcript | Sigma-protocol HVZK/simulation concepts and formal DCS definitions | Public-only simulators produce accepting math for false/true statements when they choose their own challenges | **No claim** that the actual browser interaction implements the original paper's full non-transferability security |
 | 2016 full verification | Xia et al. (2016), a DIFFERENT commitment + labeled CCA2 encryption construction | Separate 2016-oriented toy research under research/ | Not interchangeable; never mix implementation claims |
 

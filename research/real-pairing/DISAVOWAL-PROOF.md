@@ -1,7 +1,8 @@
 # Candidate disavowal correction: proof and implementation obligations
 
-Review date: 2026-10-18. **Original research derivation, with executable checks;
-not an author-approved erratum, mechanically verified proof, or full DCS security theorem.**
+Review date: 2026-10-18. **Original research derivation, with executable checks
+and a kernel-checked field model; not an author-approved erratum or full DCS
+security theorem.**
 
 This note establishes a narrowly stated mathematical argument for the local
 inequality OR protocol. It replaces the previous situation of completeness
@@ -123,6 +124,26 @@ The updated sampler includes zero for these values while keeping a, secret keys
 and beta exponents nonzero. This is an exact distribution argument, not a claim
 that a histogram or several passing simulations proves zero knowledge.
 
+## Kernel-checked mathematical model
+
+The [Lean project](formal/) formalizes completeness, the response-difference
+extractor (including its nonzero denominator), branch and OR two-special-soundness,
+and the unique-accepting-challenge consequence over an arbitrary field. Lean also
+checks simulator acceptance, the sampling bijections, and the exact joint
+honest-branch probability distribution over a finite field. The proof of the
+printed key-ratio contradiction is included.
+
+The model uses theoretical exponent coordinates; it does not expose or compute
+discrete logarithms in the browser. Its fourteen checked declarations permit
+only Lean’s standard logical axioms. Missing or incomplete proofs and added
+postulates fail the publication gate. Pinned tools and reproduction commands are
+in [formal/README.md](formal/README.md).
+
+This verifies the supplied mathematical statements, **not the entire JavaScript
+implementation or the full security theorem**. The interpretation in concrete
+groups, derivation from the issued object, full OR simulator-distribution proof
+and cryptographic security games still need formal treatment and review.
+
 ## Concrete implementation flaw found during this proof work
 
 The previous beta test used `gtPow(beta,Q)`. That helper reduces exponents
@@ -143,10 +164,10 @@ attack on a real issued object and checks several even challenge boundaries.
 
 - Independent mathematical review of this proof and reconciliation with the
   publication's intended correction; no publisher or author endorsement claimed.
-- A fully mechanized proof if the deliverable is to be described as formally
-  verified. [Symbolic algebra certificates](reference/check_algebra.py) check
-  polynomial components and small-field extraction cases; they do not formalize
-  the nonzero, distribution, composition or security-game arguments.
+- Extend the [kernel-checked field model](formal/) to the full OR transcript
+  distribution, concrete-group interpretation and implementation refinement.
+  The [symbolic algebra certificates](reference/check_algebra.py) and small-field
+  enumeration remain complementary checks, not substitutes for these obligations.
 - Malicious-verifier/concurrent zero knowledge and full DCS non-transferability;
   the straight-line fixed-challenge simulator above proves neither.
 - A reduction for the complete Type-3 DCS construction, including invisibility,
@@ -155,8 +176,9 @@ attack on a real issued object and checks several even challenge boundaries.
   and independent review of the [cross-library interoperability vectors](reference/).
 
 **Established here:** a written completeness, two-special-soundness and special
-HVZK argument for the specified local prime-order protocol, with executable
-extraction and attack regression tests. **Not established:** a verified correction
+HVZK argument for the specified local prime-order protocol, with kernel-checked
+field-model completeness, extraction, OR soundness and joint honest-branch
+sampling, plus executable extraction and attack regression tests. **Not established:** a verified correction
 of the complete published DCS scheme or production security.
 
 ## Additional implementation boundary checks

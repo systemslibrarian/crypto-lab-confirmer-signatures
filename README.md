@@ -6,6 +6,8 @@
 
 **Reproducible verification:** A [separate Python/py_ecc verifier](research/real-pairing/reference/) checks the same public transcripts using a different cryptographic library. CI reproduces fixed vectors, checks polynomial identities and 100,972 small-field extraction cases, tests tampering and verifies actual browser exports. This is not independent expert review or a machine-checked full security proof.
 
+**Kernel-checked mathematics:** The [Lean 4 proof project](research/real-pairing/formal/) proves completeness, explicit witness extraction and OR two-special-soundness in a field model, including the crucial nonzero denominator. It also proves the exact joint honest-branch sampling distribution. Fourteen declarations pass a restricted axiom gate; Pages publication now requires that proof check on the same commit. Concrete BLS12-381/code refinement, the full OR distribution and full DCS security games remain outside the formalization.
+
 **Security repair:** Proof work exposed a vacuous subgroup check: reducing the group-order exponent to zero let an order-two element support a false denial of a valid signature for even challenges. The verifier now uses raw subgroup exponentiation and validates group membership. The new regression reproduces that attack and requires rejection. This is why passing honest examples alone was insufficient.
 
 **Reading the history below:** Earlier symbolic and 2016-oriented experiments remain available, but they are separate constructions. Current real-pairing claims and remaining obligations are recorded in the [security ledger](research/real-pairing/SECURITY-MODEL.md).
@@ -38,7 +40,7 @@ This repository records the development brief and the cryptographic selection ga
 - [`RESEARCH-GATE.md`](RESEARCH-GATE.md) — scheme-selection prerequisites, literature and acceptance criteria.
 - [Crypto Lab master template](https://github.com/systemslibrarian/crypto-lab/blob/main/audits/_MASTER-TEMPLATE.md) — binding Build → Teach → Look → Accessibility → README → Deploy standard, to apply after research passes.
 
-**Non-goals for this stage:** claiming designated-confirmer signature correctness, presenting simulated proofs as genuine, deploying *unfinished DCS* as a complete lab, or adding a card to the main catalog. Publishing only the explicitly named ordinary-signature **research preview** is permitted and is not evidence that the DCS research gate passed.
+**Non-goals for this stage:** claiming designated-confirmer signature correctness, presenting simulated proofs as genuine, deploying *unfinished DCS* as a complete lab, or adding a card to the main catalog. Publishing the explicitly scoped ordinary-signature, symbolic and real-pairing **research previews** is permitted and is not evidence that the full DCS research gate passed.
 
 ---
 

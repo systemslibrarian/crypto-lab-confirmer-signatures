@@ -6,7 +6,7 @@ dual-key certificate, signed-ElGamal format, challenge split and every public
 confirmation or candidate disavowal equation. It accepts no private key.
 
 “Separate implementation” does not mean independent authorship, expert review,
-formal verification or audited cryptographic dependencies. These checks were
+formal verification of this Python program or audited cryptographic dependencies. These checks were
 prepared as part of the same research effort. py_ecc itself is experimental.
 
 From the repository root:
@@ -76,3 +76,8 @@ not evidence of secure parameters or a proof for all primes.
 
 CI runs these checks before Pages publication. See the [review packet](../REVIEW-PACKET.md)
 for obligations that still require an independent cryptographer.
+
+The separate [Lean project](../formal/) kernel-checks the abstract field-model
+soundness argument and joint honest-branch sampling distribution. It does not
+prove that this Python code implements that model; cross-library agreement and
+negative controls remain useful, separate evidence.

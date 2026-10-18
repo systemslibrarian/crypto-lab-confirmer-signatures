@@ -1,10 +1,6 @@
 name: Candidate disavowal — Lean proof kernel
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'research/real-pairing/formal/**'
-      - '.github/workflows/confirmer-formal-proof.yml'
+  workflow_call:
   workflow_dispatch:
 permissions:
   contents: read

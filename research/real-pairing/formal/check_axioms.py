@@ -5,7 +5,8 @@ from pathlib import Path
 text=Path(sys.argv[1]).read_text()
 expected={'completeness','differenceEquations','responseDifferenceNonzero','extraction',
  'branchSpecialSoundness','orSpecialSoundness','falseStatementUniqueChallenge',
- 'simulatorAccepts','maskEquiv','betaEquiv','printedBetaIsIdentity'}
+ 'simulatorAccepts','maskEquiv','betaEquiv','printedBetaIsIdentity',
+ 'uniformEquiv','honestRandomnessEquiv','honestBranchUniform'}
 allowed={'propext','Classical.choice','Quot.sound'}
 found={}
 pattern=r"'SignatureGate\.(\w+)' (?:depends on axioms: \[([^\]]*)\]|does not depend on any axioms)"

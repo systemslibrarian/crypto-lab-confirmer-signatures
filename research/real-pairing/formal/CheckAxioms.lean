@@ -10,3 +10,6 @@ import SignatureGate
 #print axioms SignatureGate.maskEquiv
 #print axioms SignatureGate.betaEquiv
 #print axioms SignatureGate.printedBetaIsIdentity
+#print axioms SignatureGate.uniformEquiv
+#print axioms SignatureGate.honestRandomnessEquiv
+#print axioms SignatureGate.honestBranchUniform

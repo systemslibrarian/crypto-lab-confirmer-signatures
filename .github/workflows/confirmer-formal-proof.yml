@@ -28,7 +28,7 @@ jobs:
           lake update
           git diff --exit-code -- lake-manifest.json
       - name: Download compiled mathematics dependencies
-        run: lake exe cache get Mathlib.Tactic.FieldSimp Mathlib.Tactic.LinearCombination Mathlib.Tactic.Ring Mathlib.Algebra.Field.Basic
+        run: lake exe cache get Mathlib.Tactic.FieldSimp Mathlib.Tactic.LinearCombination Mathlib.Tactic.Ring Mathlib.Algebra.Field.Basic Mathlib.Probability.Distributions.Uniform Mathlib.Probability.ProbabilityMassFunction.Constructions
       - name: Check theorem proofs with the Lean kernel
         run: lake build
       - name: Print and restrict theorem axiom dependencies
@@ -36,6 +36,7 @@ jobs:
           set -euo pipefail
           lake env lean CheckAxioms.lean | tee axioms.txt
           python3 check_axioms.py axioms.txt
+          python3 -m unittest discover -p test_axiom_guard.py -v
       - uses: actions/upload-artifact@v7
         if: always()
         with:

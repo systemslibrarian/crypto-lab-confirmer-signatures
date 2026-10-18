@@ -2,6 +2,8 @@ import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.LinearCombination
 import Mathlib.Tactic.Ring
 import Mathlib.Algebra.Field.Basic
+import Mathlib.Probability.Distributions.Uniform
+import Mathlib.Probability.ProbabilityMassFunction.Constructions
 
 /-!
 Candidate inequality OR protocol in exponent coordinates over an arbitrary field.
@@ -150,6 +152,32 @@ def betaEquiv (ratio : F) (hr : ratio≠0) : {a : F // a≠0} ≃ {beta : F // b
   invFun beta := ⟨beta.val/ratio,div_ne_zero beta.property hr⟩
   left_inv a := by apply Subtype.ext; dsimp; field_simp [hr]
   right_inv beta := by apply Subtype.ext; dsimp; field_simp [hr]
+
+/-- A permutation preserves the uniform finite probability distribution. -/
+theorem uniformEquiv {α : Type*} [Fintype α] [Nonempty α] (e : α ≃ α) :
+    (PMF.uniformOfFintype α).map e = PMF.uniformOfFintype α := by
+  classical
+  ext y
+  rw [PMF.map_apply]
+  rw [← e.symm.tsum_eq (fun a => if y = e a then PMF.uniformOfFintype α a else 0)]
+  simp [PMF.uniformOfFintype_apply]
+
+/-- Joint bijection, including the dependence of the response translation on a. -/
+def honestRandomnessEquiv (x ratio c : F) (hr : ratio≠0) :
+    ({a : F // a≠0} × (F × F)) ≃ ({beta : F // beta≠0} × (F × F)) where
+  toFun p := (betaEquiv ratio hr p.1, maskEquiv x p.1.val c p.2)
+  invFun p := ((betaEquiv ratio hr).symm p.1,
+    (maskEquiv x ((betaEquiv ratio hr).symm p.1).val c).symm p.2)
+  left_inv p := by simp
+  right_inv p := by simp
+
+/-- Exact joint distribution of (beta,u,v), for each fixed witness and challenge. -/
+theorem honestBranchUniform [Fintype F] [DecidableEq F]
+    (x ratio c : F) (hr : ratio≠0) :
+    (PMF.uniformOfFintype ({a : F // a≠0} × (F × F))).map
+      (honestRandomnessEquiv x ratio c hr) =
+    PMF.uniformOfFintype ({beta : F // beta≠0} × (F × F)) := by
+  exact uniformEquiv (honestRandomnessEquiv x ratio c hr)
 
 /-- The printed key-ratio beta is identity under the stated key relation. -/
 theorem printedBetaIsIdentity (d x a : F) : a*(d*x-d*x)=0 := by ring

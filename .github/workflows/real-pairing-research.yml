@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'research/real-pairing/**'
+      - 'tests/real_pairing_browser.py'
       - '.github/workflows/real-pairing-research.yml'
   workflow_dispatch:
 permissions:

@@ -76,7 +76,9 @@ jobs:
           grep -Fq 'The separate protocol where Carol proves a signature valid or invalid is <b>not yet implemented</b>' prototype/index.html
           grep -Fq '<small>NOT IMPLEMENTED</small>' prototype/index.html
           mkdir -p dist
-          cp prototype/index.html prototype/style.css prototype/app.mjs prototype/crypto.mjs dist/
+          cp prototype/entry.html dist/index.html
+          cp prototype/index.html dist/ordinary.html
+          cp prototype/style.css prototype/app.mjs prototype/crypto.mjs dist/
           mkdir -p dist/symbolic
           cp prototype/symbolic/index.html prototype/symbolic/app.mjs dist/symbolic/
           cp research/dcs-uv-symbolic.mjs dist/symbolic/dcs-uv-symbolic.mjs
@@ -86,7 +88,8 @@ jobs:
           grep -Fq 'id="attack-lab"' dist/symbolic/index.html
           grep -Fq 'id="forge"' dist/symbolic/index.html
           grep -Fq 'forgeWithKnownChallenge' dist/symbolic/dcs-uv-symbolic.mjs
-          grep -Fq 'interactive 2013 OR-confirmation workbench' dist/index.html
+          grep -Fq 'interactive 2013 OR-confirmation workbench' dist/ordinary.html
+          grep -Fq 'content="0; url=./real/"' dist/index.html
           touch dist/.nojekyll
           test -s dist/real/index.html
           grep -Fq 'REAL CRYPTOGRAPHIC ARITHMETIC — NOT A FINISHED OR SECURITY-PROVEN DCS' dist/real/index.html
@@ -126,14 +129,16 @@ jobs:
             if curl -fsSL --connect-timeout 7 --max-time 15 -H 'Cache-Control: no-cache' "$url" -o /tmp/revision.json; then
               if node -e 'const x=JSON.parse(require("node:fs").readFileSync("/tmp/revision.json","utf8"));process.exit(x.source_sha===process.argv[1]&&x.scope==="ecdsa-symbolic-and-real-pairing-research-only"&&x.repository===process.argv[2]?0:1)' "$GITHUB_SHA" "$GITHUB_REPOSITORY"; then
                 curl -fsSL --connect-timeout 7 --max-time 15 -H 'Cache-Control: no-cache' "${SITE}?audit=${GITHUB_SHA}-${i}" -o /tmp/preview.html
-                grep -Fq 'Chapter 01 is working. The full confirmer protocol is still being built.' /tmp/preview.html
-                grep -Fq 'The separate protocol where Carol proves a signature valid or invalid is <b>not yet implemented</b>' /tmp/preview.html
+                grep -Fq 'content="0; url=./real/"' /tmp/preview.html
+                curl -fsSL --connect-timeout 7 --max-time 15 -H 'Cache-Control: no-cache' "${SITE}ordinary.html?audit=${GITHUB_SHA}-${i}" -o /tmp/ordinary-preview.html
+                grep -Fq 'Chapter 01 is working. The full confirmer protocol is still being built.' /tmp/ordinary-preview.html
+                grep -Fq 'The separate protocol where Carol proves a signature valid or invalid is <b>not yet implemented</b>' /tmp/ordinary-preview.html
                 curl -fsSL --connect-timeout 7 --max-time 15 -H 'Cache-Control: no-cache' "${SITE}symbolic/?audit=${GITHUB_SHA}-${i}" -o /tmp/symbolic-preview.html
                 grep -Fq 'NOT SECURE CRYPTOGRAPHY OR A FINISHED DESIGNATED CONFIRMER SIGNATURE' /tmp/symbolic-preview.html
                 grep -Fq 'does <b>not</b> implement disavowal' /tmp/symbolic-preview.html
                 grep -Fq 'id="attack-lab"' /tmp/symbolic-preview.html
                 grep -Fq 'id="forge"' /tmp/symbolic-preview.html
-                grep -Fq 'interactive 2013 OR-confirmation workbench' /tmp/preview.html
+                grep -Fq 'interactive 2013 OR-confirmation workbench' /tmp/ordinary-preview.html
                 curl -fsSL --connect-timeout 7 --max-time 15 -H 'Cache-Control: no-cache' "${SITE}symbolic/dcs-uv-symbolic.mjs?audit=${GITHUB_SHA}-${i}" -o /tmp/served-symbolic.mjs
                 expected="$(node -p 'JSON.parse(require("fs").readFileSync("/tmp/revision.json","utf8")).symbolic_sha256')"
                 actual="$(sha256sum /tmp/served-symbolic.mjs | cut -d' ' -f1)"

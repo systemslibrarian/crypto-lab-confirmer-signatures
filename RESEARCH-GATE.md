@@ -1,6 +1,8 @@
 # Designated Confirmer Signatures — research gate (NOT YET PASSED)
 
-**Status: DCS research gate CLOSED. No complete designated-confirmer implementation, production security claim, DCS catalog card, or DCS deployment is approved. A separate, conspicuously labeled Chapter 01 ordinary-ECDSA-only research preview may be served by Pages; it cannot unlock any DCS chapter.**
+**Status (2026-10-18): full DCS research gate CLOSED. The owner has authorized a working educational demo and its own Advanced · Research Preview catalog card. This permits discoverability of Signature Gate's explicitly scoped real-pairing workbench, not a claim of a complete, independently reviewed or production-secure DCS.**
+
+The [current security ledger](research/real-pairing/SECURITY-MODEL.md) and [Lean proof scope](research/real-pairing/formal/) distinguish implemented computations, kernel-checked mathematics and unresolved scheme security. Older no-card/no-preview decisions in historical experiment notes are superseded only for this labeled research-preview listing; their mathematical limitations remain in force.
 
 This repository will not advertise ordinary signed-then-encrypted content as a designated confirmer signature. A browser animation with a button marked “confirm” does not establish either soundness or non-transferability.
 
@@ -21,10 +23,11 @@ A chosen, published and fully specified scheme must provide:
 
 A separately sourced [research module](research/dcs-uv-symbolic.mjs) now executes **Xia's 2013 Chapter 5** signed-ElGamal/BLS-shaped *symbolic* issuing equations and the two source-defined OR-confirmation challenge/response diagrams. A [clearly insecure visitor workbench](https://systemslibrarian.github.io/crypto-lab-confirmer-signatures/symbolic/) displays Bob's independent equation checks. This is **NOT the 2016 generic scheme** and cannot be silently combined with the 2013 Chapter 6/2016 CCA2-Paillier construction.
 
-The groups store **public discrete-log exponents**, and thus provide no cryptographic hiding or unforgeability. The extracted witnesses and proofs do not establish real pairings or concurrent zero knowledge. The printed 2013 disavowal Figures 5.3–5.4 contain an apparent non-identity/identity contradiction, explained and checked in [XIA2013-UNIFIED-CONFIRMATION.md](research/XIA2013-UNIFIED-CONFIRMATION.md). Until source reconciliation, a sound affirmative disavowal cannot be claimed. Consequently the **full DCS release gate remains CLOSED**; this research workbench is not a completed DCS exhibit.
+The groups store **public discrete-log exponents**, and thus provide no cryptographic hiding or unforgeability. The extracted witnesses and proofs do not establish real pairings or concurrent zero knowledge. The printed 2013 disavowal Figures 5.3–5.4 contain an apparent non-identity/identity contradiction, explained and checked in [XIA2013-UNIFIED-CONFIRMATION.md](research/XIA2013-UNIFIED-CONFIRMATION.md). The separate real-pairing candidate now has scoped mathematical evidence; it cannot be attributed to an author-approved correction without source reconciliation. Consequently the **full DCS release gate remains CLOSED**; this research workbench is not a completed DCS exhibit.
 
 ## What has been implemented — and what has not
 
+- **Real-pairing research demo:** [Signature Gate](research/real-pairing/) implements issuance, both confirmation roles, candidate inequality proofs, public transcript export and simulation experiments using BLS12-381. A second-library verifier and [Lean field-model proofs](research/real-pairing/formal/) supply scoped evidence. Full DCS security and independent expert review remain open.
 - **Implemented and tested:** [Chapter 01 ordinary-signature comparison](prototype/) uses real WebCrypto P-256 ECDSA/SHA-256. Alice signs fictional bytes; Bob and Dave independently import the exported public key and verify; tampered messages and wrong keys reject. Published RFC 6979 P-256/SHA-256 verification fixture and browser interaction checks pass.
 - **Added as research algebra, NOT a protocol:** [pi0-equality.mjs](research/pi0-equality.mjs) reproduces the §6.5.2 *e-component equality-of-encrypted-opening subrelation* with a distinct public verifier and positive/negative arithmetic fixtures. This partial calculation does **not** prove that the message commitment ψ opens with the same r, that u/v ciphertext fields are valid, or that the complete initial NIZK is sound or non-transferable; see [PI0-RELATION.md](research/PI0-RELATION.md).
 - **Added as algebraic preflight, NOT confirmation:** [pi1-relation.mjs](research/pi1-relation.mjs) checks the source's seven π1 witness equations on tiny arithmetic **using the private witness** and independent decrypt. It neither generates commitments/challenges/responses nor hides a witness. See [PI1-WITNESS-RELATION.md](research/PI1-WITNESS-RELATION.md).
@@ -47,7 +50,7 @@ The research-only [pi1-special-soundness.mjs](research/pi1-special-soundness.mjs
 
 ## Published foundations and candidate decision
 
-**Research triage completed; implementation gate still closed.** [SCHEME-SELECTION.md](SCHEME-SELECTION.md) compares the 2016 full-verification construction with the 2024 threshold construction and the Camenisch–Shoup building blocks. The 2016 full-verification DCS is the **primary paper candidate**, not yet a selected *implementation*; exact equations and an independent proof oracle are still missing. The 2024 threshold construction's abort-on-invalid path does **not** establish the affirmative disavowal proof demanded by this brief. No implementation or deployment has been approved.
+**Research triage completed; implementation gate still closed.** [SCHEME-SELECTION.md](SCHEME-SELECTION.md) compares the 2016 full-verification construction with the 2024 threshold construction and the Camenisch–Shoup building blocks. The 2016 full-verification DCS is the **primary paper candidate**, not yet a selected *implementation*; exact equations and an independent proof oracle are still missing. The 2024 threshold construction's abort-on-invalid path does **not** establish the affirmative disavowal proof demanded by this brief. This historical selection does not certify the separately approved real-pairing research preview.
 
 ## Published foundations to evaluate
 
@@ -68,10 +71,12 @@ The 2013 [Fubiao Xia thesis](https://etheses.bham.ac.uk/4579/1/Xia13PhD.pdf) (Ch
 - [ ] Rust/TypeScript or independent implementation oracle available to catch self-consistent algebraic errors.
 - [ ] Independent security review completed before any claim of full DCS correctness.
 
-## Narrowly permitted research preview (not DCS)
+## Permitted research preview and catalog listing
 
-To prevent a 404 for visitors inspecting progress, the separate [research-preview-pages.yml](.github/workflows/research-preview-pages.yml) is allowed to serve *only* four files copied verbatim from `prototype/`: `index.html`, `style.css`, `app.mjs` and `crypto.mjs`, plus `.nojekyll` and source-SHA `revision.json`. The workflow runs the research tests, exercises real P-256 signing in Chromium at desktop/mobile widths, and checks the served revision and the prominent `does not implement a designated confirmer signature` warning. It never copies `research/` toy proofs or provides Sign/Confirm/Disavow controls. **A successful preview publish is not a successful DCS publish**, and the main Crypto Lab catalogue must NOT gain a Confirmer Signatures card yet. If Pages is disabled at the repository settings level, the preview remains unavailable until its source is configured to GitHub Actions.
+The [preview workflow](.github/workflows/research-preview-pages.yml) publishes three explicitly bounded teaching experiences: the ordinary-signature comparison at `ordinary.html`, the insecure symbolic model at `symbolic/`, and the real-pairing candidate at `real/`. The project root opens `real/`, so the **Signature Gate** catalog card reaches the working demo directly.
+
+The card must say **Research Preview**, carry **Advanced** difficulty, and explain that full DCS security remains under review. Source-derived algorithm metadata must distinguish executable primitives from research claims. Publication requires the Lean proof/axiom gate and cryptographic/browser tests on the same commit, followed by live served-content checks. **A successful preview publication or catalog listing does not pass the full DCS security gate.**
 
 ## Required delivery gate
 
-Once the mathematics and references pass, follow [`brief.md`](brief.md) and the catalog's [master template](https://github.com/systemslibrarian/crypto-lab/blob/main/audits/_MASTER-TEMPLATE.md) for a complete, accessible Vite + TypeScript lab with real proof flows, known-answer tests, adversarial cases, mutation-checks, GitHub Actions gates and served-byte deployment verification. Until then, **no live lab and no main catalog card**.
+Once the mathematics and references pass, follow [`brief.md`](brief.md) and the catalog's [master template](https://github.com/systemslibrarian/crypto-lab/blob/main/audits/_MASTER-TEMPLATE.md) for a complete, accessible Vite + TypeScript lab with real proof flows, known-answer tests, adversarial cases, mutation-checks, GitHub Actions gates and served-byte deployment verification. Until then, the live demo and its catalog card remain explicitly labeled **Research Preview**, with no complete or production-secure DCS claim.

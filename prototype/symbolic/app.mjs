@@ -1,4 +1,4 @@
-import {keygen,issue,validFormat,extract,confirmBegin,verifierChallenge,confirmRespond,confirmVerify,securityLimit} from './dcs-uv-symbolic.mjs';
+import {keygen,issue,validFormat,extract,confirmBegin,verifierChallenge,confirmRespond,confirmVerifyEnvelope,securityLimit} from './dcs-uv-symbolic.mjs';
 const id=x=>document.getElementById(x);
 let keys=null, issued=null, busy=false,version=0;
 const buttons=['keys','issue','carol','alice','change'];
@@ -21,7 +21,7 @@ async function prove(role){
  const d=issued; const session=await confirmBegin({publicData:d,keys,role});
  // Bob's challenge sampled only AFTER prover's first message exists.
  const challenge=verifierChallenge();const response=confirmRespond(session,challenge);
- const verdict=confirmVerify({publicStatement:session.statement,firstMessage:session.firstMessage,challenge,response});
+ const verdict=await confirmVerifyEnvelope({publicData:d,firstMessage:session.firstMessage,challenge,response});
  const selected=role==='signer'?'Alice (signer)':'Carol (confirmer)';
  const lines=[`${selected} sent four first-message values:`,publicLine(session.firstMessage),`Bob selected challenge: ${challenge}`,`Response values:`,publicLine(response),'Bob recomputed these equations:',...Object.entries(verdict.checks).map(([k,v])=>`${k}: ${v?'MATCH':'REJECT'}`)];
  id('proof-data').textContent=lines.join('\n');

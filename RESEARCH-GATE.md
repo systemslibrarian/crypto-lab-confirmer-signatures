@@ -17,6 +17,12 @@ A chosen, published and fully specified scheme must provide:
 7. Negative controls: wrong message, wrong keys, altered proof messages, mismatched groups, malformed points, replayed challenge, and aborted sessions all fail closed.
 8. Threat-model honesty: a simulator can show transcript non-transferability only under a paper's security definition; one-browser role separation is NOT deployment-grade trust isolation.
 
+## Alternative publication studied: 2013 Chapter 5 unified-verification scheme
+
+A separately sourced [research module](research/dcs-uv-symbolic.mjs) now executes **Xia's 2013 Chapter 5** signed-ElGamal/BLS-shaped *symbolic* issuing equations and the two source-defined OR-confirmation challenge/response diagrams. A [clearly insecure visitor workbench](https://systemslibrarian.github.io/crypto-lab-confirmer-signatures/symbolic/) displays Bob's independent equation checks. This is **NOT the 2016 generic scheme** and cannot be silently combined with the 2013 Chapter 6/2016 CCA2-Paillier construction.
+
+The groups store **public discrete-log exponents**, and thus provide no cryptographic hiding or unforgeability. The extracted witnesses and proofs do not establish real pairings or concurrent zero knowledge. The printed 2013 disavowal Figures 5.3–5.4 contain an apparent non-identity/identity contradiction, explained and checked in [XIA2013-UNIFIED-CONFIRMATION.md](research/XIA2013-UNIFIED-CONFIRMATION.md). Until source reconciliation, a sound affirmative disavowal cannot be claimed. Consequently the **full DCS release gate remains CLOSED**; this research workbench is not a completed DCS exhibit.
+
 ## What has been implemented — and what has not
 
 - **Implemented and tested:** [Chapter 01 ordinary-signature comparison](prototype/) uses real WebCrypto P-256 ECDSA/SHA-256. Alice signs fictional bytes; Bob and Dave independently import the exported public key and verify; tampered messages and wrong keys reject. Published RFC 6979 P-256/SHA-256 verification fixture and browser interaction checks pass.

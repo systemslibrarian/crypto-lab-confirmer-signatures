@@ -30,6 +30,7 @@ Tests demonstrate that, under a fixed synthetic opening r=7 and decryption expon
 - An identical verifier challenge offers no pairwise extraction.
 - A separate first-message commitment with independently generated masks cannot be substituted for the original one.
 - Tampered transcript messages, malformed challenges and incorrect public ciphertext or claim fail closed instead of fabricating a secret.
+- **Crucial negative fixture:** in the deliberately tiny Paillier group, the encryption generator used by the proof has order 5. Changing the ciphertext label can change the full SHA-256-derived H(u,e,L) but leave the exponent modulo 5 unchanged, so all toy public equations and the extracted witness still pass under a DIFFERENT label. The tests preserve this surprising counterexample. It is not an authenticated label-binding construction and **must not be advertised as one**.
 - The special-soundness intuition concerns extraction under explicit conditions. It is NOT proof-of-knowledge security at meaningful strength: the challenge is TWO BITS and the group assumptions are intentionally violated.
 - No experiment establishes zero knowledge, interactive session protection, non-transferability, or affirmative disavowal. The public verifier still has its deliberate zero-challenge limitation.
 - The 2013 toy arithmetic is NOT claimed to match the unreconciled final 2016 journal DCS construction.

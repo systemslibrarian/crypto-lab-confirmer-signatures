@@ -24,5 +24,5 @@ test('source discrepancy does not authorize a live or complete DCS',()=>{
  assert.match(s,/implementation\/release gate remains \*\*CLOSED\*\*/);
  assert.equal(existsSync(new URL('.github/workflows/deploy.yml',root)),false);
  const page=read('prototype/index.html');
- assert.match(page,/does <b>not<\/b> implement a designated confirmer signature/);
+ assert.match(page,/The separate protocol where Carol proves a signature valid or invalid is <b>not yet implemented<\/b>/);
 });

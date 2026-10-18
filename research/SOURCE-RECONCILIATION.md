@@ -1,38 +1,41 @@
-# Source reconciliation — 2013 thesis versus 2016 journal introduction
+# Source reconciliation — Xia's 2013 thesis and final 2016 paper
 
-**Status: OPEN SPECIFICATION DISCREPANCY.** This document prevents thesis equations from being accidentally attributed to the final 2016 journal algorithm. It does **not** claim that a particular final protocol is missing a proof or that either paper is incorrect.
+**Status: OPEN SPECIFICATION DISCREPANCY for proof equations, parameters and security model.** The earlier FOUR-vs-FIVE component confusion is now **resolved at the published algorithm-inventory level**: the 2016 journal introduction abbreviates the issuing tuple, while its detailed Section 6 explicitly describes a five-component object including π0. This is NOT evidence that every 2013 proof equation or toy parameter choice carries over unchanged to the final 2016 scheme.
 
-## Materials actually examined
+## Primary sources examined
 
-1. **Complete thesis:** Fubiao Xia (2013), [*Designated Confirmer Signatures: Modelling, Design and Analysis*](https://etheses.bham.ac.uk/4579/1/Xia13PhD.pdf), Chapter 6 §§6.3 and 6.5. The explicit procedure \`DCSSign\` includes an initial consistency proof, written as \`π0\`, alongside a commitment, underlying signature, and separately encrypted openings.
-2. **Accessible journal article introduction and abstract:** Yingjie Xia, Xuejiao Liu, Fubiao Xia, Guilin Wang (2016), [*A reduction of security notions in designated confirmer signatures*](https://doi.org/10.1016/j.tcs.2015.12.025), *Theoretical Computer Science* **618**, pp. 1–20. The accessible **introductory overview** describes the output as the four components \`(φ, c1, c2, σ)\`, with a later zero-knowledge confirmation that the decrypted randomness opens the commitment.
-3. **Complete underlying proof building block:** Camenisch and Shoup (2003), [*Practical Verifiable Encryption and Decryption of Discrete Logarithms*](https://www.shoup.net/papers/verenc.pdf), §7.3. Its affine/verifiable decryption relations and invalidity OR cases are independently accessible, but **do not define the 2016 DCS tuple**.
+1. **Complete 2013 thesis:** Fubiao Xia, [Designated Confirmer Signatures: Modelling, Design and Analysis](https://etheses.bham.ac.uk/4579/1/Xia13PhD.pdf), Chapter 6 §§6.3 and 6.5; the 2013 thesis expressly issues a commitment, ordinary signature, two encrypted openings, and an initial equality subproof π0.
+2. **2016 journal indexed publication, introduction and detailed portions of §§6–7:** Yingjie Xia, Xuejiao Liu, Fubiao Xia, Guilin Wang, [A reduction of security notions in designated confirmer signatures](https://doi.org/10.1016/j.tcs.2015.12.025), *Theoretical Computer Science* **618**, pp. 1–20. The 2016 journal **introduction summary** describes four high-level objects. Crucially, its later §6 extraction algorithm explicitly consumes the five-object sequence including π0, and §7.2 defines the π0 equality-of-encrypted-opening subproof. These source-visible portions establish that the introduction was abbreviated; **we still lack a line-by-line independent transcription of the complete final article**.
+3. **Primary proof component:** Jan Camenisch and Victor Shoup, [Practical Verifiable Encryption and Decryption of Discrete Logarithms](https://www.shoup.net/papers/verenc.pdf), §7.3. Its verified-decryption and OR-invalidity building blocks are not a stand-alone DCS.
 
-## Difference we can establish, and difference we cannot
+## Resolved tuple issue versus unresolved full protocol
 
-| Source | Issuing object listed in accessible text | Proof described |
+| Source | Issuing object | What the evidence establishes |
 |---|---|---|
-| Xia 2013 thesis Chapter 6 full \`DCSSign\` | \`(ψ, σ, cS, cC, π0)\` — five listed objects | Explicit initial equality/consistency \`π0\`; separate later interactive confirmation/disavowal |
-| Xia et al. 2016 journal **introduction summary** | \`(φ, c1, c2, σ)\` — four listed objects | Interactive zero-knowledge proof after decrypting an opening; whether final §§6–7 also add \`π0\` is **unconfirmed** |
+| 2013 thesis §6.3 | Five listed objects: (ψ,σ,cS,cC,π0) | Explicit equality proof plus subsequent interactive confirmation and disavowal |
+| 2016 journal **introduction summary** | Four headline objects (φ,c1,c2,σ) | Editorial overview, NOT the final complete algorithm |
+| 2016 journal §6 Extract and §7.2 | Detailed algorithm includes (ψ,σ,c1,c2,π0) | π0 is present; §7.2 gives a subproof tying the two encrypted opening values via their e components |
 
-**What the source does not entitle us to infer:**
+**What this does NOT establish:**
 
-- The shorter journal introduction does **not** prove the actual algorithms in §§6–7 omit \`π0\`. Introductions can summarize or leave out auxiliary proof material.
-- Conversely, the complete **2013** \`DCSSign\` tuple does **not** prove the **2016** implementation necessarily has the same initial \`π0\`, equations, wire encoding, or challenge distributions.
-- The exact \`π0\` relation in the 2013 thesis visually links the two encrypted e components; the displayed equation does not explicitly mention the message commitment \`ψ\`. It is not safe to assert that our implemented \`π0\` subproof ties \`ψ\` to a claimed message. Independent negative tests intentionally demonstrate that it does not.
-- Camenisch–Shoup's affirmative OR proof is not automatically a complete 2016 \`Disavow\` algorithm.
+- The full 2016 byte encodings, exact challenge distributions, signatures, public statement, supported groups, proof bounds or malicious/concurrent-verifier compiler. Those cannot be inferred from a summarized formula.
+- **Commitment linkage:** the π0 relation explicitly checks equality of the encrypted openings. The verifier equation shown in §7.2 contains e1/e2 and key elements, NOT ψ. It does **not** prove by itself that ψ is a commitment to the *claimed message*. The issue is **not** “missing π0”; it is the exact relationship between π0 and the rest of the verification protocol.
+- **Ciphertext validity:** the e-component equality proof does **not** validate complete u/e/v triples, ciphertext labels or recipient proof rules. Separate validation is mandatory.
+- **Disavowal:** Camenisch–Shoup §7.3 describes special OR and exact-range machinery. Our existing four-way local diagnostic is NOT an affirmative sound disavowal proof.
+- **Non-transferability:** a basic three-move protocol, even with an algebraically correct public verifier, does NOT prove the full security notion for arbitrary/malicious interacting verifiers.
 
-## Impact on the implementation and security gate
+## Source-aligned code status
 
-Our current \`research/\` executable toy arithmetic is **2013-thesis-inspired** and built from **2003 Camenisch–Shoup source relations**; it is not claimed to implement Xia et al.'s final 2016 DCS. The research lab can continue to test algebra and disavowal predicates but cannot label any of those exercises **“2016 DCS issuance,” “2016 complete π0,” “2016 Confirm,” or “2016 Disavow.”**
+The [toy issuance path](issued-envelope-toy.mjs) now computes ψ, signs ψ with a *real* WebCrypto ECDSA signature, encrypts the same toy opening for S and C, and checks a toy π0 e-component equality proof. The [research confirmation orchestrator](toy-confirmation-session.mjs) privately decrypts an opening and runs the seven-equation toy π1/π2 precursor with an independent public-only checker. Neither is a source-compliant DCS.
 
-**Version-specific acceptance:** If we choose to implement the **2013 scheme**, its \`π0\` requirement remains mandatory, along with all actual proof statements and their correct security parameters. If we instead implement the **2016 scheme**, the decision must be made only after obtaining and scrutinizing the **complete final §§6–7 and security appendix**, recording every issued item and protocol obligation actually specified there. Neither a four-part object nor a five-part object should be accepted on the basis of an overview or guess.
+This implementation uses n=11×23, insecure parameters, locally selected label/encoding rules, intentionally tiny challenges, and does not run the final proof compiler. Its positive tests prove execution of the stated toy algebra and ECDSA adapter; its negative tests show the missing binding and soundness conditions. **Do not interpret a partial test pass as production or full DCS validity.**
 
-## To close this discrepancy
+## Remaining gate for a genuine full implementation
 
-- [ ] Obtain a legally accessible **complete publisher/author manuscript** of the final 2016 article, especially §§6–7 and the proof appendix. The publisher's indexed introduction does **not** replace the full algorithms.
-- [ ] Make an explicit one-page, line-by-line table of 2016 \`KGen, DCSSign, Confirm(S,V), Confirm(C,V), Disavow(S,V), Disavow(C,V), Extract\` versus 2013 §6.3. Include **the full \`π0\` status**.
-- [ ] Check all witnesses, commitment relation, ciphertext label, proof statement, challenge distribution, and security model. If there is a legitimate version change, choose **one** of the actual constructions rather than mixing algorithms.
-- [ ] Independent mathematical review of transcript equations and source scope before enabling any DCS verdict or live deployment.
+- [ ] Obtain/review the COMPLETE final 2016 §§6–7 and Appendix A, not only indexed excerpts; fix source lines for Setup, DCSSign, π0, π1, π2, Confirm(S,V), Confirm(C,V), both Disavow protocols and Extract.
+- [ ] Pin canonical statement / label encoding, group assumptions, exact witness intervals, challenge ranges, session binding and proof security model. Explain the counterintuitive printed range bound; do not relax it to get green tests.
+- [ ] Implement independently checked complete π0 and the required concurrent-ZK transformations, with genuine security parameters.
+- [ ] Implement affirmative Camenisch–Shoup disavowal OR proof and exact-interval proof; a rejected confirmation is not sufficient.
+- [ ] Obtain independent test oracle and specialist review against the final published construction before shipping the full interactive UI.
 
-**Current decision:** the 2016 specification reconciliation gate is **OPEN / BLOCKING**; the DCS implementation/release gate remains **CLOSED**. The 49 passing research tests do not settle the papers' differences.
+**Decision: issuance inventory reconciled, full protocol implementation/release gate remains CLOSED.** The original four-part introductory wording **does not** prove omission of π0; the detailed paper includes it. This correction is an evidence improvement, not a release approval.

@@ -177,3 +177,33 @@ export async function confirmVerifyEnvelope({publicData,firstMessage,challenge,r
 }
 /** The public values equal *exponents* in this model. This destroys secrecy! */
 export const securityLimit = 'Public group-element exponents reveal all discrete logarithms. These are real modular identities but NOT cryptographic proof security.';
+
+/**
+ * Deliberate research FORGERY: an adversary picks Bob's challenge before
+ * generating the purported prover-first message. No private keys are used.
+ * The same public equations can pass for an invalid message if the order
+ * is reversed. This is NOT a valid protocol run or a secure DCS attack.
+ */
+export async function forgeWithKnownChallenge({publicData,forgedMessage,chosenChallenge}={}){
+  if(!(await validFormat(publicData)))throw new Error('Cannot forge against an invalid symbolic envelope');
+  if(typeof forgedMessage!=='string'||!forgedMessage.trim()||forgedMessage===publicData.message)
+    throw new TypeError('Choose a different fictional message to forge');
+  if((await hashMessage(forgedMessage))===(await hashMessage(publicData.message)))
+    throw new Error('Tiny group hash collision; choose a different fictional statement');
+  const c=chosenChallenge===undefined?verifierChallenge():checked(chosenChallenge);
+  const alteredData=Object.freeze({...publicData,message:forgedMessage});
+  const st=await statement(alteredData);
+  // Wrong order on purpose: choose response and challenge shares first,
+  // then calculate first-message commitments to make the checks hold.
+  const b1=randScalar(),b2=randScalar(),c1=randScalar(),c2=mod(c-c1);
+  const response=Object.freeze({b1,b2,c1,c2});
+  const firstMessage=Object.freeze({
+    z1:mod(st.B1*b1+st.A1*c1),z2:mod(st.D1*b1+st.C1*c1),
+    z3:mod(st.B2*b2+st.A2*c2),z4:mod(st.D2*b2+st.C2*c2)
+  });
+  return Object.freeze({
+    publicData:alteredData,firstMessage,response,chosenChallenge:c,
+    status:'FORGERY WITH EARLY CHALLENGE',
+    warning:'The first message was fabricated AFTER choosing c: this is NOT a valid interactive exchange.'
+  });
+}

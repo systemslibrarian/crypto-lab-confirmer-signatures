@@ -67,7 +67,7 @@ async function run(where,action){if(busy)return;busy=true;render();
  finally{busy=false;render();}
 }
 function go(n){chapter=n;render();focusHeading(['issue-heading','proof-heading','alter-heading','eve-heading'][n]);}
-function view(name){mode=name;render();$('global-status').textContent='View changed: '+$('mode-'+name).textContent;
+function view(name){mode=name;$('equations').open=name==='explore';render();$('global-status').textContent='View changed: '+$('mode-'+name).textContent;
  if(name==='research')focusHeading('research-heading');
 }
 for(const name of ['guided','explore','research'])$('mode-'+name).onclick=()=>view(name);

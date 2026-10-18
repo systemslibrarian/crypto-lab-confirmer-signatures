@@ -10,7 +10,25 @@
 - Signed ElGamal as in Wang–Xia–Zhao (2011) / Xia (2013): σ₁ = r·Y꜀₁, σ₂ = σ+r·G₁, signature-format challenge s=H₀(k·Y꜀₁,σ₁,σ₂), response t=k+s·r. The H₀ encoding/domain is an explicitly noted LOCAL choice. The format proof DOES NOT reveal whether a message's underlying BLS signature is valid.
 - Carol's private extraction σ = σ₂ − x꜀⁻¹·σ₁ followed by a fresh, independent pairing validity test.
 - Both positive OR-verification branches from §5.5: A=e(σ₂,Y꜀₂)/e(σ₁,G₂), B₁=e(H(m),Yₛ₂), B₂=e(H(m),Y꜀₂), with A=B₁^x꜀ OR A=B₂^xₛ and the corresponding public-key equations. Real first-message commitments, a verifier-supplied challenge and independent response checking.
-- A separately declared **research candidate** of the inequality/disavowal OR relation. It uses a correction DERIVED from the intended inequality statement, not a protocol that can legitimately be attributed verbatim to the source's published Figure 4/5 or Figure 5.3/5.4. Independent arithmetic fixtures test completeness for honest toy decisions and rejection for dishonest changes; a written completeness, two-special-soundness and special honest-verifier zero-knowledge argument is now available in [DISAVOWAL-PROOF.md](DISAVOWAL-PROOF.md), with executable witness extraction. It is not independently reviewed or mechanically verified, and is not a full DCS security proof.
+- A separately declared **research candidate** of the inequality/disavowal OR relation. It uses a correction DERIVED from the intended inequality statement, not a protocol that can legitimately be attributed verbatim to the source's published Figure 4/5 or Figure 5.3/5.4. Independent arithmetic fixtures test completeness for honest research instances and rejection for dishonest changes; a written completeness, two-special-soundness and special honest-verifier zero-knowledge argument is now available in [DISAVOWAL-PROOF.md](DISAVOWAL-PROOF.md), with executable witness extraction. It is not independently reviewed or mechanically verified, and is not a full DCS security proof.
+
+## Reproducibility and review status
+
+The [separate Python verifier](reference/) uses py_ecc 8.0.0 instead of Noble,
+reconstructs the public statement and checks actual browser exports. Six fixed
+vectors cover both roles, both relations and both known-challenge simulators;
+three pairing anchors make the libraries’ normalization convention explicit.
+Symbolic certificates check eight polynomial identities, alongside exhaustive
+small-field extraction checks. These are machine-checked components, not a
+formalized security theorem or independent expert audit. The same research
+effort produced both implementations. The [review packet](REVIEW-PACKET.md)
+lists the unresolved claims and exact reproduction commands.
+
+The challenge and proof masks use the entire scalar field, including zero.
+Identity proof commitments are allowed; identity registered keys are rejected.
+A single-use exchange enforces commitment → challenge → response locally. All
+roles still share one browser, so this does not establish device isolation or
+network/session security.
 
 ## Why Type-3 is an ADAPTATION, not the 2011/2013 implementation
 
@@ -20,7 +38,7 @@ The source writes a symmetric bilinear map e:G×G→Gₜ. BLS12-381 is an asymme
 
 ## Paper and implementation audit matrix
 
-| Mechanism or claim | What is published | Current independent evidence | What remains missing |
+| Mechanism or claim | What is published | Current implementation evidence | What remains missing |
 |---|---|---|---|
 | BLS signature | Boneh–Lynn–Shacham short signatures and hash-to-curve; Wang et al. (2011), §2 | Genuine BLS12-381 G₁/G₂ points, bilinearity and modified-message negative fixtures | Source-paper symmetric instantiation; exact author encoding |
 | Signed ElGamal | Wang–Xia–Zhao (2011), §4 and Xia (2013), Ch. 5 | Actual issuance, format validation, Carol decryption, independently checked pairing | Proof its Type-3 adaptation meets the paper's security model |

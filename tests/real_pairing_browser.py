@@ -103,6 +103,8 @@ class RealPairingBrowser(unittest.TestCase):
                     page.locator('#mode-explore').click()
                     expect(page.locator('#issue-panel')).to_be_visible()
                     expect(page.locator('#eve-panel')).to_be_visible()
+                    self.assertTrue(page.locator('#equations').evaluate('e=>e.open'))
+                    self.assertIn('z_pair = β^c',page.locator('#equations').inner_text())
                     # Editing the source statement must invalidate every old result/export.
                     page.locator('#message').fill('A fresh fictional agreement.')
                     expect(page.locator('#begin-confirm')).to_be_disabled()

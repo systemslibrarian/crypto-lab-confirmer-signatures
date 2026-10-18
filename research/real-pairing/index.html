@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width,initial-scale=1">
+ <meta name="theme-color" content="#07171d">
+ <meta name="description" content="Test actual BLS12-381 designated-confirmer signature equations, challenge-response confirmation, and a research candidate invalidity proof; inspect what security has and has not been established.">
+ <title>Signature Gate | Real Pairing Research Workbench</title>
+ <style>
+  :root{color-scheme:dark;--bg:#07171d;--surface:#102c33;--surface2:#14373f;--line:#436675;--ink:#eaf6f5;--muted:#c2d6dd;--blue:#9dd9fc;--green:#b8efc5;--amber:#ffe0a3;--red:#ffbdae;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px}
+  *{box-sizing:border-box}body{margin:0;color:var(--ink);background:radial-gradient(ellipse at 85% -20%,#214858,transparent 52%),var(--bg);line-height:1.56}
+  .skip{position:absolute;top:-100px;left:10px;padding:10px;background:var(--blue);color:#06202a;z-index:10}.skip:focus{top:8px}
+  header,main,footer{max-width:1180px;margin:auto;padding:1.15rem clamp(1rem,3vw,2rem)}
+  nav{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;border-bottom:1px solid var(--line);padding-bottom:.85rem}
+  a{color:var(--blue);text-underline-offset:.18em}a:hover{color:#fff}a:focus-visible,button:focus-visible,textarea:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
+  h1{font-size:clamp(1.8rem,4.7vw,3.1rem);line-height:1.12;letter-spacing:-.035em;margin:.6rem 0}h2{font-size:clamp(1.25rem,2.4vw,1.65rem);line-height:1.25;margin:.25rem 0 .8rem}h3{font-size:1.05rem;margin:.5rem 0}
+  p{max-width:78ch}.eyebrow{font-size:.68rem;letter-spacing:.18em;font-weight:850;text-transform:uppercase;color:var(--blue);margin:0}
+  .lead{font-size:1.13rem;max-width:72ch;color:#d8eaf0}.scope{margin:1.3rem 0;border:1px solid #a6854c;background:#30271b;padding:1rem 1.2rem;border-radius:10px;color:#fff0cf}
+  .scope b{color:#ffe5ac}.pill{display:inline-block;border:1px solid var(--line);border-radius:100px;padding:.25rem .6rem;font-size:.75rem;margin:.3rem .3rem .3rem 0;color:var(--muted);background:#0b2930}
+  .story{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem}.character{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--blue);padding:.85rem 1rem;border-radius:9px;min-width:0}.character b{display:block}.character span{font-size:.83rem;color:var(--muted)}
+  .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:1.5rem}.card{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:1.15rem;min-width:0}.card.full{grid-column:1/-1}
+  .card>p:first-of-type{margin-top:.4rem}.step{font-size:.67rem;letter-spacing:.14em;color:var(--blue);font-weight:850}.muted{color:var(--muted);font-size:.92rem}.mini{font-size:.78rem;color:var(--muted)}
+  button{font:750 .92rem/1.3 inherit;min-height:44px;border-radius:8px;padding:.72rem 1rem;margin:.25rem .3rem .25rem 0;cursor:pointer;background:var(--blue);border:1px solid var(--blue);color:#061b24}
+  button.secondary{background:transparent;color:var(--blue)}button:disabled{opacity:.5;cursor:not-allowed}
+  textarea{width:100%;resize:vertical;min-height:90px;border:1px solid #77939d;border-radius:9px;padding:.8rem;background:#071b21;color:var(--ink);font:inherit}
+  label{display:block;font-weight:700;font-size:.9rem;margin:.8rem 0 .35rem}
+  .output{background:#061b21;border:1px solid #4b727e;border-radius:8px;padding:.8rem .95rem;white-space:pre-wrap;overflow-wrap:anywhere;min-height:3rem;font:13px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;color:#d8eaff}
+  .status{border-left:4px solid var(--blue);padding:.8rem 1rem;background:var(--surface2);border-radius:7px;font-weight:700}.status[data-kind="pass"]{border-color:var(--green);color:var(--green)}.status[data-kind="warn"]{border-color:var(--amber);color:var(--amber)}.status[data-kind="reject"]{border-color:var(--red);color:var(--red)}
+  .teach{background:#0e303a;border-left:3px solid var(--blue);padding:.75rem 1rem;border-radius:5px}
+  .guess{border:1px dashed #65858e;padding:.7rem 1rem;border-radius:8px;margin:.85rem 0}.guess legend{font-weight:750}.guess label{display:inline-flex;align-items:center;gap:.35rem;margin:.4rem .7rem .2rem 0}.guess input{accent-color:var(--blue)}
+  details{margin:.65rem 0;padding:.6rem .8rem;border-radius:8px;background:#0b2530;border:1px solid var(--line)}summary{cursor:pointer;font-weight:750;color:var(--blue)}
+  .paper{border-bottom:1px solid var(--line);padding:.6rem 0}.paper small{display:block;color:var(--muted)}
+  footer{border-top:1px solid var(--line);margin-top:1.2rem;text-align:center;color:var(--muted);font-size:.85rem}
+  @media(max-width:800px){.story{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:670px){.cards{grid-template-columns:1fr}.card.full{grid-column:auto}nav{flex-direction:column}.story{grid-template-columns:1fr 1fr}}
+  @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+ </style>
+ <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to research workbench</a>
+<header>
+ <nav aria-label="Research navigation"><strong><a href="https://crypto-lab.systemslibrarian.dev/">CRYPTO LAB</a> / SIGNATURE GATE</strong><span><a href="../symbolic/">Symbolic model</a> · <a href="https://github.com/systemslibrarian/crypto-lab-confirmer-signatures">Source and tests</a></span></nav>
+ <p class="eyebrow" style="margin-top:1.5rem">REAL BLS12-381 GROUPS / EXPERIMENTAL PROTOCOL</p>
+ <h1>Who can prove Alice signed it?</h1>
+ <p class="lead">Alice privately signs an agreement. Bob asks Carol to prove the signature is valid—or prove the alleged signature is invalid. Try both using <strong>real elliptic-curve pairings</strong>, then discover why a recorded transcript alone can be misleading.</p>
+ <span class="pill">Actual BLS12-381 G₁ · G₂ · Gₜ</span><span class="pill">Signed ElGamal</span><span class="pill">Interactive OR proofs</span><span class="pill">Research — not audited DCS</span>
+</header>
+<main id="main">
+ <section class="scope" id="research-scope" aria-label="Security scope"><b>REAL CRYPTOGRAPHIC ARITHMETIC — NOT A FINISHED OR SECURITY-PROVEN DCS.</b> The BLS12-381 group and pairing operations are real. This is an explicit <strong>Type-3 adaptation</strong> of the 2011/2013 symmetric-pairing construction, with a new dual-key consistency proof. The invalidity proof uses a mathematically reconstructed candidate relation because the published diagrams appear internally inconsistent. Non-transferability, malicious/concurrent-verifier zero knowledge, and the final full scheme have <b>not</b> been independently proved or audited. Use fictional statements only.</section>
+ <section aria-label="Participants">
+  <div class="story">
+   <div class="character"><b>Alice — signer</b><span>Creates a BLS signature then encrypts it for Carol</span></div>
+   <div class="character"><b>Carol — confirmer</b><span>Can decrypt and participate in proof protocols</span></div>
+   <div class="character"><b>Bob — verifier</b><span>Chooses the challenge AFTER receiving the proof commitment</span></div>
+   <div class="character"><b>Dave — observer</b><span>Sees a transcript but cannot assume how its challenge was chosen</span></div>
+  </div>
+ </section>
+ <div class="cards">
+  <section class="card" aria-labelledby="issue-heading">
+   <p class="step">EXPERIMENT 01 / ISSUE</p><h2 id="issue-heading">Alice seals an agreement</h2>
+   <p>Generate separate keys, sign a fictional message with a real BLS12-381 point, and form a signed-ElGamal encryption for Carol.</p>
+   <label for="message">Fictional statement</label>
+   <textarea id="message" maxlength="600" rows="3">The library loan was returned.</textarea>
+   <button id="issue" type="button">Issue signed object</button>
+   <button id="reset" class="secondary" type="button">Reset</button>
+   <p id="issue-status" class="status" role="status" aria-live="polite">No issued object yet.</p>
+   <details><summary>See real cryptographic evidence</summary><div id="issue-math" class="output">Awaiting issuance.</div></details>
+  </section>
+  <section class="card" aria-labelledby="confirm-heading">
+   <p class="step">EXPERIMENT 02 / CONFIRM</p><h2 id="confirm-heading">Can Carol or Alice prove it?</h2>
+   <p>Carol and Alice know different secret keys. Each can respond to Bob's fresh challenge using a five-equation OR proof. Bob never receives their secret.</p>
+   <button id="confirm-carol" type="button" disabled>Ask Carol to confirm</button>
+   <button id="confirm-alice" class="secondary" type="button" disabled>Ask Alice to confirm</button>
+   <p id="confirm-status" class="status" role="status" aria-live="polite">Issue the signature first.</p>
+   <details><summary>Inspect Bob's verification equations</summary><div id="confirm-math" class="output">No proof transcript yet.</div></details>
+  </section>
+  <section class="card" aria-labelledby="deny-heading">
+   <p class="step">EXPERIMENT 03 / INVALIDITY</p><h2 id="deny-heading">What if someone changes the agreement?</h2>
+   <p>The encrypted object stays the same, but Bob's claimed message changes. Carol can use a separately checked <strong>inequality OR-proof candidate</strong>. It isn't enough to say “confirmation failed.”</p>
+   <button id="alter" class="secondary" type="button" disabled>Alter claimed message</button>
+   <button id="deny-carol" type="button" disabled>Carol: prove inequality</button>
+   <button id="deny-alice" class="secondary" type="button" disabled>Alice: prove inequality</button>
+   <p id="deny-status" class="status" role="status" aria-live="polite">No altered statement yet.</p>
+   <p class="mini">The proof formula is a tested research reconstruction, NOT a publisher-verified repair to the printed disavowal diagrams.</p>
+   <details><summary>Inspect candidate mathematical evidence</summary><div id="deny-math" class="output">No inequality proof yet.</div></details>
+  </section>
+  <section class="card" aria-labelledby="sim-heading">
+   <p class="step">EXPERIMENT 04 / CAN EVE CHEAT?</p><h2 id="sim-heading">Can a convincing screenshot be fake?</h2>
+   <p>A dishonest transcript author can compute numbers that satisfy the public equations after choosing Bob's challenge themselves. Can you tell whether Bob genuinely took part?</p>
+   <fieldset class="guess"><legend>Predict the result</legend>
+    <label><input type="radio" name="prediction" value="pass" checked> The math will pass</label>
+    <label><input type="radio" name="prediction" value="reject"> The math will reject</label>
+   </fieldset>
+   <button id="simulate" type="button" disabled>Have Eve forge a transcript</button>
+   <p id="simulate-status" class="status" role="status" aria-live="polite">No experiment yet.</p>
+   <p class="teach"><strong>What this actually teaches:</strong> Checking recorded equations does not establish that a real verifier chose the challenge independently. That distinction is why proof simulation and precise non-transferability definitions matter.</p>
+   <details><summary>See the simulated proof evidence</summary><div id="simulate-math" class="output">No simulated transcript yet.</div></details>
+  </section>
+  <section class="card full" aria-labelledby="audit-heading">
+   <p class="step">THE AUDIT SHELF / FOLLOW THE PAPERS</p><h2 id="audit-heading">What comes from the papers—and what does not?</h2>
+   <div class="paper"><strong>Wang, Xia & Zhao (2011) — signed-ElGamal + BLS and unified verification</strong><small><a href="https://eprint.iacr.org/2011/182">IACR ePrint 2011/182</a>. Source for the signed-ElGamal design and symmetric-pairing OR relations. Our Type-3 version is an adaptation, not the paper's original instantiation.</small></div>
+   <div class="paper"><strong>Fubiao Xia (2013) — confirmation/disavowal diagrams and security definitions</strong><small><a href="https://etheses.bham.ac.uk/4579/1/Xia13PhD.pdf">University of Birmingham thesis, Chapter 5</a>. Printed disavowal β expressions appear inconsistent with its C=Dˣ relation. Our inequality proof is clearly identified as a candidate reconstruction.</small></div>
+   <div class="paper"><strong>Xia et al. (2016) — a different full-verification construction</strong><small><a href="https://doi.org/10.1016/j.tcs.2015.12.025">Theoretical Computer Science 618</a>. Commitment + labeled encryption construction. Kept separate: this workbench does not claim to implement the 2016 construction.</small></div>
+   <div class="paper"><strong>Camenisch & Shoup (2003) — verifiable decryption and OR invalidity proofs</strong><small><a href="https://www.shoup.net/papers/verenc.pdf">Author-hosted paper, §7.3</a>. Separate exact-range/OR building blocks, not interchangeable with this 2013 scheme.</small></div>
+   <details><summary>Research boundaries and next verification gates</summary>
+    <p>The browser generates real cryptographic group elements, but that alone does not establish complete zero knowledge or non-transferability. Our dual G₁/G₂ key certificate and inequality reconstruction require independent formal review; the original schemes' malicious/concurrent verifier models and full disavowal correctness remain open. No production use, sensitive messages, or certification claims.</p>
+   </details>
+  </section>
+ </div>
+</main>
+<footer><p>Research demonstration — all calculations local in your browser, no accounts or server plaintext. Not an audited production cryptographic protocol.</p><p>So whether you eat or drink or whatever you do, do it all for the glory of God. — 1 Corinthians 10:31</p></footer>
+<noscript>JavaScript required for the real-pairing computations.</noscript>
+</body></html>

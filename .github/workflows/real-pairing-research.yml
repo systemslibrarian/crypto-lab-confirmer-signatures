@@ -35,7 +35,8 @@ jobs:
         run: |
           set -euo pipefail
           test -s dist/real/index.html
-          grep -Fq 'REAL CRYPTOGRAPHIC ARITHMETIC — NOT A FINISHED OR SECURITY-PROVEN DCS' dist/real/index.html
+          grep -Fq 'Real cryptography. Experimental protocol. Built for learning and research.' dist/real/index.html
+          grep -Fq 'These checks do not establish the security of the complete designated-confirmer signature scheme.' dist/real/index.html
           grep -Fq 'candidate reconstruction' dist/real/index.html
           find dist/real/assets -name '*.js' -size +10k | grep -q .
       - uses: actions/setup-python@v6

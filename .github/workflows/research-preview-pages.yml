@@ -92,7 +92,8 @@ jobs:
           grep -Fq 'content="0; url=./real/"' dist/index.html
           touch dist/.nojekyll
           test -s dist/real/index.html
-          grep -Fq 'REAL CRYPTOGRAPHIC ARITHMETIC — NOT A FINISHED OR SECURITY-PROVEN DCS' dist/real/index.html
+          grep -Fq 'Real cryptography. Experimental protocol. Built for learning and research.' dist/real/index.html
+          grep -Fq 'These checks do not establish the security of the complete designated-confirmer signature scheme.' dist/real/index.html
           REAL_ASSET="$(find dist/real/assets -maxdepth 1 -type f -name '*.js' | head -n 1)"
           test -s "$REAL_ASSET"
           REAL_ASSET_NAME="$(basename "$REAL_ASSET")"
@@ -144,7 +145,8 @@ jobs:
                 actual="$(sha256sum /tmp/served-symbolic.mjs | cut -d' ' -f1)"
                 test "$expected" = "$actual"
                 curl -fsSL --connect-timeout 7 --max-time 15 -H 'Cache-Control: no-cache' "${SITE}real/?audit=${GITHUB_SHA}-${i}" -o /tmp/real-preview.html
-                grep -Fq 'REAL CRYPTOGRAPHIC ARITHMETIC — NOT A FINISHED OR SECURITY-PROVEN DCS' /tmp/real-preview.html
+                grep -Fq 'Real cryptography. Experimental protocol. Built for learning and research.' /tmp/real-preview.html
+                grep -Fq 'These checks do not establish the security of the complete designated-confirmer signature scheme.' /tmp/real-preview.html
                 grep -Fq 'candidate reconstruction' /tmp/real-preview.html
                 grep -Fq 'id="challenge-eve"' /tmp/real-preview.html
                 grep -Fq 'id="download"' /tmp/real-preview.html

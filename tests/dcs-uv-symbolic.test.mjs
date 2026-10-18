@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {webcrypto} from 'node:crypto';
-import {keygen,issue,validFormat,extract,statement,confirmBegin,verifierChallenge,confirmRespond,confirmVerify,confirmVerifyEnvelope,mod,SYMBOLIC,securityLimit} from '../research/dcs-uv-symbolic.mjs';
+import {keygen,issue,validFormat,extract,statement,confirmBegin,verifierChallenge,confirmRespond,confirmVerify,confirmVerifyEnvelope,forgeWithKnownChallenge,mod,SYMBOLIC,securityLimit} from '../research/dcs-uv-symbolic.mjs';
 if(!globalThis.crypto)globalThis.crypto=webcrypto;
 const keys=()=>keygen({signerSecret:73n,confirmerSecret:29n});
 const init=async()=>{const k=keys();const d=await issue({message:'Fictional library agreement',keys:k,r:21n,k:37n});return {keys:k,publicData:d};};
@@ -122,4 +122,42 @@ test('negative claim: if prover chooses verifier challenge AFTER first message, 
  assert.equal(forged.equationsHold,true);
  // This is NOT an honest 3-move exchange. Challenge must be selected by Bob
  // after receiving the prover commitment, not selected by the adversary.
+});
+
+test('false-message proofs can pass arithmetic when Eve controls the challenge before her first message',async()=>{
+ const {publicData:d,keys:k}=await init();
+ const fake=await forgeWithKnownChallenge({publicData:d,forgedMessage:'Not the library agreement',chosenChallenge:39n});
+ assert.equal(fake.publicData.message,'Not the library agreement');
+ assert.equal(await validFormat(fake.publicData),true);
+ assert.equal((await extract({publicData:fake.publicData,confirmerSecret:k.confirmerSecret})).extracted,false);
+ const eq=await confirmVerifyEnvelope({publicData:fake.publicData,firstMessage:fake.firstMessage,challenge:fake.chosenChallenge,response:fake.response});
+ assert.equal(eq.equationsHold,true);
+ assert.ok(Object.values(eq.checks).every(Boolean));
+ assert.match(fake.warning,/NOT a valid interactive exchange/);
+ assert.equal('secret' in fake,false);
+});
+test('Bob choosing a different challenge rejects Eve fabricated first message',async()=>{
+ const {publicData:d}=await init();
+ const forged=await forgeWithKnownChallenge({publicData:d,forgedMessage:'A different document',chosenChallenge:57n});
+ const good=await confirmVerifyEnvelope({publicData:forged.publicData,firstMessage:forged.firstMessage,challenge:57n,response:forged.response});
+ const bad=await confirmVerifyEnvelope({publicData:forged.publicData,firstMessage:forged.firstMessage,challenge:58n,response:forged.response});
+ assert.equal(good.equationsHold,true);
+ assert.equal(bad.equationsHold,false);
+ assert.equal(bad.checks.challenge,false);
+});
+test('challenge-first forgeries require a valid envelope, different message, bounded challenge',async()=>{
+ const {publicData:d}=await init();
+ await assert.rejects(forgeWithKnownChallenge({publicData:d,forgedMessage:d.message}),/different fictional message/);
+ await assert.rejects(forgeWithKnownChallenge({publicData:d,forgedMessage:'  '}),/different fictional message/);
+ await assert.rejects(forgeWithKnownChallenge({publicData:d,forgedMessage:'different',chosenChallenge:-1n}),/Scalar outside/);
+ await assert.rejects(forgeWithKnownChallenge({publicData:d,forgedMessage:'different',chosenChallenge:SYMBOLIC.order}),/Scalar outside/);
+ await assert.rejects(forgeWithKnownChallenge({publicData:{...d,signature:{...d.signature,s:mod(d.signature.s+1n)}},forgedMessage:'different'}),/invalid symbolic envelope/);
+});
+test('random preselected challenges verify false proofs only at the chosen challenge',async()=>{
+ const {publicData:d}=await init();
+ for(let i=0;i<16;i++){
+  const f=await forgeWithKnownChallenge({publicData:d,forgedMessage:'Counterfeit document'});
+  assert.equal((await confirmVerifyEnvelope({publicData:f.publicData,firstMessage:f.firstMessage,challenge:f.chosenChallenge,response:f.response})).equationsHold,true);
+  assert.equal((await confirmVerifyEnvelope({publicData:f.publicData,firstMessage:f.firstMessage,challenge:mod(f.chosenChallenge+1n),response:f.response})).equationsHold,false);
+ }
 });

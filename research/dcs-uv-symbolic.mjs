@@ -162,5 +162,18 @@ export function confirmVerify({publicStatement,firstMessage,challenge,response}=
     return Object.freeze({equationsHold:Object.values(checks).every(Boolean),checks:Object.freeze(checks)});
   }catch{return reject;}
 }
+/**
+ * Binds the OR-check to an actual signed-ElGamal public object: always derive
+ * A,B,C,D independently, and fail closed if its signed-format check fails.
+ * Still NOT a secure DCS verifier: the entire symbolic group reveals secrets.
+ */
+export async function confirmVerifyEnvelope({publicData,firstMessage,challenge,response}={}){
+  try{
+    const independentlyDerived=await statement(publicData);
+    return confirmVerify({publicStatement:independentlyDerived,firstMessage,challenge,response});
+  }catch{
+    return Object.freeze({equationsHold:false,checks:Object.freeze({invalidInput:false})});
+  }
+}
 /** The public values equal *exponents* in this model. This destroys secrecy! */
 export const securityLimit = 'Public group-element exponents reveal all discrete logarithms. These are real modular identities but NOT cryptographic proof security.';

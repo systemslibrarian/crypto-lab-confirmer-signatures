@@ -9,7 +9,7 @@ test('separate symbolic research chapter identifies its insecure algebra and mis
 });
 test('browser uses ONLY one linked module and real verifier equations',()=>{
  const source=read('prototype/symbolic/app.mjs');
- assert.match(source,/confirmBegin/);assert.match(source,/verifierChallenge/);assert.match(source,/confirmRespond/);assert.match(source,/confirmVerify/);
+ assert.match(source,/confirmBegin/);assert.match(source,/verifierChallenge/);assert.match(source,/confirmRespond/);assert.match(source,/confirmVerifyEnvelope/);
  assert.match(source,/NOT a mathematical disavowal/);
  const adapter=read('prototype/symbolic/dcs-uv-symbolic.mjs');
  assert.match(adapter,/research\/dcs-uv-symbolic\.mjs/);

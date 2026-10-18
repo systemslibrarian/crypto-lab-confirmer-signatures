@@ -1,0 +1,100 @@
+name: Research preview — ordinary ECDSA only
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'prototype/**'
+      - 'tests/**'
+      - 'research/**'
+      - '.github/workflows/research-preview-pages.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'prototype/**'
+      - 'tests/**'
+      - 'research/**'
+      - '.github/workflows/research-preview-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: signature-research-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  prove-scope-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: 22 }
+      - name: Real ECDSA and research-only unit tests
+        run: |
+          set -euo pipefail
+          node --test tests/*.test.mjs | tee /tmp/tests.tap
+          grep -Eq '^# tests (6[7-9]|[7-9][0-9]|[1-9][0-9]{2,})$' /tmp/tests.tap
+      - uses: actions/setup-python@v6
+        with: { python-version: '3.12' }
+      - name: Browser test dependencies
+        run: |
+          python -m pip install playwright==1.57.0
+          python -m playwright install chromium
+      - name: Play through genuine ordinary signatures on phone and desktop
+        run: python -m unittest discover -s tests -p 'browser_flow.py' -v
+      - name: Package ONLY the ordinary-signature research preview
+        run: |
+          set -euo pipefail
+          test ! -e prototype/dcs.mjs
+          test ! -e prototype/confirmer.mjs
+          grep -Fq 'Research prototype — only Chapter 01 works.' prototype/index.html
+          grep -Fq 'does <b>not</b> implement a designated confirmer signature' prototype/index.html
+          grep -Fq 'RESEARCH-GATED' prototype/index.html
+          mkdir -p dist
+          cp prototype/index.html prototype/style.css prototype/app.mjs prototype/crypto.mjs dist/
+          touch dist/.nojekyll
+          printf '{"source_sha":"%s","scope":"ordinary-ecdsa-only","repository":"%s"}\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" > dist/revision.json
+          test ! -e dist/research
+          test ! -e dist/tests
+          echo "Research-only preview ready. No DCS code is published."
+      - uses: actions/configure-pages@v6
+        if: github.event_name != 'pull_request'
+      - uses: actions/upload-pages-artifact@v5
+        if: github.event_name != 'pull_request'
+        with: { path: dist }
+
+  publish-preview:
+    if: github.event_name != 'pull_request'
+    needs: prove-scope-and-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.publish.outputs.page_url }}
+    steps:
+      - id: publish
+        uses: actions/deploy-pages@v5
+      - name: Confirm that PUBLIC Pages serves this exact reviewed preview
+        env:
+          SITE: https://systemslibrarian.github.io/crypto-lab-confirmer-signatures/
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 20); do
+            url="${SITE}revision.json?audit=${GITHUB_SHA}-${i}"
+            if curl -fsSL --connect-timeout 7 --max-time 15 -H 'Cache-Control: no-cache' "$url" -o /tmp/revision.json; then
+              if node -e 'const x=JSON.parse(require("node:fs").readFileSync("/tmp/revision.json","utf8"));process.exit(x.source_sha===process.argv[1]&&x.scope==="ordinary-ecdsa-only"&&x.repository===process.argv[2]?0:1)' "$GITHUB_SHA" "$GITHUB_REPOSITORY"; then
+                curl -fsSL --connect-timeout 7 --max-time 15 -H 'Cache-Control: no-cache' "${SITE}?audit=${GITHUB_SHA}-${i}" -o /tmp/preview.html
+                grep -Fq 'Research prototype — only Chapter 01 works.' /tmp/preview.html
+                grep -Fq 'does <b>not</b> implement a designated confirmer signature' /tmp/preview.html
+                echo "Verified the served source SHA and research-only warnings."
+                exit 0
+              fi
+            fi
+            sleep 6
+          done
+          echo "::error::The Pages site is not serving the exact ordinary-signature preview."
+          exit 1

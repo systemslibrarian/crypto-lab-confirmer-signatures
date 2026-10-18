@@ -16,13 +16,13 @@ jobs:
           persist-credentials: true
       - uses: actions/setup-node@v7
         with: {node-version: '22'}
-      - name: Generate exact transitive package lock for the real BLS implementation
+      - name: Refresh exact lock for current BLS and pinned accessibility engine
         working-directory: research/real-pairing
         run: npm install --package-lock-only --no-audit --no-fund --ignore-scripts
       - name: Verify exact noble and Vite dependency pins and commit the lock
         run: |
           set -euo pipefail
-          node -e 'const x=require("./research/real-pairing/package-lock.json");if(x.packages[""].dependencies["@noble/curves"]!=="2.4.0"||x.packages[""].devDependencies.vite!=="8.3.4")process.exit(1)'
+          node -e 'const x=require("./research/real-pairing/package-lock.json");if(x.packages[""].dependencies["@noble/curves"]!=="2.4.0"||x.packages[""].devDependencies.vite!=="8.3.4"||x.packages[""].devDependencies["axe-core"]!=="4.14.0")process.exit(1)'
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add research/real-pairing/package-lock.json

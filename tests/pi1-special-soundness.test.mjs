@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {toyParameters,modPow,encrypt} from '../research/cs-paillier.mjs';
+import {toyParameters,modPow,encrypt,challenge} from '../research/cs-paillier.mjs';
 import {TOY_GROUP,commitToy,proofAuxiliaryToy} from '../research/pi1-relation.mjs';
 import {beginToyPi1,answerToyPi1,checkToyPi1Transcript} from '../research/pi1-interactive-toy.mjs';
 import {extractToyPi1Fork} from '../research/pi1-special-soundness.mjs';
@@ -71,14 +71,27 @@ test('changing the public message or commitment invalidates at least one branch'
    {...f.statement,psi:f.statement.psi*TOY_GROUP.delta%TOY_GROUP.prime}];
  for(const statement of modified)assert.throws(()=>extractToyPi1Fork({...f,statement}),/public-only equations/);
 });
-test('a changed ciphertext label, tag or public encryption key breaks a transcript',()=>{
+test('changing encrypted components or public encryption key breaks a transcript',()=>{
  const f=fork();
  const bads=[
-  ['modified label',{...f.statement,label:'altered'}],
   ['modified ciphertext e',{...f.statement,ciphertext:{...f.statement.ciphertext,e:f.statement.ciphertext.e*(n+1n)%M}}],
   ['modified public y2',{...f.statement,publicKey:{...f.statement.publicKey,y2:f.statement.publicKey.y2*2n%M}}]
  ];
  for(const [name,statement] of bads)assert.throws(()=>extractToyPi1Fork({...f,statement}),/public-only equations/,name);
+});
+test('negative claim: changing the label can alias modulo the tiny ciphertext subgroup order',()=>{
+ const f=fork(), z=f.statement.ciphertext;
+ const changedLabel='altered';
+ const oldH=challenge(z.u,z.e,f.statement.label,n), newH=challenge(z.u,z.e,changedLabel,n);
+ assert.notEqual(oldH,newH,'Hash really changes under a different label');
+ // Toy u has tiny order 5: two unrelated hashes can yield identical u^(2 H x3).
+ const x3=7n+6n;
+ assert.equal(modPow(z.u,2n*x3*oldH,M),modPow(z.u,2n*x3*newH,M));
+ const changed={...f.statement,label:changedLabel};
+ assert.equal(checkToyPi1Transcript(changed,f.firstMessage,f.first.challenge,f.first.response).equationsHold,true);
+ assert.equal(checkToyPi1Transcript(changed,f.firstMessage,f.second.challenge,f.second.response).equationsHold,true);
+ assert.equal(extractToyPi1Fork({...f,statement:changed}).algebraicWitnessRecovered,true);
+ // This is a collision counterexample, NOT a valid secure label-binding claim.
 });
 test('malformed, non-bigint, out-of-range or missing challenge branches cannot claim recovery',()=>{
  const f=fork();

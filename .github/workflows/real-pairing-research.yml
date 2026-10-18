@@ -27,6 +27,16 @@ jobs:
           npm test | tee /tmp/dcs-real-pairing.tap
           grep -Eq '^# tests ([7-9]|[1-9][0-9]+)$' /tmp/dcs-real-pairing.tap
           ! grep -Eq '^# fail [1-9]' /tmp/dcs-real-pairing.tap
+      - name: Bundle an offline-capable static real-pairing research workbench
+        working-directory: research/real-pairing
+        run: npm run build
+      - name: Verify compiled HTML and assets retain both paper uncertainty and security gate
+        run: |
+          set -euo pipefail
+          test -s dist/real/index.html
+          grep -Fq 'REAL CRYPTOGRAPHIC ARITHMETIC — NOT A FINISHED OR SECURITY-PROVEN DCS' dist/real/index.html
+          grep -Fq 'candidate reconstruction' dist/real/index.html
+          find dist/real/assets -name '*.js' -size +100k | grep -q .
       - name: Do not mistake reviewed math primitives for an audited full DCS
         run: |
           set -eu

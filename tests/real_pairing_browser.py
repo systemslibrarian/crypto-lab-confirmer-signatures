@@ -52,10 +52,12 @@ class RealPairingBrowser(unittest.TestCase):
                     page.locator('#issue').click()
                     page.wait_for_function(
                         "document.querySelector('#issue-status').textContent.includes('Signed-ElGamal format and confirmer extraction both passed')")
+                    page.locator('details:has(#issue-math) summary').click()
                     self.assertIn('PASS',page.locator('#issue-math').inner_text())
                     page.locator('#confirm-carol').click()
                     page.wait_for_function(
                         "document.querySelector('#confirm-status').textContent.includes('five real pairing/point equations matched')")
+                    page.locator('details:has(#confirm-math) summary').click()
                     self.assertIn('MATCH',page.locator('#confirm-math').inner_text())
                     page.locator('#confirm-alice').click()
                     page.wait_for_function(
@@ -63,6 +65,7 @@ class RealPairingBrowser(unittest.TestCase):
                     page.locator('#simulate').click()
                     page.wait_for_function(
                         "document.querySelector('#simulate-status').textContent.includes('Eve’s computed transcript PASSED')")
+                    page.locator('details:has(#simulate-math) summary').click()
                     self.assertIn('SIMULATED CONFIRMATION',page.locator('#simulate-math').inner_text())
                     page.locator('#alter').click()
                     self.assertIn('altered',page.locator('#deny-status').inner_text())
@@ -72,6 +75,7 @@ class RealPairingBrowser(unittest.TestCase):
                     page.locator('#deny-carol').click()
                     page.wait_for_function(
                         "document.querySelector('#deny-status').textContent.includes('candidate inequality relation')")
+                    page.locator('details:has(#deny-math) summary').click()
                     self.assertIn('MATCH',page.locator('#deny-math').inner_text())
                     page.locator('#deny-alice').click()
                     page.wait_for_function(

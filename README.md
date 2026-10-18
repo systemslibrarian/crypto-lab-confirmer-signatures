@@ -10,7 +10,7 @@
 
 This repository records the development brief and the cryptographic selection gate for a proposed interactive lab on designated confirmer signatures. Genuine confirmation **and disavowal** protocols must come from a reviewed, published construction and pass independent mathematical checks. A normal signature hidden by encryption is not automatically a designated confirmer signature.
 
-- **[Chapter 01 — ordinary signature prototype](prototype/)** — executable WebCrypto P-256/SHA-256, Bob/Dave public verification, tamper experiment; no DCS claimed. Serve locally on localhost; no Pages deployment. Tests: `node --test tests/baseline.test.mjs`, plus GitHub Actions desktop/mobile browser checks.
+- **[Chapter 01 — ordinary signature research preview](https://systemslibrarian.github.io/crypto-lab-confirmer-signatures/)** — a separately gated Pages preview of ONLY the P-256/SHA-256 public-signature comparison, Bob/Dave verification, and tamper experiment. It is **not** a designated confirmer signature. The deployment checks a live source-SHA marker; if GitHub Pages has not been enabled or if deployment fails, use the [GitHub source](prototype/) and check the [workflow](.github/workflows/research-preview-pages.yml). Tests: `node --test tests/baseline.test.mjs`, plus GitHub Actions desktop/mobile browser checks.
 - [`PRODUCT-VISION.md`](PRODUCT-VISION.md) — intended visitor journey, educational outcome, interaction flow, and go/no-go criterion.
 - [`SCHEME-NOTES.md`](SCHEME-NOTES.md) — the **2013-thesis-specific** five-part issuing sketch including `π0`; exact 2016 issuance, confirmation and disavowal remain unverified.
 - [`research/SOURCE-RECONCILIATION.md`](research/SOURCE-RECONCILIATION.md) — the 2013 five-part tuple versus the shorter 2016 introductory summary; records why neither can substitute for full final-spec review.
@@ -18,7 +18,7 @@ This repository records the development brief and the cryptographic selection ga
 - [`RESEARCH-GATE.md`](RESEARCH-GATE.md) — scheme-selection prerequisites, literature and acceptance criteria.
 - [Crypto Lab master template](https://github.com/systemslibrarian/crypto-lab/blob/main/audits/_MASTER-TEMPLATE.md) — binding Build → Teach → Look → Accessibility → README → Deploy standard, to apply after research passes.
 
-**Non-goals for this stage:** claiming signature correctness, presenting a protocol simulation as proof, deploying a placeholder as a complete lab, or adding a card to the main catalog.
+**Non-goals for this stage:** claiming designated-confirmer signature correctness, presenting simulated proofs as genuine, deploying *unfinished DCS* as a complete lab, or adding a card to the main catalog. Publishing only the explicitly named ordinary-signature **research preview** is permitted and is not evidence that the DCS research gate passed.
 
 ---
 

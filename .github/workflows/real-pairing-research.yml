@@ -1,0 +1,35 @@
+name: Real BLS12-381 pairing research (source-audited, NOT full DCS)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'research/real-pairing/**'
+      - '.github/workflows/real-pairing-research.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pairing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: Install pinned reviewed cryptography dependency
+        working-directory: research/real-pairing
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Run actual pairing, signing and adversarial fixtures
+        working-directory: research/real-pairing
+        run: |
+          set -euo pipefail
+          npm test | tee /tmp/dcs-real-pairing.tap
+          grep -Eq '^# tests ([7-9]|[1-9][0-9]+)$' /tmp/dcs-real-pairing.tap
+          ! grep -Eq '^# fail [1-9]' /tmp/dcs-real-pairing.tap
+      - name: Do not mistake reviewed math primitives for an audited full DCS
+        run: |
+          set -eu
+          grep -q 'NOT a production DCS' research/real-pairing/core.mjs
+          grep -q 'independent security review' research/real-pairing/core.mjs
+          test ! -f research/real-pairing/deploy.yml

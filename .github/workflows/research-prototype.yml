@@ -51,8 +51,8 @@ jobs:
           set -eu
           test ! -f .github/workflows/deploy.yml
           ! grep -Eiq 'import .*from .*(sign-then-encrypt-dcs|fake-confirm|fake-disavow)' prototype/app.mjs
-          grep -q 'does <b>not</b> implement a designated confirmer signature' prototype/index.html
-          grep -q 'RESEARCH-GATED' prototype/index.html
+          grep -Fq 'The separate protocol where Carol proves a signature valid or invalid is <b>not yet implemented</b>' prototype/index.html
+          grep -Fq '<small>NOT IMPLEMENTED</small>' prototype/index.html
           grep -q 'NOT a complete DCS construction' research/THESIS-EQUATIONS.md
           grep -q 'deliberately TINY' research/cs-paillier.mjs
           grep -q 'RESEARCH ONLY' research/pi0-equality.mjs

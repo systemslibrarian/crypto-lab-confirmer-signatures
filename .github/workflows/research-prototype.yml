@@ -70,5 +70,5 @@ jobs:
           grep -q 'OPEN SPECIFICATION DISCREPANCY' research/SOURCE-RECONCILIATION.md
           grep -Fq 'NOT secure crypto' research/dcs-uv-symbolic.mjs
           grep -Fq 'NOT SECURE CRYPTOGRAPHY OR A FINISHED DESIGNATED CONFIRMER SIGNATURE' prototype/symbolic/index.html
-          grep -Fq 'does not implement disavowal' prototype/symbolic/index.html
+          grep -Fq 'does <b>not</b> implement disavowal' prototype/symbolic/index.html
           echo 'Research-only guard holds: no complete DCS, no Pages publisher'

@@ -49,9 +49,9 @@ jobs:
           set -euo pipefail
           test ! -e prototype/dcs.mjs
           test ! -e prototype/confirmer.mjs
-          grep -Fq 'Research prototype — only Chapter 01 works.' prototype/index.html
-          grep -Fq 'does <b>not</b> implement a designated confirmer signature' prototype/index.html
-          grep -Fq 'RESEARCH-GATED' prototype/index.html
+          grep -Fq 'Chapter 01 is working. The full confirmer protocol is still being built.' prototype/index.html
+          grep -Fq 'The separate protocol where Carol proves a signature valid or invalid is <b>not yet implemented</b>' prototype/index.html
+          grep -Fq '<small>NOT IMPLEMENTED</small>' prototype/index.html
           mkdir -p dist
           cp prototype/index.html prototype/style.css prototype/app.mjs prototype/crypto.mjs dist/
           touch dist/.nojekyll

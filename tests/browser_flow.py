@@ -49,6 +49,8 @@ class BrowserFlow(unittest.TestCase):
                     self.assertTrue(page.locator('#sign').is_disabled())
                     self.assertTrue(page.get_by_text('The separate protocol where Carol proves a signature valid or invalid is not yet implemented', exact=False).count() >= 1)
                     self.assertIn('Alice signs a private agreement.', page.locator('.cl-hero-why').inner_text())
+                    self.assertEqual(page.locator('.research-note a[href="./symbolic/"]').count(),1)
+                    self.assertIn('not secure DCS',page.locator('.research-note').inner_text())
                     self.assertIn('Carol helps Bob check', page.locator('.chapter-nav').inner_text())
                     self.assertEqual(page.locator('.chapter-nav .locked').count(), 4)
                     page.locator('#generate').click()

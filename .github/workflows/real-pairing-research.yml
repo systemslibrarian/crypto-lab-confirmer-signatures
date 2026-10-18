@@ -37,6 +37,20 @@ jobs:
           grep -Fq 'REAL CRYPTOGRAPHIC ARITHMETIC — NOT A FINISHED OR SECURITY-PROVEN DCS' dist/real/index.html
           grep -Fq 'candidate reconstruction' dist/real/index.html
           find dist/real/assets -name '*.js' -size +10k | grep -q .
+      - uses: actions/setup-python@v6
+        with: {python-version: '3.12'}
+      - name: Install browser test runner
+        run: |
+          python -m pip install playwright==1.57.0
+          python -m playwright install chromium
+      - name: Verify actual real-pairing browser controls on mobile and desktop
+        run: python -m unittest discover -s tests -p 'real_pairing_browser.py' -v
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: signature-gate-real-pairing-screenshots
+          path: test-results/dcs-real-pairing-*.png
+          if-no-files-found: ignore
       - name: Do not mistake reviewed math primitives for an audited full DCS
         run: |
           set -eu

@@ -113,7 +113,7 @@ class BrowserFlow(unittest.TestCase):
                     self.assertIn('Confirmer extraction check: PASS',page.locator('#issue-data').inner_text())
                     page.locator('#carol').click()
                     page.wait_for_function("document.querySelector('#proof-data').textContent.includes('groupPairing1: MATCH')")
-                    self.assertIn('equations',page.locator('#verdict').inner_text())
+                    self.assertIn('OR-proof checks hold',page.locator('#verdict').inner_text())
                     self.assertIn('groupKey2: MATCH',page.locator('#proof-data').inner_text())
                     page.locator('#alice').click()
                     page.wait_for_function("document.querySelector('#proof-data').textContent.includes('Alice (signer)')")

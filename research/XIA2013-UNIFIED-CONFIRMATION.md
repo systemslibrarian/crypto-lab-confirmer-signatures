@@ -28,6 +28,7 @@ The UI exposes the real first-message, response, challenge and five computed che
 - Reusing prover masks is forbidden; this avoids the exact two-challenge extraction demonstrated by the separate 2013 Chapter 6 research module.
 - Public exponent storage trivially reveals xs and xc. Thus *zero knowledge, non-transferability, confidentiality and unforgeability are false as security claims* for this model; only the algebraic structure is taught.
 - Random challenges use a toy 1019-element field; this is not an appropriate production proof security level.
+- **Adversarial challenge-order negative control:** a dishonest prover can fabricate four OR commitments *after choosing a particular verifier challenge* by choosing both branch responses and challenges first. This can make the public equations pass for an alleged signature on a different message. Our separate test deliberately demonstrates this. Only an actual three-move interaction, with Bob choosing an unpredictable challenge **after** receiving the prover's first commitments, supports the intended soundness argument. A recorded, purely algebraic passing transcript is not proof of that causal order. The research workbench's bound verifier also recomputes A/B/C/D from the actual signed-ElGamal object rather than trusting a supplied substitute.
 - The model does not use a real type-1 elliptic-curve pairing. A source-faithful pairing implementation and parameter security analysis are mandatory before any real cryptographic-security claim.
 
 ## Important unresolved printed disavowal relation

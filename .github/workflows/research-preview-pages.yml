@@ -85,8 +85,8 @@ jobs:
             if curl -fsSL --connect-timeout 7 --max-time 15 -H 'Cache-Control: no-cache' "$url" -o /tmp/revision.json; then
               if node -e 'const x=JSON.parse(require("node:fs").readFileSync("/tmp/revision.json","utf8"));process.exit(x.source_sha===process.argv[1]&&x.scope==="ordinary-ecdsa-only"&&x.repository===process.argv[2]?0:1)' "$GITHUB_SHA" "$GITHUB_REPOSITORY"; then
                 curl -fsSL --connect-timeout 7 --max-time 15 -H 'Cache-Control: no-cache' "${SITE}?audit=${GITHUB_SHA}-${i}" -o /tmp/preview.html
-                grep -Fq 'Research prototype — only Chapter 01 works.' /tmp/preview.html
-                grep -Fq 'does <b>not</b> implement a designated confirmer signature' /tmp/preview.html
+                grep -Fq 'Chapter 01 is working. The full confirmer protocol is still being built.' /tmp/preview.html
+                grep -Fq 'The separate protocol where Carol proves a signature valid or invalid is <b>not yet implemented</b>' /tmp/preview.html
                 echo "Verified the served source SHA and research-only warnings."
                 exit 0
               fi

@@ -128,5 +128,38 @@ class BrowserFlow(unittest.TestCase):
                 finally:
                     page.close()
 
+
+    def test_challenge_first_forgery_and_fresh_verifier_challenge_on_mobile_and_desktop(self):
+        for width in (390, 1270):
+            with self.subTest(width=width):
+                page=self.browser.new_page(viewport={'width':width,'height':900},reduced_motion='reduce')
+                errors=[]
+                page.on('pageerror', lambda err: errors.append(str(err)))
+                try:
+                    page.goto(self.origin+'symbolic/', wait_until='networkidle')
+                    self.assertTrue(page.locator('#forge').is_disabled())
+                    page.locator('#keys').click()
+                    page.get_by_text('Toy keys generated',exact=False).wait_for()
+                    page.locator('#issue').click()
+                    page.get_by_text('Source-structured symbolic signature issued',exact=False).wait_for()
+                    page.locator('input[name="forgery-predict"][value="reject"]').check()
+                    page.locator('#forge').click()
+                    page.wait_for_function("document.querySelector('#attack-result').textContent.includes('FALSE PROOF PASSED')")
+                    self.assertIn('The result passed',page.locator('#prediction-feedback').inner_text())
+                    self.assertIn('challenge: MATCH',page.locator('#attack-proof').inner_text())
+                    page.locator('#fresh-challenge').click()
+                    page.wait_for_function("document.querySelector('#attack-result').textContent.includes('REJECTED')")
+                    self.assertIn('challenge: REJECT',page.locator('#attack-proof').inner_text())
+                    self.assertIn('different challenge',page.locator('#attack-result').inner_text())
+                    page.locator('#message').fill('Another synthetic agreement')
+                    self.assertTrue(page.locator('#forge').is_disabled())
+                    self.assertTrue(page.locator('#fresh-challenge').is_disabled())
+                    self.assertIn('does not implement disavowal',page.locator('#disavow').inner_text())
+                    self.assertTrue(page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'))
+                    self.assertEqual(errors,[])
+                    page.screenshot(path=str(ROOT / f'test-results/signature-gate-attack-{width}.png'),full_page=True)
+                finally:
+                    page.close()
+
 if __name__ == '__main__':
     unittest.main()

@@ -60,6 +60,7 @@ export async function beginConfirmation({publicData,privateKeys,role='confirmer'
  }
  const state=Object.freeze({real,secret,a,fakeB,fakeC});
  return Object.freeze({
+  mode:'REAL-PAIRING-OR-CONFIRM',
   firstMessage:Object.freeze(z),
   role,
   _private:state,

@@ -24,24 +24,24 @@
         <p class="eyebrow">SIGNATURE GATE / CHAPTER 01</p>
         <h1>Who gets to <em>verify?</em></h1>
         <p class="cl-hero-sub">Ordinary P-256 ECDSA · WebCrypto · SHA-256</p>
-        <p class="cl-hero-desc">Sign a fictional statement. Verify it independently as Bob and Dave. Then change one word and watch both reject it.</p>
+        <p class="cl-hero-desc">Try the problem first: Alice signs a fictional agreement. Bob checks it. Then he forwards the same evidence to Dave, who can check it too. Change the agreement and see both reject it.</p>
       </div>
       <aside class="cl-hero-why" aria-label="Why it matters">
         <p class="eyebrow">WHY IT MATTERS</p>
-        <p>An ordinary signature is publicly verifiable. Our future designated-confirmer lab will teach a different property: proving validity through an authorized party without necessarily yielding transferable evidence.</p>
+        <p><strong>Alice signs a private agreement.</strong> With a regular digital signature, Bob can send it to Dave, and Dave can check it himself. A designated confirmer signature works differently: Bob asks Carol to help prove whether Alice signed it, without simply giving Bob a normal signature to pass around. <strong>This page currently demonstrates the regular-signature case only.</strong></p>
       </aside>
     </header>
 
     <section class="research-note" aria-label="Research status">
-      <strong>Research prototype — only Chapter 01 works.</strong>
-      <span>This page implements a real <b>ordinary digital signature</b>. It does <b>not</b> implement a designated confirmer signature, confirmation, disavowal, or non-transferability proof. Nothing here is for production.</span>
+      <strong>Chapter 01 is working. The full confirmer protocol is still being built.</strong>
+      <span>This exercise uses real ECDSA to show why anyone can verify an ordinary signature. The separate protocol where Carol proves a signature valid or invalid is <b>not yet implemented</b>; Chapters 02–04 remain unavailable. Use fictional information only.</span>
     </section>
 
     <nav aria-label="Chapters" class="chapter-nav"><ol>
       <li class="current"><b>01</b><span>Everybody can check</span><small>REAL CRYPTO</small></li>
-      <li class="locked"><b>02</b><span>Ask the confirmer</span><small>RESEARCH-GATED</small></li>
-      <li class="locked"><b>03</b><span>Prove invalidity</span><small>RESEARCH-GATED</small></li>
-      <li class="locked"><b>04</b><span>Transferable evidence?</span><small>RESEARCH-GATED</small></li>
+      <li class="locked"><b>02</b><span>Carol helps Bob check</span><small>NOT IMPLEMENTED</small></li>
+      <li class="locked"><b>03</b><span>Prove a forgery is invalid</span><small>NOT IMPLEMENTED</small></li>
+      <li class="locked"><b>04</b><span>Can Bob convince Dave?</span><small>NOT IMPLEMENTED</small></li>
       <li class="locked"><b>05</b><span>True or merely signed?</span><small>CONCEPT PREVIEW</small></li>
     </ol></nav>
 
@@ -81,12 +81,12 @@
 
     <section class="learning" aria-labelledby="meaning-title">
       <div><p class="eyebrow">THE LESSON</p><h2 id="meaning-title">What did the signature actually establish?</h2><p><strong>Signature verified</strong> means the message bytes match what was signed under Alice's public key. It does <strong>not</strong> prove that a package was delivered or that anyone has independently checked Alice's real-world identity.</p>
-      <p id="negative-claim">A valid ordinary signature is publicly transferable and does not establish the factual truth of its signed claim.</p>
+      <p id="negative-claim">Dave can verify an ordinary signature even if Alice never speaks to him. But a valid signature on “Package delivered” still does not prove that a package was actually delivered.</p>
       <p class="small">In this fictional example, a separate dispatch note reads: <strong>“Status: not delivered.”</strong> The note is not cryptographic evidence and could itself be wrong; it illustrates that signatures do not adjudicate external facts.</p></div>
       <details><summary>Inspect the actual algorithm, evidence and limits</summary>
         <p>Alice uses browser-native <b>ECDSA over NIST P-256 and SHA-256</b>. The private CryptoKey is non-extractable. Her public key is exported in SPKI format, copied and re-imported independently by Bob and Dave. The ECDSA signature is a 64-byte IEEE P1363 r∥s value. Signing uses a fixed, domain-separated prefix bound to the experiment.</p>
         <p>When you change the message, the signature remains the original—verifiers recompute SHA-256 over the *changed* message and should reject it. The signature is not encrypted. The experiment uses synthetic statements only and performs no uploads, account creation or local storage.</p>
-        <p><b>Beyond this chapter:</b> a designated confirmer signature is a different, paper-specified protocol. This page deliberately does not construct confirmation/disavowal proofs or demonstrate non-transferability.</p>
+        <p><b>The unfinished goal:</b> Carol should be able to help Bob check whether Alice signed this particular agreement—or prove that an alleged signature is invalid—by running the published mathematical protocol. Bob should not automatically receive an ordinary signature he can show to everyone. Those real confirmation, disavowal and non-transferability requirements are not implemented by this exercise.</p>
         <p><a href="https://www.rfc-editor.org/rfc/rfc6979#appendix-A.2.5">P-256 published verification vector (RFC 6979 Appendix A.2.5)</a> · <a href="https://github.com/systemslibrarian/crypto-lab-confirmer-signatures/blob/main/RESEARCH-GATE.md">Research gate</a> · <a href="https://github.com/systemslibrarian/crypto-lab-confirmer-signatures/blob/main/PRODUCT-VISION.md">Product vision</a></p>
       </details>
     </section>

@@ -50,6 +50,11 @@
       <span>Try the <a href="./symbolic/">interactive 2013 OR-confirmation workbench</a>: Alice or Carol responds to Bob's challenge, then Eve tries to fake a proof by choosing the challenge before her commitment. You can predict, forge, and inspect the rejection yourself. <b>It is not secure DCS confirmation.</b> Its symbolic group exposes secrets; genuine disavowal, full non-transferability and the final 2016 construction remain unfinished.</span>
     </section>
 
+    <section class="research-note" aria-label="Real BLS12-381 cryptography research workbench">
+      <strong>Now available: real BLS12-381 signature and pairing experiments.</strong>
+      <span><a href="./real/">Open the Real Pairing Research Workbench</a>. Alice and Carol can answer real elliptic-curve OR-proof challenges; Bob independently checks the equations. Alter the alleged message to examine an explicitly <b>research-candidate</b> invalidity proof, then see how Eve can simulate a convincing transcript by choosing her own challenge. This is genuine group arithmetic but <b>not</b> a security-proven, audited designated-confirmer protocol. Its Type-3 adaptation, corrected proof candidate and non-transferability remain under independent review.</span>
+    </section>
+
     <section class="workshop" aria-labelledby="workshop-title">
       <div class="section-lede"><div><p class="eyebrow">ONE / THE PUBLIC SIGNATURE</p><h2 id="workshop-title">An agreement anyone can check</h2></div><p>Start by generating Alice's temporary signing key. Bob and Dave will import copies of her public key and perform their own cryptographic verification.</p></div>
       <div class="roles" aria-label="Alice, Bob and Dave">

@@ -95,6 +95,88 @@ def verify(document):
     except (ValueError,TypeError,KeyError,IndexError,OverflowError,AssertionError,ZeroDivisionError):
         return False
 
+# ---------------------------------------------------------------------------
+# A-D-09: non-interactive designated-verifier proofs (Jakobsson-Sako-Impagliazzo,
+# EUROCRYPT '96, section 5). Recomputed here with py_ecc, independently of the
+# browser's Noble implementation. EQUATIONS_HOLD never means the statement is
+# true: the designated verifier can produce an accepting proof of anything.
+# ---------------------------------------------------------------------------
+DV_CHALLENGE_DOMAIN='dv-designated-challenge-v1'
+PUBLIC_CHALLENGE_DOMAIN='dv-public-transferable-challenge-v1'
+DV_KEY_DOMAIN='dv-verifier-key-registration-v1'
+G1_INFINITY=bytes([0xc0])+bytes(47)
+G2_INFINITY=bytes([0xc0])+bytes(95)
+
+def dv_point(value,group):
+    """Parse a point that MAY be the canonical compressed identity."""
+    raw=bytes.fromhex(value) if isinstance(value,str) and re.fullmatch('[0-9a-f]+',value or '') else None
+    if raw==(G1_INFINITY if group==1 else G2_INFINITY):
+        return multiply(G1 if group==1 else G2,Q)
+    return point(value,group)
+
+def dv_point_bytes(pt,group):
+    if is_inf(pt):return G1_INFINITY if group==1 else G2_INFINITY
+    return encode(pt,group)
+
+def dv_target_string(x):
+    return ':'.join(format(int(c),'x') for c in x.coeffs)
+
+def dv_multiply(pt,k):
+    k%=Q
+    return multiply(pt,k if k else Q)
+
+def dv_branch(A,B,C,role):
+    if role=='confirmer':return B[0],C[0],G1,1
+    if role=='signer':return B[1],C[1],G2,2
+    raise ValueError('Unknown role')
+
+def verify_designated(vector):
+    """Both equations of the designated proof, plus the verifier key registration."""
+    try:
+        A,B,C=statement(json.dumps(vector['publicData'],sort_keys=True))
+        Bj,Cj,base,group=dv_branch(A,B,C,vector['role'])
+        context=vector['context']
+        if not isinstance(context,str) or not 0<len(context)<=200 or re.search(r'[\x00-\x1f\x7f]',context):
+            return False
+        key=vector['verifierKey']
+        y=point(key['y'],1,True);commitment=dv_point(key['commitment'],1);response=integer(key['response'])
+        kc=hscalar(DV_KEY_DOMAIN,dv_point_bytes(y,1),dv_point_bytes(commitment,1))
+        if not eq(dv_multiply(G1,response),add(commitment,dv_multiply(y,kc))):return False
+        proof=vector['proof']
+        w=integer(proof['w']);r=integer(proof['r']);d=integer(proof['d'])
+        t_src=dv_point(proof['tSrc'],group);t_tgt=target(proof['tTgt'])
+        c=add(dv_multiply(G1,w),dv_multiply(y,r))
+        h=hscalar(DV_CHALLENGE_DOMAIN,vector['role'].encode(),context.encode(),
+                  dv_target_string(A).encode(),dv_target_string(Bj).encode(),
+                  dv_point_bytes(Cj,group),dv_point_bytes(base,group),
+                  dv_point_bytes(y,1),dv_point_bytes(c,1),dv_point_bytes(t_src,group),
+                  dv_target_string(t_tgt).encode())
+        e=(h+w)%Q
+        if not eq(dv_multiply(base,d),add(t_src,dv_multiply(Cj,e))):return False
+        return Bj**d==t_tgt*A**e
+    except (ValueError,TypeError,KeyError,IndexError,OverflowError,AssertionError,ZeroDivisionError):
+        return False
+
+def verify_public_transferable(vector):
+    """The ordinary Fiat-Shamir proof of the SAME statement: anyone is convinced."""
+    try:
+        A,B,C=statement(json.dumps(vector['publicData'],sort_keys=True))
+        Bj,Cj,base,group=dv_branch(A,B,C,vector['role'])
+        context=vector['context']
+        if not isinstance(context,str) or not 0<len(context)<=200 or re.search(r'[\x00-\x1f\x7f]',context):
+            return False
+        proof=vector['proof']
+        if 'w' in proof or 'r' in proof:return False
+        d=integer(proof['d']);t_src=dv_point(proof['tSrc'],group);t_tgt=target(proof['tTgt'])
+        e=hscalar(PUBLIC_CHALLENGE_DOMAIN,vector['role'].encode(),context.encode(),
+                  dv_target_string(A).encode(),dv_target_string(Bj).encode(),
+                  dv_point_bytes(Cj,group),dv_point_bytes(base,group),
+                  dv_point_bytes(t_src,group),dv_target_string(t_tgt).encode())
+        if not eq(dv_multiply(base,d),add(t_src,dv_multiply(Cj,e))):return False
+        return Bj**d==t_tgt*A**e
+    except (ValueError,TypeError,KeyError,IndexError,OverflowError,AssertionError,ZeroDivisionError):
+        return False
+
 if __name__=='__main__':
     if len(sys.argv)!=2:raise SystemExit('Usage: python verify.py PUBLIC_TRANSCRIPT.json')
     p=Path(sys.argv[1])

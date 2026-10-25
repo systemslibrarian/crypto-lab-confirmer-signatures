@@ -564,5 +564,344 @@
         }
       }
     }
+  ],
+  "designatedVerifier": [
+    {
+      "name": "confirmer-designated-from-witness",
+      "kind": "designated",
+      "role": "confirmer",
+      "context": "signature-gate-public-fixture-v1",
+      "expected": true,
+      "publicData": {
+        "scheme": "XIA-2013-TYPE3-RESEARCH-NOT-AUDITED",
+        "message": "The manuscript stays in the archive.",
+        "signerPublic": "8d0273f6bf31ed37c3b8d68083ec3d8e20b5f2cc170fa24b9b5be35b34ed013f9a921f1cad1644d4bdb14674247234c8049cd1dbb2d2c3581e54c088135fef36505a6823d61b859437bfc79b617030dc8b40e32bad1fa85b9c0f368af6d38d3c",
+        "confirmerPublicG1": "80fd75ebcc0a21649e3177bcce15426da0e4f25d6828fbf4038d4d7ed3bd4421de3ef61d70f794687b12b2d571971a55",
+        "confirmerPublicG2": "a190be857d602284393305bfe0a29e29a6982ed3f04ccaabafb7e59cdc7eda85c22bc3e8690355c7a0fb7590ae40f1b009303f04d568e289a35102b6df883d5ed620355c0eb5d02236718cdaf99fba6e19ef5cee2996268eb9a53ae1ee09bce3",
+        "confirmerKeyProof": {
+          "R1": "97bb00f218cce26abe8588f63cbfc66a41794080b35f1c5557e526f3a67be717b2d0c4987b3c0f4f065cd264aa8d8f8b",
+          "R2": "96082a3d48ffee6385d1d45c38f0f0a3f3122c246547878876f875f4b836bb3e2259c709a0a4fcce7da3351bf60b180a0a6c460010dd23715999c7186e79bd77d5c505b4e0d721758a05a3b9c6e232942686eaf8b544be72ad425eb6d920ddde",
+          "z": "fabedfca059b2c0233212818c6ceffe5ad455aa8728f2fcb36a90e47c173a68"
+        },
+        "signature": {
+          "sigma1": "b0ea38f0b465ae0f0b019494aecd8a82cb7c496ecfab60af96d0bda1a52c29efd4d4e5b270f3d565eb3485b2aaf3d87c",
+          "sigma2": "a39138ff1f9084c590b96ecc097a89ab3f8d64de5591f175f2970b0392dff2cf74ba746de90ccdb80d4a05b80179068f",
+          "s": "14078980b017d09f9e00ce2640e97a357e64e25a4270dac84fe443ed4e73b513",
+          "t": "1c86ace29dfa9d8a9f96c7e1389784acc3a4368f5fbe642e0e97730efbe03206"
+        }
+      },
+      "verifierKey": {
+        "y": "818b3ad43a052aeb025b029c94898d95601d158f622e3d0955bbbd25b6982ed2cc9d908d28f0ef17fe29f7279592accb",
+        "commitment": "a73402deaba2fc5ad356e436e0c36202b1d286d903732c9a7f919a54b4642397f9488417a96b9fa11646a36e656c6915",
+        "response": "627ddd6bbd98b894034a8a39c756d8bf8f2945fc6faff2cad20aefbb0094d25"
+      },
+      "proof": {
+        "w": "49fec5d298d039dec07eb4153899e6f4dc58246370afa92d0e85a27874c2268f",
+        "r": "2b2576b65aa99d8f21dd5b4139a8064c16d8ceac7e8025bfce758910e76bbdd1",
+        "tSrc": "891c7a6f9f5a3e11ff51bc89edc11564cab3c16453b540f9afd2ff0d4fda7ed55cc49c65f0d8fb4c15a09e7851515b6f",
+        "tTgt": [
+          "14b77030fcecf09597acdf4dd373a694510c6ce0fe6fdec3195fdfbe915a385f1dab91aad64e447efecb919f6bda46b0",
+          "16363222dc8c1a4414564a896e9feb68ff1c6b19e50f15e5127873afe81281be20a2fb0400b1e59b345c528dea0836df",
+          "237943f00ece6694ea8163152eeaea61c31650cf2f9aafd1e7d35c575b9334f82338806fedea157457e8b57aa4d525d",
+          "cb18b668eb4f8c027c988a1181045cf2a13a6efed1f041369905640911df8aa7ed75de2cf28db7aa037e2188b78b644",
+          "36ba2c136609c6f99ba9173e28c55637000e993e78fbf20e00a804e599cf105a111f5814eac03e13080ef98f28fe865",
+          "12173c29c1c1f65c540f92013dac26d7d45b734c84f10d94ab1baf7eab81569c73e414578a7371fd6d2f8526d74504f6",
+          "14398c776663d0b1dda6008d96ac6ebfb4d83892e35bd8aa5fd3584f6a781ebfb074fb125edbe7c2ac3d820ca7c6c24c",
+          "13121d8d681cd09ec6b196ce1948ffbe319ed6929c7ab4bc957edc5cdaa3d50c848c0de28eb2fae3e9849f26c4bb8d5d",
+          "acb3f2d36f5f34b5ce50c8e5a6cbc0f50bc380b5cd1b8e75ba2c4ba80cbb1bc257b3ca1995cefb02b10927f8c106390",
+          "c201924d5cd6d32420795c5260f59e687c545404de007e39b9680558500a229d1763c4bd5355d1ce74927f2068d081b",
+          "17e1f74c1ffd9609906713a30618af84c60be736ffb55b4b3d22e40f5e0b14fbf4e5c9f2c8b7664522cf26d25d0d08b3",
+          "150901e65cb4d286b1720dcadb7d7bf22170a4301d873e2bc6c4e21aadd0844a3fa57ad50c8e2f7e862d07d4cca3842d"
+        ],
+        "d": "4d4c380383245be28e57bc759e41a4dc8a6e672477d316cbd1655d9f86a1adb4"
+      }
+    },
+    {
+      "name": "confirmer-designated-from-verifier-secret",
+      "kind": "designated",
+      "role": "confirmer",
+      "context": "signature-gate-public-fixture-v1",
+      "expected": true,
+      "publicData": {
+        "scheme": "XIA-2013-TYPE3-RESEARCH-NOT-AUDITED",
+        "message": "The manuscript stays in the archive.",
+        "signerPublic": "8d0273f6bf31ed37c3b8d68083ec3d8e20b5f2cc170fa24b9b5be35b34ed013f9a921f1cad1644d4bdb14674247234c8049cd1dbb2d2c3581e54c088135fef36505a6823d61b859437bfc79b617030dc8b40e32bad1fa85b9c0f368af6d38d3c",
+        "confirmerPublicG1": "80fd75ebcc0a21649e3177bcce15426da0e4f25d6828fbf4038d4d7ed3bd4421de3ef61d70f794687b12b2d571971a55",
+        "confirmerPublicG2": "a190be857d602284393305bfe0a29e29a6982ed3f04ccaabafb7e59cdc7eda85c22bc3e8690355c7a0fb7590ae40f1b009303f04d568e289a35102b6df883d5ed620355c0eb5d02236718cdaf99fba6e19ef5cee2996268eb9a53ae1ee09bce3",
+        "confirmerKeyProof": {
+          "R1": "97bb00f218cce26abe8588f63cbfc66a41794080b35f1c5557e526f3a67be717b2d0c4987b3c0f4f065cd264aa8d8f8b",
+          "R2": "96082a3d48ffee6385d1d45c38f0f0a3f3122c246547878876f875f4b836bb3e2259c709a0a4fcce7da3351bf60b180a0a6c460010dd23715999c7186e79bd77d5c505b4e0d721758a05a3b9c6e232942686eaf8b544be72ad425eb6d920ddde",
+          "z": "fabedfca059b2c0233212818c6ceffe5ad455aa8728f2fcb36a90e47c173a68"
+        },
+        "signature": {
+          "sigma1": "b0ea38f0b465ae0f0b019494aecd8a82cb7c496ecfab60af96d0bda1a52c29efd4d4e5b270f3d565eb3485b2aaf3d87c",
+          "sigma2": "a39138ff1f9084c590b96ecc097a89ab3f8d64de5591f175f2970b0392dff2cf74ba746de90ccdb80d4a05b80179068f",
+          "s": "14078980b017d09f9e00ce2640e97a357e64e25a4270dac84fe443ed4e73b513",
+          "t": "1c86ace29dfa9d8a9f96c7e1389784acc3a4368f5fbe642e0e97730efbe03206"
+        }
+      },
+      "verifierKey": {
+        "y": "818b3ad43a052aeb025b029c94898d95601d158f622e3d0955bbbd25b6982ed2cc9d908d28f0ef17fe29f7279592accb",
+        "commitment": "a73402deaba2fc5ad356e436e0c36202b1d286d903732c9a7f919a54b4642397f9488417a96b9fa11646a36e656c6915",
+        "response": "627ddd6bbd98b894034a8a39c756d8bf8f2945fc6faff2cad20aefbb0094d25"
+      },
+      "proof": {
+        "w": "a474ba664844fc6c191f13b4621a77f2f99646352c16d58ac54308efab54280",
+        "r": "6d513b0742d2a45acfb6562ed5894ea52f2b37fe61f5b06f6b74a306e2a1fb7e",
+        "tSrc": "acf8cdd65ec291fc6a13af6e797cd0f5cb7a0ccfedbd504d33869933198e7e8f88ec5f186dd8f0ab1179f7fca46bed7a",
+        "tTgt": [
+          "11b01ee16f49a477a3061dbe25b8751277a9eab1040f22a94a6a88f3f991ca3ec1e63b3c0c6b96c919550f95a8d8b9ce",
+          "94b2204ea6bd25b68ed4665bbcec3acc54ad7a4e2b804e0bb5bf31ba315b072b429ebd5e0bdcb4715eda89e0bacee58",
+          "ad0787c28233dce5ae8847f13b96421e03094f1a37cbcedc5b67fa71899eb8b0f1f776019cf3b34b5dbd95bb8a836f0",
+          "d3761367e143f0449984b8c167b0808c44c38bcd1456ebe73edbf8f8fe2bf9de7f048fcbae7ad492134ca7962c55f7b",
+          "32a06e0fb38ed616f148911b1e142301c555779b6e530ccad5bd4596fa073ed9fcced6df82b3d8b5e5333040195cbc8",
+          "57e03413bc2e484ef35bb7319763c4dd574fc09aec3e503c9b8f20a19277fd059519db55c8bf66d41b17876209e3b08",
+          "13d42b4ea6a653ec0d5a584246776b7dc36c4bb180ffac6a5a1f018f8ca52ee86e050ad1d1b95d8c5a33e36ac0d7cb94",
+          "901ee06c58d30336ff7e8a0016f57bf7c38bc268d78a139d6eededddbeb326f184f7d69c8d3ca6427b9c55bef7c6b2a",
+          "163f90b59257e4dee548ddd85d24b21597f61b767f3b39927e8a94bfbbf34072fbfbaf60f0460603e5daeec211fde594",
+          "66e8c88075dcdd3a1c31269bd1f50e3aeb2a860b33b9c1a815e3d154e4454a663e1553c64e55afa6d9681629a1ce3e7",
+          "15631058c1de214c226209b878b623edef16586279c0eb4d7fc27826da11adaa4e799958e08be0f7b128aa8f0d0061c1",
+          "b6c37ddc5d46b61099acf9f62de7eeff0dd69375dbda954992f1437185bd62880729b9dcb41e694c09bd954d3e88fd8"
+        ],
+        "d": "6113e710e5cef4f34e8b1fe9f07ecd8eac862fb3ba4b3989e0fbab92fc5679ea"
+      }
+    },
+    {
+      "name": "confirmer-public-transferable",
+      "kind": "public",
+      "role": "confirmer",
+      "context": "signature-gate-public-fixture-v1",
+      "expected": true,
+      "publicData": {
+        "scheme": "XIA-2013-TYPE3-RESEARCH-NOT-AUDITED",
+        "message": "The manuscript stays in the archive.",
+        "signerPublic": "8d0273f6bf31ed37c3b8d68083ec3d8e20b5f2cc170fa24b9b5be35b34ed013f9a921f1cad1644d4bdb14674247234c8049cd1dbb2d2c3581e54c088135fef36505a6823d61b859437bfc79b617030dc8b40e32bad1fa85b9c0f368af6d38d3c",
+        "confirmerPublicG1": "80fd75ebcc0a21649e3177bcce15426da0e4f25d6828fbf4038d4d7ed3bd4421de3ef61d70f794687b12b2d571971a55",
+        "confirmerPublicG2": "a190be857d602284393305bfe0a29e29a6982ed3f04ccaabafb7e59cdc7eda85c22bc3e8690355c7a0fb7590ae40f1b009303f04d568e289a35102b6df883d5ed620355c0eb5d02236718cdaf99fba6e19ef5cee2996268eb9a53ae1ee09bce3",
+        "confirmerKeyProof": {
+          "R1": "97bb00f218cce26abe8588f63cbfc66a41794080b35f1c5557e526f3a67be717b2d0c4987b3c0f4f065cd264aa8d8f8b",
+          "R2": "96082a3d48ffee6385d1d45c38f0f0a3f3122c246547878876f875f4b836bb3e2259c709a0a4fcce7da3351bf60b180a0a6c460010dd23715999c7186e79bd77d5c505b4e0d721758a05a3b9c6e232942686eaf8b544be72ad425eb6d920ddde",
+          "z": "fabedfca059b2c0233212818c6ceffe5ad455aa8728f2fcb36a90e47c173a68"
+        },
+        "signature": {
+          "sigma1": "b0ea38f0b465ae0f0b019494aecd8a82cb7c496ecfab60af96d0bda1a52c29efd4d4e5b270f3d565eb3485b2aaf3d87c",
+          "sigma2": "a39138ff1f9084c590b96ecc097a89ab3f8d64de5591f175f2970b0392dff2cf74ba746de90ccdb80d4a05b80179068f",
+          "s": "14078980b017d09f9e00ce2640e97a357e64e25a4270dac84fe443ed4e73b513",
+          "t": "1c86ace29dfa9d8a9f96c7e1389784acc3a4368f5fbe642e0e97730efbe03206"
+        }
+      },
+      "proof": {
+        "tSrc": "92be9bfb405f24ea2f4a45edd35862148c04be53ead9a85ee80a6e7c64a43489291b800cc21dd6cd015efb282002d961",
+        "tTgt": [
+          "15061577824cf7b5c73adb264357aab38fc2b17bbb631493d7b5a6b0a302a0f4b9ac5edea3532d466b415cfb129899aa",
+          "88ffd03371cbfad784285a2bf36095999ad19f30e5ca6867552b10bfd81f6adf76a2036bd06bfcef3ae8199c0737b08",
+          "52c1f80f91c57c66bbcb7b08891b036b14182309453c5968c2632ccf5a24357e73ea02a9e008b6e5c07928bfff9b9af",
+          "159f96d4650e932e3c0d3ef992683922250c0e86024b596cc7bcf21194f68ddf41b2fbaeadc9442d45ad17991fde21cd",
+          "8d2020ab538f22f19508e22dc82c6923ae23b8b6d6b6086304f211ac17faabcfb8a80a18222d94c6236663dbc4807b2",
+          "566c0b9b875e79c3fe7e8b0bba10c14d3c7a7831971072d52db652a1161e826fd69343094074915198db361517f8334",
+          "13c628afb8a8b9e0965e876e502a66aae5df21bdb7d107cf999e26d2e854050ca12491832a4e52b3e28c56f0583545ed",
+          "8724a70d6635ae32f1226b4637dd69ee824a0199ec5ff36adf1b799adfe080e3a859526df78883a3c122c492183461",
+          "3db793518c9bd2ad6efdb96633a89a08dd49783aa5d17a21758bd87358c41cb10eab1f12fb8809a12568c21a4f965df",
+          "9bccca8eb09b0e687d39d6aaaebe6e5a118f7c259b3fb7a5c2a77a8b3b3ff2b19dc24ca66891ba7da53c69904edcc54",
+          "1456b46883c86d210024a9f15d91dacfc883ab28992cd54796546143c00ea45ba638557df9454bde996c088087e6f925",
+          "125496251ae20dd9193caaaab0fd80296d4a1aef068fd0f7feaf67fafb8333a11331595b8e4c9efedbd5012619a3929"
+        ],
+        "d": "3cc9e27a3bb473f9da473aa1cc973f8f9220982fbec9a3a3c4adb5507bf6e88c"
+      }
+    },
+    {
+      "name": "signer-designated-from-witness",
+      "kind": "designated",
+      "role": "signer",
+      "context": "signature-gate-public-fixture-v1",
+      "expected": true,
+      "publicData": {
+        "scheme": "XIA-2013-TYPE3-RESEARCH-NOT-AUDITED",
+        "message": "The manuscript stays in the archive.",
+        "signerPublic": "8d0273f6bf31ed37c3b8d68083ec3d8e20b5f2cc170fa24b9b5be35b34ed013f9a921f1cad1644d4bdb14674247234c8049cd1dbb2d2c3581e54c088135fef36505a6823d61b859437bfc79b617030dc8b40e32bad1fa85b9c0f368af6d38d3c",
+        "confirmerPublicG1": "80fd75ebcc0a21649e3177bcce15426da0e4f25d6828fbf4038d4d7ed3bd4421de3ef61d70f794687b12b2d571971a55",
+        "confirmerPublicG2": "a190be857d602284393305bfe0a29e29a6982ed3f04ccaabafb7e59cdc7eda85c22bc3e8690355c7a0fb7590ae40f1b009303f04d568e289a35102b6df883d5ed620355c0eb5d02236718cdaf99fba6e19ef5cee2996268eb9a53ae1ee09bce3",
+        "confirmerKeyProof": {
+          "R1": "97bb00f218cce26abe8588f63cbfc66a41794080b35f1c5557e526f3a67be717b2d0c4987b3c0f4f065cd264aa8d8f8b",
+          "R2": "96082a3d48ffee6385d1d45c38f0f0a3f3122c246547878876f875f4b836bb3e2259c709a0a4fcce7da3351bf60b180a0a6c460010dd23715999c7186e79bd77d5c505b4e0d721758a05a3b9c6e232942686eaf8b544be72ad425eb6d920ddde",
+          "z": "fabedfca059b2c0233212818c6ceffe5ad455aa8728f2fcb36a90e47c173a68"
+        },
+        "signature": {
+          "sigma1": "b0ea38f0b465ae0f0b019494aecd8a82cb7c496ecfab60af96d0bda1a52c29efd4d4e5b270f3d565eb3485b2aaf3d87c",
+          "sigma2": "a39138ff1f9084c590b96ecc097a89ab3f8d64de5591f175f2970b0392dff2cf74ba746de90ccdb80d4a05b80179068f",
+          "s": "14078980b017d09f9e00ce2640e97a357e64e25a4270dac84fe443ed4e73b513",
+          "t": "1c86ace29dfa9d8a9f96c7e1389784acc3a4368f5fbe642e0e97730efbe03206"
+        }
+      },
+      "verifierKey": {
+        "y": "818b3ad43a052aeb025b029c94898d95601d158f622e3d0955bbbd25b6982ed2cc9d908d28f0ef17fe29f7279592accb",
+        "commitment": "a73402deaba2fc5ad356e436e0c36202b1d286d903732c9a7f919a54b4642397f9488417a96b9fa11646a36e656c6915",
+        "response": "627ddd6bbd98b894034a8a39c756d8bf8f2945fc6faff2cad20aefbb0094d25"
+      },
+      "proof": {
+        "w": "22cb8d7681bb43a377431258fb430bf1852747c2c9f405c088411f9c0c616ac6",
+        "r": "43e42c79f3fdc09bc517d1b38dd5bdba2724449fad0047abc1360a3a77ebdb1c",
+        "tSrc": "b2813a27f3346591fe2b9e9b636f777fde72f741dacbe29488133e788e7acc16bcd73e87b30cb8468c12f83d244219da0554b466a9f232c19e51abfc4cfb17173a68f2a3dcf76e1e3e728701f754e72b89d00b60a2d5c0757f71826199761332",
+        "tTgt": [
+          "adb59e5d45fd6b89f9f1975d8a7ed0485a5a9d0c68c2306e00e57c906b13370c644c54b007a8768dd09854676327cda",
+          "190f0fc19cf4b6f7cbd26172d9bfe1879b238924c778bfb6404cf5dd51ccc04dfd504f238b33cfc61085fd9469bd7ddd",
+          "2567e81ab11309fc73fb3b26e55ea6215937116964ffb4286a05f778a8d99dd475fae19b0c44e9700cf5b03eae2d8f7",
+          "b0a89f3ff7572c9969e1892989c8226e42b3f5f998444a36e0586726c0834a68a8785d1146265551fee8eca3ad9bc8f",
+          "48f886295cfe8e1c4b82ff71b607fe6b46f523ebe1172a816ec2899e8a0d1d144ba21d849b956c760321fd0ba875014",
+          "c2939e212157a73dcfac58b800e40bd509b0f490b987e863e74debbc420a74546b6393a7e42bfa1d604bfdef63424b1",
+          "3039c28eee047e44af2c3f8ac084791ba4749dd7482883227d74bd2a8ddc83c2e95bdcf7a42562b08aaeb0c7cc6ed74",
+          "857ac1a714513c82fecf2629920465d5cdb3661d649b9c97c1b65ec06671c13410515b6e0c230a6644affabac6ab525",
+          "1b1548f6d47f09ff43188a54f3672a1a64339a6f87c50ec7bafb44699763ecbbbc3423f94fc0811a76f81dd86b99ca4",
+          "11f45485041a6b3ffa1734535f0f80437b3f0fcb278d6a27110e2a3022e823aa7b0444ac77f0d08f3de19d2f4e869e09",
+          "712ec263a564033e64fb6328e4290d67f8a207124d67784cdc556b5ccb7a11243b599ecd11660f79d7db880ad4dfc64",
+          "4bcd27aedf313b9e50b03c6bf54a291840d5713d10e598fb5ef9716f469aaeaafae7330486beec845041b6c05864fef"
+        ],
+        "d": "24080ff87636dda2d63033c4d17c71c4572a724e790fe8f866a800e64f7bdf0f"
+      }
+    },
+    {
+      "name": "signer-designated-from-verifier-secret",
+      "kind": "designated",
+      "role": "signer",
+      "context": "signature-gate-public-fixture-v1",
+      "expected": true,
+      "publicData": {
+        "scheme": "XIA-2013-TYPE3-RESEARCH-NOT-AUDITED",
+        "message": "The manuscript stays in the archive.",
+        "signerPublic": "8d0273f6bf31ed37c3b8d68083ec3d8e20b5f2cc170fa24b9b5be35b34ed013f9a921f1cad1644d4bdb14674247234c8049cd1dbb2d2c3581e54c088135fef36505a6823d61b859437bfc79b617030dc8b40e32bad1fa85b9c0f368af6d38d3c",
+        "confirmerPublicG1": "80fd75ebcc0a21649e3177bcce15426da0e4f25d6828fbf4038d4d7ed3bd4421de3ef61d70f794687b12b2d571971a55",
+        "confirmerPublicG2": "a190be857d602284393305bfe0a29e29a6982ed3f04ccaabafb7e59cdc7eda85c22bc3e8690355c7a0fb7590ae40f1b009303f04d568e289a35102b6df883d5ed620355c0eb5d02236718cdaf99fba6e19ef5cee2996268eb9a53ae1ee09bce3",
+        "confirmerKeyProof": {
+          "R1": "97bb00f218cce26abe8588f63cbfc66a41794080b35f1c5557e526f3a67be717b2d0c4987b3c0f4f065cd264aa8d8f8b",
+          "R2": "96082a3d48ffee6385d1d45c38f0f0a3f3122c246547878876f875f4b836bb3e2259c709a0a4fcce7da3351bf60b180a0a6c460010dd23715999c7186e79bd77d5c505b4e0d721758a05a3b9c6e232942686eaf8b544be72ad425eb6d920ddde",
+          "z": "fabedfca059b2c0233212818c6ceffe5ad455aa8728f2fcb36a90e47c173a68"
+        },
+        "signature": {
+          "sigma1": "b0ea38f0b465ae0f0b019494aecd8a82cb7c496ecfab60af96d0bda1a52c29efd4d4e5b270f3d565eb3485b2aaf3d87c",
+          "sigma2": "a39138ff1f9084c590b96ecc097a89ab3f8d64de5591f175f2970b0392dff2cf74ba746de90ccdb80d4a05b80179068f",
+          "s": "14078980b017d09f9e00ce2640e97a357e64e25a4270dac84fe443ed4e73b513",
+          "t": "1c86ace29dfa9d8a9f96c7e1389784acc3a4368f5fbe642e0e97730efbe03206"
+        }
+      },
+      "verifierKey": {
+        "y": "818b3ad43a052aeb025b029c94898d95601d158f622e3d0955bbbd25b6982ed2cc9d908d28f0ef17fe29f7279592accb",
+        "commitment": "a73402deaba2fc5ad356e436e0c36202b1d286d903732c9a7f919a54b4642397f9488417a96b9fa11646a36e656c6915",
+        "response": "627ddd6bbd98b894034a8a39c756d8bf8f2945fc6faff2cad20aefbb0094d25"
+      },
+      "proof": {
+        "w": "3825d0203a28df7c3fe7a079847ca761bab55a399a9fe6163e547345694269a0",
+        "r": "366cf03ae2bec9d0d81c6617a645d193fe996a6a779f743cab193c73de33cd7c",
+        "tSrc": "8c12825c56c0996d288e80d5be45c0b40fe4cbfbeb18082ccc09920bfda76751892c18ef31b6a684e5825b71e3c989220004093af716309f2b17f1f6a7eedfc95a78065e44a5f3b05214729431e16309c73b2135be5ec9a878f0ff8fd2c5a7bf",
+        "tTgt": [
+          "15af54d2d04f32386c790f692f971581bf76df48cd3e604e9ccf058efe5d8a2534f8a850e1d094d293509346608c2759",
+          "2fff00d438c04cd8ca5e692205e14d7e784b2c8addb01097bb9cf5473c34ae39fc2b16d45393bf925f3ad98414651e4",
+          "210f31641dcfab29abd75522e6621762e7e69d2d193b3263f0aa2d614fdac3623ec5c8fa324d69b3f0f8bef6e441b4f",
+          "3a0d1e5eb747016db0b15edf43df8f9d87e35c0163ffbb508bafc0ce2c216c612e3c8d87c3b9dfeb2fbff31e5d17611",
+          "dd9e10333e9cc851e7a7f36b346b8789993432686b0e03c0c0c35ef7877b12a42f4eecb1b275071aa0e991868430b9a",
+          "10bd0d698a5e41000bf9e4674d0525483caa35442fe497f387eb1d4a585742b134f65d4ed15eccefc94447dd05d3e3d7",
+          "7e24dd061281ef81ad9663bdaafa98bb18167b2e871acbf3e3254ca315afc10c1ad33efd1c588e1070a9c0dfd5782e7",
+          "1346fa84c5daba410b87e893e49ada18f7d0991f7e67514a1bd94f088cc973a0fc35ded148753cdb57ba1c3e73544465",
+          "74d47ab4982eab08508e16685c24adc6cbc04fb6244b25171bbb907e92f0e7d22400b46837ff3f9cd8fa7c4e53e251a",
+          "c1e88f07a335b66d94e5e3a6d190b7d34c711785a3ed752412799f06e8c385e99cb0fa54bb3f265c71f6fed7676d76a",
+          "6249fe75b3bd3b7b7e5096e9465f74fef27a0e648b7b694d49086eaf028eb6571c18e218f8a931e237688b4775d2ce6",
+          "1548fdfc2f0e584ad15dcaf5a16d2e80a4fd51b97927de307c7363199521380f07f36c165760d67f4ffbfee70ee50164"
+        ],
+        "d": "669ad8dd0a49078d0577ce588c01e77bfdaa5b2f6b479fdce05654f829c806b6"
+      }
+    },
+    {
+      "name": "signer-public-transferable",
+      "kind": "public",
+      "role": "signer",
+      "context": "signature-gate-public-fixture-v1",
+      "expected": true,
+      "publicData": {
+        "scheme": "XIA-2013-TYPE3-RESEARCH-NOT-AUDITED",
+        "message": "The manuscript stays in the archive.",
+        "signerPublic": "8d0273f6bf31ed37c3b8d68083ec3d8e20b5f2cc170fa24b9b5be35b34ed013f9a921f1cad1644d4bdb14674247234c8049cd1dbb2d2c3581e54c088135fef36505a6823d61b859437bfc79b617030dc8b40e32bad1fa85b9c0f368af6d38d3c",
+        "confirmerPublicG1": "80fd75ebcc0a21649e3177bcce15426da0e4f25d6828fbf4038d4d7ed3bd4421de3ef61d70f794687b12b2d571971a55",
+        "confirmerPublicG2": "a190be857d602284393305bfe0a29e29a6982ed3f04ccaabafb7e59cdc7eda85c22bc3e8690355c7a0fb7590ae40f1b009303f04d568e289a35102b6df883d5ed620355c0eb5d02236718cdaf99fba6e19ef5cee2996268eb9a53ae1ee09bce3",
+        "confirmerKeyProof": {
+          "R1": "97bb00f218cce26abe8588f63cbfc66a41794080b35f1c5557e526f3a67be717b2d0c4987b3c0f4f065cd264aa8d8f8b",
+          "R2": "96082a3d48ffee6385d1d45c38f0f0a3f3122c246547878876f875f4b836bb3e2259c709a0a4fcce7da3351bf60b180a0a6c460010dd23715999c7186e79bd77d5c505b4e0d721758a05a3b9c6e232942686eaf8b544be72ad425eb6d920ddde",
+          "z": "fabedfca059b2c0233212818c6ceffe5ad455aa8728f2fcb36a90e47c173a68"
+        },
+        "signature": {
+          "sigma1": "b0ea38f0b465ae0f0b019494aecd8a82cb7c496ecfab60af96d0bda1a52c29efd4d4e5b270f3d565eb3485b2aaf3d87c",
+          "sigma2": "a39138ff1f9084c590b96ecc097a89ab3f8d64de5591f175f2970b0392dff2cf74ba746de90ccdb80d4a05b80179068f",
+          "s": "14078980b017d09f9e00ce2640e97a357e64e25a4270dac84fe443ed4e73b513",
+          "t": "1c86ace29dfa9d8a9f96c7e1389784acc3a4368f5fbe642e0e97730efbe03206"
+        }
+      },
+      "proof": {
+        "tSrc": "a27dbbb05c33654853c39865e85b49d23ac1fbe99a919dbcb327df48f8122c3c950813c5b204b0d6a50d56287216d78d033ac1a243e53ca6baf7e5918d30fb7ab0dc857ea878cb1027965c1ac2d264bb45eda77cbcd9f4f964a23665f00aed3d",
+        "tTgt": [
+          "e13f063f6d9962128d42a01176d781c944f9fa99afb449ceca3f65dc2babd3e3f603431a6b7afc34456d12f31c98004",
+          "148342414803d32e63bb17950ec0c83d8012647e44114c3717b856f6edc48f087d5814c749111084913e55a7db116c98",
+          "1230dd3f4efe57bc5dd037f7eca7502e84a3cfe35d23cf37d82b743212e27c21d3ce92783a2a9a2e2d603bd364724d6b",
+          "e2bcad0f09299b3bbcc540a769bbd97c1fd91ed661452f6807bca05f754cfe927cf7fba0cb83f166b1dc29d15f16699",
+          "b5928fd141ca1bf8b4464fb1d97994f6332436b2c5da466b5b04644c22f955ad7f388e53be9ebf468caf91955ec8776",
+          "234163a2d6e9f5fcb8c40437ac7bdfa5ac1482b7f0dfea77fd18ea2ebf150656ac5a41500b52b52aa68000dc6b7a986",
+          "ac9a3173e8457f13f85b973274b9ecf01ff3d9a6a5d8c69f7755744b84ecb53549471714643ecee6197d8e576a4f6e",
+          "48ae2d3e596f84d8082d1d6801ec6fd7222ac527578efa25805f0e9691971f2921d418b52fecfd841e270901372e044",
+          "1290f5d00fa3aeddc296c1fa954786d4d16eb174885f96827bffc842ea9b97cc94a6cd06fc8894a71b9ee3abd081556c",
+          "7b6873a92299cf3426d2b171470e1da3faae8e76b122a2cb8b18ac3b31ec75b825b5086a4773f435151a814ae4b851d",
+          "bb3925a0180aa556d3de74c4d22e1a83085f970e466194f3ca180bf750a5300017eb1df3bff8c3b8fdcc8e5c8e0f4f2",
+          "143732a2703598d32b42361b05dccd2ceb7b61a175c2bf31e378ca662f1a5248aff5e86561f8d6688b7f2e779b1626c8"
+        ],
+        "d": "3af7de2f347c0d2d3d4147d7c0bc944bc02a1a2fd5e920579c3b981419b707d3"
+      }
+    },
+    {
+      "name": "designated-simulated-false-statement",
+      "kind": "designated",
+      "role": "confirmer",
+      "context": "signature-gate-public-fixture-v1",
+      "expected": true,
+      "publicData": {
+        "scheme": "XIA-2013-TYPE3-RESEARCH-NOT-AUDITED",
+        "message": "The manuscript leaves the archive.",
+        "signerPublic": "8d0273f6bf31ed37c3b8d68083ec3d8e20b5f2cc170fa24b9b5be35b34ed013f9a921f1cad1644d4bdb14674247234c8049cd1dbb2d2c3581e54c088135fef36505a6823d61b859437bfc79b617030dc8b40e32bad1fa85b9c0f368af6d38d3c",
+        "confirmerPublicG1": "80fd75ebcc0a21649e3177bcce15426da0e4f25d6828fbf4038d4d7ed3bd4421de3ef61d70f794687b12b2d571971a55",
+        "confirmerPublicG2": "a190be857d602284393305bfe0a29e29a6982ed3f04ccaabafb7e59cdc7eda85c22bc3e8690355c7a0fb7590ae40f1b009303f04d568e289a35102b6df883d5ed620355c0eb5d02236718cdaf99fba6e19ef5cee2996268eb9a53ae1ee09bce3",
+        "confirmerKeyProof": {
+          "R1": "97bb00f218cce26abe8588f63cbfc66a41794080b35f1c5557e526f3a67be717b2d0c4987b3c0f4f065cd264aa8d8f8b",
+          "R2": "96082a3d48ffee6385d1d45c38f0f0a3f3122c246547878876f875f4b836bb3e2259c709a0a4fcce7da3351bf60b180a0a6c460010dd23715999c7186e79bd77d5c505b4e0d721758a05a3b9c6e232942686eaf8b544be72ad425eb6d920ddde",
+          "z": "fabedfca059b2c0233212818c6ceffe5ad455aa8728f2fcb36a90e47c173a68"
+        },
+        "signature": {
+          "sigma1": "b0ea38f0b465ae0f0b019494aecd8a82cb7c496ecfab60af96d0bda1a52c29efd4d4e5b270f3d565eb3485b2aaf3d87c",
+          "sigma2": "a39138ff1f9084c590b96ecc097a89ab3f8d64de5591f175f2970b0392dff2cf74ba746de90ccdb80d4a05b80179068f",
+          "s": "14078980b017d09f9e00ce2640e97a357e64e25a4270dac84fe443ed4e73b513",
+          "t": "1c86ace29dfa9d8a9f96c7e1389784acc3a4368f5fbe642e0e97730efbe03206"
+        }
+      },
+      "verifierKey": {
+        "y": "818b3ad43a052aeb025b029c94898d95601d158f622e3d0955bbbd25b6982ed2cc9d908d28f0ef17fe29f7279592accb",
+        "commitment": "a73402deaba2fc5ad356e436e0c36202b1d286d903732c9a7f919a54b4642397f9488417a96b9fa11646a36e656c6915",
+        "response": "627ddd6bbd98b894034a8a39c756d8bf8f2945fc6faff2cad20aefbb0094d25"
+      },
+      "note": "A FALSE statement. Its equations hold because the designated verifier can always produce one; that is the designation property, not a soundness failure.",
+      "proof": {
+        "w": "5b4091ac2b0ef293ad5b69fb162585387c5be36f586fa45b884b415e97d3d986",
+        "r": "544b7222c2a2e45cd1396b65baa68dc8ad1390f5fbb32274c3db6ea6c58d2a31",
+        "tSrc": "b300db01324796a3f01527a43b1174b776017fad11d2e1120bb3abf08ffaf533255d0989e3621b7a1618cb00a9ac97eb",
+        "tTgt": [
+          "96af02d35a8c3259ea23268847cd039069b6a9f4362dbcb442bf4f324bfcaab544a916d2cfc16a8d2cb6c240a526e83",
+          "a64e312fa7cae602e6e819bf90732801041c9b85760c0b610c0cbaa9d195ce7a13b2070388d33f9c632e460a191ffa6",
+          "d756e37c56e3319437e3d7781a86a792f0a6a50ae01a9f59390c5465dcf0adb868793be24ec3692bb53afc284dd2eb8",
+          "c402102f5994beb01528838729a289865856f58045b65c08cda888894e91d1e030b47d6efc9c02bfc945917c7ee78ad",
+          "13c23d90eb936bd37b19b8eb58ce5c7be40cf73b23cd1f6c2f31bd8aa4b703cddce42deab6898ca6add9b9b3bcd0cb5a",
+          "a8db1495ffa2b62587ce7d6aa25565a7be97531f4030ce40eb61ffe9b6d6163370e97e2c117c05f2ae4468ae13e6d8f",
+          "937dec46f49621815f2bde70d5b708c7ffd7edbd21b03d6655f1c5208c8e1e56b2c4c3507346cfd1b2f1ae33f320b76",
+          "13113fbb18587258f1c04b93e5b106a2b6eefa2cacf1f2cfdd9ea3453a4498136a06074e21a19c9349fd7eed43156f80",
+          "150a69cc777bfd51a1239715ec7e1406740c32d550573db71f92c7df019b8b4f4f71b6057d18330169dcc4e30edfdc63",
+          "184bd679d0c847e070ba55df8e39042a786b4410f88da17153b6fc427cee0f80f7cdf016284047ffc84d804a374ca46a",
+          "16a8a1097b4214195a97676adb2ebb431a34271f107e2ca38127ec36720b10cf40e2aa8f273c4bbc0c9306f7874cf595",
+          "ae2e796f29396fb04fdf966c309d375f23d06581ec555bccfdecf67b3ab8e35947af46b7ae981898eb941d0cedb3790"
+        ],
+        "d": "62a796b93f2ecaf85c8b8aabf3ab7a6d475e37f12d2839a2a8dc6bd1f6a9ba8"
+      }
+    }
   ]
 }

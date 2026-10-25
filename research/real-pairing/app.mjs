@@ -2,9 +2,14 @@ import {issue,verifyFormat,extract,messagePoint} from './core.mjs';
 import {chooseVerifierChallenge,simulateConfirmation,verifyConfirmation} from './confirmation.mjs';
 import {ProofExchange} from './exchange.mjs';
 import {exportTranscript} from './transcript.mjs';
+import {createVerifierKey,proveWithWitness,proveWithVerifierSecret,verifyDesignatedProof,
+ provePublicTransferable,verifyPublicTransferable,observerView,publicProofFields} from './designated-verifier.mjs';
 const $=id=>document.getElementById(id);
 let mode='guided',chapter=0,unlocked=0,busy=false,issued=null,claim=null;
 let exchange=null,proof=null,proofData=null,lastExport=null,eve=null,eveCheck=null,liveCheck=null;
+// The designated verifier's secret stays in module scope and is never rendered.
+let dvKey=null,dvWitnessProof=null,dvVerifierProof=null,dvPublicProof=null;
+const DV_CONTEXT='signature-gate-designated-verifier-lesson-v1';
 const status=(id,text,kind='neutral')=>{const n=$(id);n.textContent=text;n.dataset.kind=kind;};
 const json=x=>JSON.stringify(x,(_,v)=>typeof v==='bigint'?'0x'+v.toString(16):v,2);
 const changed=()=>!!issued&&claim!==issued.publicData.message;
@@ -23,7 +28,20 @@ function clearEve(){eve=null;eveCheck=null;liveCheck=null;
  $('eve-challenge').textContent='';$('live-challenge').textContent='';$('eve-math').textContent='No recording yet.';
  $('live-card').classList.remove('live-rejected');status('eve-status','Make your prediction first.');
 }
-function retire(){issued=null;claim=null;chapter=0;unlocked=0;clearProof();clearEve();actor(null);
+function clearDv({keepKey=false}={}){
+ if(!keepKey)dvKey=null;
+ dvWitnessProof=null;dvVerifierProof=null;dvPublicProof=null;
+ $('dv-witness-verdict').textContent='Not created yet';
+ $('dv-verifier-verdict').textContent='Not created yet';
+ $('dv-witness-explain').textContent='Alice uses the branch secret. She cannot make this proof for a statement she cannot prove.';
+ $('dv-verifier-explain').textContent='You use your verifier secret instead of any branch secret, and the same verifier accepts the result.';
+ $('dv-witness-d').textContent='';$('dv-verifier-d').textContent='';
+ $('dv-observer-text').textContent='nothing yet; no proof has been created.';
+ $('dv-math').textContent='No designated proof yet.';
+ if(!keepKey)status('dv-key-status','You have no verifier key yet. The proof will be addressed to it, and its secret is what lets you forge the same proof.');
+ status('dv-status',dvKey?'Your verifier key is ready. Ask Alice for a proof, or make one yourself.':'Create a verifier key to begin.');
+}
+function retire(){issued=null;claim=null;chapter=0;unlocked=0;clearProof();clearEve();clearDv();actor(null);
  status('issue-status','Ready. No signed object has been created.');
  status('alter-status','The original claim is still in use.');$('bob-knows').textContent='You have no proof yet';
  for(const input of document.querySelectorAll('input[type=radio]'))input.checked=false;
@@ -37,8 +55,9 @@ function render(){
  $('alter-panel').hidden=!all&&chapter!==2;
  $('proof-panel').hidden=!all&&![1,2].includes(chapter);
  $('eve-panel').hidden=!all&&chapter!==3;
+ $('dv-panel').hidden=!all&&chapter!==4;
  for(const name of ['guided','explore','research'])$('mode-'+name).setAttribute('aria-pressed',String(mode===name));
- for(let n=0;n<4;n++){$('chapter-'+n).disabled=busy||n>unlocked;
+ for(let n=0;n<5;n++){$('chapter-'+n).disabled=busy||(n===4?!issued:n>unlocked);
   if(n===chapter)$('chapter-'+n).setAttribute('aria-current','step');else $('chapter-'+n).removeAttribute('aria-current');}
  $('mode-description').textContent=mode==='guided'?'Four short experiments. Make a prediction, choose a challenge, and see what the mathematics establishes.':mode==='explore'?'All experiments are available together. Switch prover roles, change the claim, and inspect exact public values.':'Reproduce the calculations, inspect the correction argument, and distinguish implemented checks from open security claims.';
  $('issue').disabled=busy;$('reset').disabled=busy;$('message').disabled=busy;
@@ -55,6 +74,9 @@ function render(){
  $('challenge-eve').disabled=busy||!eve||!!liveCheck;
  $('takeaway').hidden=!liveCheck||liveCheck.equationsHold;
  $('download').disabled=busy||!lastExport;
+ $('dv-key').disabled=busy||!issued;
+ $('dv-role').disabled=busy;
+ for(const id of ['dv-prove','dv-simulate','dv-false','dv-public','dv-public-forge'])$(id).disabled=busy||!issued||!dvKey;
  $('claim-display').textContent=issued?'Bob is checking: “'+claim+'”':'Create an agreement first.';
  $('original-message').textContent=issued?.publicData.message??'Create an agreement first.';
  const rank={ready:0,preparing:0,committed:1,challenged:2,checking:2,checked:3,'no-proof':0,failed:0}[stage];
@@ -66,12 +88,12 @@ async function run(where,action){if(busy)return;busy=true;render();
  try{await action();}catch(e){status(where,'Operation unavailable: '+e.message,'reject');}
  finally{busy=false;render();}
 }
-function go(n){chapter=n;render();focusHeading(['issue-heading','proof-heading','alter-heading','eve-heading'][n]);}
+function go(n){chapter=n;render();focusHeading(['issue-heading','proof-heading','alter-heading','eve-heading','dv-heading'][n]);}
 function view(name){mode=name;$('equations').open=name==='explore';render();$('global-status').textContent='View changed: '+$('mode-'+name).textContent;
  if(name==='research')focusHeading('research-heading');
 }
 for(const name of ['guided','explore','research'])$('mode-'+name).onclick=()=>view(name);
-for(let n=0;n<4;n++)$('chapter-'+n).onclick=()=>{if(n<=unlocked)go(n);};
+for(let n=0;n<5;n++)$('chapter-'+n).onclick=()=>{if(n===4?issued:n<=unlocked)go(n);};
 $('next-alter').onclick=()=>go(2);$('next-eve').onclick=()=>go(3);$('open-evidence').onclick=()=>view('research');
 $('reset').onclick=()=>{retire();focusHeading('issue-heading');};
 $('message').oninput=()=>{if(!busy)retire();};
@@ -158,5 +180,93 @@ $('download').onclick=()=>{if(!lastExport)return;
  const a=document.createElement('a');a.href=url;a.download='signature-gate-public-transcript.json';a.click();
  setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
+// ---------------------------------------------------------------------------
+// Chapter 5: the non-interactive designated-verifier proof.
+// ---------------------------------------------------------------------------
+const dvData=()=>({...issued.publicData,message:claim});
+const dvRole=()=>$('dv-role').value;
+const dvWitness=()=>dvRole()==='confirmer'?issued.privateKeys.xc:issued.privateKeys.xs;
+function dvShow(proofObject,label,{designated=true}={}){
+ // A public proof carries no w or r; asking for them would be a different object.
+ $('dv-math').textContent=label+'\n'+json(publicProofFields(proofObject,{designated}))+
+  '\n\nContext bound into the challenge: '+DV_CONTEXT+'\nBranch proved: '+dvRole();
+}
+async function dvObserver(proofObject){
+ const view=await observerView({publicData:dvData(),role:dvRole(),proof:proofObject,
+  verifierPublicKey:dvKey.publicKey,context:DV_CONTEXT});
+ $('dv-observer-text').textContent=(view.equationsHold?'the equations hold, and that is all. ':'the equations do not hold. ')+
+  'It cannot establish '+view.doesNotEstablish.length+' things: '+view.doesNotEstablish.join(' ')+
+  ' Possible origins: '+view.possibleOrigins.join('; or ')+'.';
+}
+$('dv-key').onclick=()=>run('dv-key-status',async()=>{
+ clearDv();dvKey=await createVerifierKey();actor('bob');
+ status('dv-key-status','Your verifier key passed this lab\'s Schnorr/Fiat–Shamir registration check. Section 7 requires actual knowledge of the secret; this executable check is the lab\'s adaptation, not a security theorem.','pass');
+ $('dv-observer-text').textContent='nothing yet; no proof has been created.';
+ status('dv-status','Ask Alice for a proof, or make the same proof yourself.');
+});
+$('dv-role').onchange=()=>{clearDv({keepKey:true});render();};
+$('dv-prove').onclick=()=>run('dv-status',async()=>{
+ actor(dvRole()==='confirmer'?'carol':'alice');
+ try{dvWitnessProof=await proveWithWitness({publicData:dvData(),role:dvRole(),witness:dvWitness(),
+   verifierPublicKey:dvKey.publicKey,context:DV_CONTEXT});}
+ catch(e){dvWitnessProof=null;$('dv-witness-verdict').textContent='No proof was produced';
+  $('dv-witness-explain').textContent='An honest prover refuses a statement it cannot prove: '+e.message;
+  status('dv-status','Alice produced no proof. That refusal is not evidence of anything; you can still forge the proof yourself.','warn');return;}
+ const verdict=await verifyDesignatedProof({publicData:dvData(),role:dvRole(),proof:dvWitnessProof,
+  verifierPublicKey:dvKey.publicKey,context:DV_CONTEXT});
+ $('dv-witness-verdict').textContent=verdict.accepted?'Your verifier: ACCEPTED':'Your verifier: REJECTED';
+ $('dv-witness-explain').textContent=verdict.reason;
+ $('dv-witness-d').textContent='d = 0x'+dvWitnessProof.d.toString(16).slice(0,24)+'…';
+ dvShow(dvWitnessProof,'PROOF MADE BY ALICE, USING THE BRANCH SECRET');
+ await dvObserver(dvWitnessProof);
+ status('dv-status',verdict.accepted?'Accepted. Now make the same proof yourself and compare.':'Rejected; inspect the values.',verdict.accepted?'pass':'reject');
+});
+$('dv-simulate').onclick=()=>run('dv-status',async()=>{
+ actor('bob');
+ dvVerifierProof=await proveWithVerifierSecret({publicData:dvData(),role:dvRole(),verifierSecret:dvKey.secret,
+  verifierPublicKey:dvKey.publicKey,context:DV_CONTEXT});
+ const verdict=await verifyDesignatedProof({publicData:dvData(),role:dvRole(),proof:dvVerifierProof,
+  verifierPublicKey:dvKey.publicKey,context:DV_CONTEXT});
+ $('dv-verifier-verdict').textContent=verdict.accepted?'Your verifier: ACCEPTED':'Your verifier: REJECTED';
+ $('dv-verifier-explain').textContent='You used no branch secret at all, only your own. On a true statement the two proofs are drawn from exactly the same distribution, so nothing in either one records which of you made it.';
+ $('dv-verifier-d').textContent='d = 0x'+dvVerifierProof.d.toString(16).slice(0,24)+'…';
+ dvShow(dvVerifierProof,'PROOF MADE BY YOU, USING ONLY YOUR VERIFIER SECRET');
+ await dvObserver(dvVerifierProof);
+ status('dv-status','Both proofs pass the same check. From the transcript alone, an outsider can establish neither statement truth nor which permitted origin produced it.','warn');
+});
+$('dv-false').onclick=()=>run('dv-status',async()=>{
+ actor('bob');
+ const falseMessage=claim==='A statement Alice never signed.'?'Another statement Alice never signed.':'A statement Alice never signed.';
+ const falseData={...issued.publicData,message:falseMessage};
+ const forged=await proveWithVerifierSecret({publicData:falseData,role:dvRole(),verifierSecret:dvKey.secret,
+  verifierPublicKey:dvKey.publicKey,context:DV_CONTEXT});
+ const verdict=await verifyDesignatedProof({publicData:falseData,role:dvRole(),proof:forged,
+  verifierPublicKey:dvKey.publicKey,context:DV_CONTEXT});
+ const view=await observerView({publicData:falseData,role:dvRole(),proof:forged,
+  verifierPublicKey:dvKey.publicKey,context:DV_CONTEXT});
+ $('dv-verifier-verdict').textContent=verdict.accepted?'Your verifier: ACCEPTED':'Your verifier: REJECTED';
+ $('dv-verifier-explain').textContent='The claim was \u201c'+falseMessage+'\u201d, which Alice never signed. The equations still hold, because you made the proof. This is the designation property, not a break.';
+ $('dv-verifier-d').textContent='d = 0x'+forged.d.toString(16).slice(0,24)+'…';
+ dvShow(forged,'PROOF OF A FALSE STATEMENT, MADE BY YOU');
+ $('dv-observer-text').textContent='the equations hold for a statement that is false. '+view.doesNotEstablish[0];
+ status('dv-status','Accepted, for a statement Alice never signed. The transcript alone therefore does not establish the claim\'s truth to an outsider.','warn');
+});
+$('dv-public').onclick=()=>run('dv-status',async()=>{
+ actor(dvRole()==='confirmer'?'carol':'alice');
+ try{dvPublicProof=await provePublicTransferable({publicData:dvData(),role:dvRole(),witness:dvWitness(),context:DV_CONTEXT});}
+ catch(e){dvPublicProof=null;status('dv-status','No public proof was produced: '+e.message,'warn');return;}
+ const verdict=await verifyPublicTransferable({publicData:dvData(),role:dvRole(),proof:dvPublicProof,context:DV_CONTEXT});
+ dvShow(dvPublicProof,'PUBLICLY VERIFIABLE PROOF OF THE SAME STATEMENT',{designated:false});
+ $('dv-observer-text').textContent='a publicly recomputable, equation-valid transcript. Interpreting it as evidence of witness knowledge requires a security theorem and assumptions this lab does not supply.';
+ status('dv-status',verdict.accepted?'Accepted by the public verifier: any reader can recompute both equations, which is the transferability contrast.':'Rejected; inspect the values.',verdict.accepted?'pass':'reject');
+});
+$('dv-public-forge').onclick=()=>run('dv-status',async()=>{
+ actor('bob');
+ try{await provePublicTransferable({publicData:dvData(),role:dvRole(),witness:dvKey.secret,context:DV_CONTEXT});
+  status('dv-status','Unexpected: a public proof was produced without the branch secret. Inspect the research checks.','reject');}
+ catch(e){status('dv-status','Refused. Your verifier secret is not the selected branch witness: '+e.message,'pass');}
+ $('dv-observer-text').textContent='the honest-prover path rejected this verifier secret because it is not a branch witness. That is a concrete negative control, not an unforgeability theorem.';
+});
+
 render();
 if(!globalThis.crypto?.subtle||!globalThis.crypto?.getRandomValues){busy=true;render();status('issue-status','Web Crypto over HTTPS or localhost is required.','reject');}

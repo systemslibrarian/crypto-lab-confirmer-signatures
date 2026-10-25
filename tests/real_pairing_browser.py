@@ -126,4 +126,86 @@ class RealPairingBrowser(unittest.TestCase):
                 finally:
                     page.screenshot(path=str(ROOT/f'test-results/dcs-real-pairing-{width}-final.png'),full_page=True)
                     page.close()
+    def test_designated_verifier_chapter_both_origins_observer_and_public_contrast(self):
+        """A-D-09: one verifier accepts a proof from Alice AND one the visitor forged."""
+        for width in (390,1360):
+            with self.subTest(width=width):
+                page=self.browser.new_page(viewport={'width':width,'height':900},reduced_motion='reduce')
+                page.set_default_timeout(30000);errors=[]
+                page.on('pageerror',lambda e:errors.append(str(e)))
+                try:
+                    page.goto(self.origin,wait_until='networkidle')
+                    page.add_script_tag(path=str(ROOT/'research/real-pairing/node_modules/axe-core/axe.min.js'))
+                    expect(page.locator('#chapter-4')).to_be_disabled()
+                    page.locator('#issue').click()
+                    expect(page.locator('#chapter-4')).to_be_enabled()
+                    page.locator('#chapter-4').click()
+                    expect(page.locator('#dv-panel')).to_be_visible()
+                    # Nothing can be proved before a verifier key exists to designate to.
+                    expect(page.locator('#dv-prove')).to_be_disabled()
+                    expect(page.locator('#dv-simulate')).to_be_disabled()
+                    page.locator('#dv-key').focus();page.keyboard.press('Enter')
+                    expect(page.locator('#dv-prove')).to_be_enabled(timeout=30000)
+                    self.assertIn('proof of knowledge',page.locator('#dv-key-status').text_content())
+                    self.access(page)
+
+                    # Origin 1: the branch witness.
+                    page.locator('#dv-prove').click()
+                    expect(page.locator('#dv-witness-verdict')).to_have_text('Your verifier: ACCEPTED',timeout=60000)
+                    witness_values=page.locator('#dv-math').text_content()
+                    self.assertIn('USING THE BRANCH SECRET',witness_values)
+                    # Origin 2: the visitor's own verifier secret, no branch secret at all.
+                    page.locator('#dv-simulate').click()
+                    expect(page.locator('#dv-verifier-verdict')).to_have_text('Your verifier: ACCEPTED',timeout=60000)
+                    forged_values=page.locator('#dv-math').text_content()
+                    self.assertIn('USING ONLY YOUR VERIFIER SECRET',forged_values)
+                    self.assertNotEqual(witness_values,forged_values)
+                    # The observer line must say the origin is undetermined.
+                    self.assertIn('Possible origins',page.locator('#dv-observer-text').text_content())
+                    self.access(page)
+                    page.screenshot(path=str(ROOT/f'test-results/dcs-designated-verifier-{width}.png'),full_page=True)
+
+                    # An accepting proof of a statement Alice never signed.
+                    page.locator('#dv-false').click()
+                    expect(page.locator('#dv-status')).to_contain_text('never signed',timeout=60000)
+                    expect(page.locator('#dv-verifier-verdict')).to_have_text('Your verifier: ACCEPTED')
+
+                    # The public transferable contrast, and its forgery refusal.
+                    page.locator('#dv-public').click()
+                    expect(page.locator('#dv-status')).to_contain_text('transferable',timeout=60000)
+                    self.assertIn('PUBLIC TRANSFERABLE PROOF',page.locator('#dv-math').text_content())
+                    page.locator('#dv-public-forge').click()
+                    expect(page.locator('#dv-status')).to_contain_text('Refused',timeout=60000)
+
+                    # No secret may ever reach the rendered values.
+                    shown=page.locator('#dv-math').text_content()
+                    for forbidden in ('"secret"','"witness"','"alpha"','"beta"','privateKeys'):
+                        self.assertNotIn(forbidden,shown)
+
+                    # Changing the branch retires the chapter's results.
+                    page.locator('#dv-role').select_option('signer')
+                    expect(page.locator('#dv-witness-verdict')).to_have_text('Not created yet')
+                    page.locator('#dv-prove').click()
+                    expect(page.locator('#dv-witness-verdict')).to_have_text('Your verifier: ACCEPTED',timeout=60000)
+
+                    # An altered claim: the honest prover refuses, the forgery still works.
+                    page.locator('#mode-explore').click()
+                    page.locator('#altered-message').fill('A different fictional agreement.')
+                    page.locator('input[name=alter-prediction][value=no]').check()
+                    page.locator('#alter').click()
+                    page.locator('#dv-prove').click()
+                    expect(page.locator('#dv-witness-verdict')).to_have_text('No proof was produced',timeout=60000)
+                    page.locator('#dv-simulate').click()
+                    expect(page.locator('#dv-verifier-verdict')).to_have_text('Your verifier: ACCEPTED',timeout=60000)
+
+                    # Editing the signed statement retires every designated result.
+                    page.locator('#message').fill('A fresh fictional agreement.')
+                    expect(page.locator('#dv-prove')).to_be_disabled()
+                    self.assertEqual(page.locator('#dv-witness-verdict').inner_text(),'Not created yet')
+                    self.assertIn('No designated proof yet',page.locator('#dv-math').text_content())
+                    self.access(page)
+                    self.assertEqual(errors,[])
+                finally:
+                    page.close()
+
 if __name__=='__main__':unittest.main()

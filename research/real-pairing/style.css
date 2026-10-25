@@ -8,3 +8,14 @@ button{min-height:46px;border:1px solid var(--line);border-radius:7px;padding:10
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
 .math-guide{font-size:.88rem;color:var(--muted)}.math-guide b,.math-guide h3{color:var(--ink)}.math-guide .comparison code{color:var(--cyan);font-size:.85rem}.math-guide .comparison p code{display:inline;margin:0}
+
+/* A-D-09 designated-verifier chapter. The comparison table uses a fixed layout
+   so it reflows inside the panel at phone width instead of scrolling sideways. */
+.table-scroll{max-width:100%;overflow-x:auto}
+#dv-compare{width:100%;table-layout:fixed;border-collapse:collapse;font-size:.78rem;margin:16px 0}
+#dv-compare caption{text-align:left;padding-bottom:8px;color:var(--muted);font-size:.78rem}
+#dv-compare th,#dv-compare td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+#dv-compare thead th{color:var(--cyan);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase}
+#dv-compare tbody th{font-weight:600;color:var(--ink)}
+#dv-panel .comparison code{display:block;margin-top:10px;color:var(--gold);overflow-wrap:anywhere}
+@media(max-width:600px){#dv-compare{font-size:.7rem}#dv-compare th,#dv-compare td{padding:6px}}

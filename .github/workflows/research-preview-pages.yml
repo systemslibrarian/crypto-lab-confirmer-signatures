@@ -5,6 +5,7 @@ on:
     paths:
       - 'prototype/**'
       - 'tests/**'
+      - 'scripts/dv-mutations.mjs'
       - 'research/dcs-uv-symbolic.mjs'
       - 'research/real-pairing/**'
       - '.github/workflows/research-preview-pages.yml'
@@ -14,6 +15,7 @@ on:
     paths:
       - 'prototype/**'
       - 'tests/**'
+      - 'scripts/dv-mutations.mjs'
       - 'research/dcs-uv-symbolic.mjs'
       - 'research/real-pairing/**'
       - '.github/workflows/research-preview-pages.yml'
@@ -52,6 +54,8 @@ jobs:
           npm ci --no-audit --no-fund --ignore-scripts
           npm test
           npm run build
+      - name: Kill each designated-verifier mutation from a passing baseline
+        run: node scripts/dv-mutations.mjs
       - uses: actions/setup-python@v6
         with: { python-version: '3.12' }
       - name: Browser test dependencies

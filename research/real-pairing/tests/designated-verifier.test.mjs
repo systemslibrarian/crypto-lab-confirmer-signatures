@@ -146,9 +146,9 @@ test('an honest prover refuses a statement it cannot prove, while the designated
    /No witness for this branch/,
   );
  }
- // This is the designation property, not a soundness failure: an accepting
- // proof of a FALSE statement is exactly what makes the object worthless to
- // anyone but the designated verifier.
+ // This is the designation property, not a soundness failure: the designated
+ // verifier can make an accepting proof of a false statement, so the transcript
+ // alone establishes neither statement truth nor origin to an outside observer.
  const falseProof = await proveWithVerifierSecret({ publicData: altered, role: 'confirmer', verifierSecret: bob.secret, verifierPublicKey: bob.publicKey, context: CONTEXT });
  const verdict = await verifyDesignatedProof({ publicData: altered, role: 'confirmer', proof: falseProof, verifierPublicKey: bob.publicKey, context: CONTEXT });
  assert.equal(verdict.accepted, true);
@@ -304,7 +304,7 @@ test('malformed and noncanonical proof elements fail closed', async () => {
  assert.equal((await verifyDesignatedProof({ ...args, role: 'bystander' })).accepted, false);
 });
 
-test('the publicly transferable proof of the same statement verifies for anyone and cannot be simulated', async () => {
+test('the public proof equations verify, while the verifier secret is not a statement witness', async () => {
  for (const role of ['confirmer', 'signer']) {
   const pub = await provePublicTransferable({ publicData: issued.publicData, role, witness: witnessOf(role), context: CONTEXT });
   const verdict = await verifyPublicTransferable({ publicData: issued.publicData, role, proof: pub, context: CONTEXT });
@@ -319,7 +319,8 @@ test('the publicly transferable proof of the same statement verifies for anyone 
   assert.equal(e, verdict.challenge);
   assert.equal(mulPoint(branch.D, pub.d).equals(pub.tSrc.add(mulPoint(branch.C, e))), true);
   assert.equal(gtEq(gtPow(branch.B, pub.d), gtMul(pub.tTgt, gtPow(statement.A, e))), true);
-  // No witness, no public proof: the designated verifier's trapdoor is useless here.
+  // The designated-verifier secret is not a witness for either branch, so this
+  // honest-prover API refuses it. This is not a general unforgeability theorem.
   await assert.rejects(
    provePublicTransferable({ publicData: issued.publicData, role, witness: bob.secret, context: CONTEXT }),
    /No witness for this branch/,

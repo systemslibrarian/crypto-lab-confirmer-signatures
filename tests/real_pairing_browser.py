@@ -146,7 +146,7 @@ class RealPairingBrowser(unittest.TestCase):
                     expect(page.locator('#dv-simulate')).to_be_disabled()
                     page.locator('#dv-key').focus();page.keyboard.press('Enter')
                     expect(page.locator('#dv-prove')).to_be_enabled(timeout=30000)
-                    self.assertIn('proof of knowledge',page.locator('#dv-key-status').text_content())
+                    self.assertIn('registration check',page.locator('#dv-key-status').text_content())
                     self.access(page)
 
                     # Origin 1: the branch witness.
@@ -170,12 +170,13 @@ class RealPairingBrowser(unittest.TestCase):
                     expect(page.locator('#dv-status')).to_contain_text('never signed',timeout=60000)
                     expect(page.locator('#dv-verifier-verdict')).to_have_text('Your verifier: ACCEPTED')
 
-                    # The public transferable contrast, and its forgery refusal.
+                    # The publicly verifiable contrast and honest-prover refusal.
                     page.locator('#dv-public').click()
                     expect(page.locator('#dv-status')).to_contain_text('transferable',timeout=60000)
-                    self.assertIn('PUBLIC TRANSFERABLE PROOF',page.locator('#dv-math').text_content())
+                    self.assertIn('PUBLICLY VERIFIABLE PROOF',page.locator('#dv-math').text_content())
                     page.locator('#dv-public-forge').click()
                     expect(page.locator('#dv-status')).to_contain_text('Refused',timeout=60000)
+                    self.assertIn('not an unforgeability theorem',page.locator('#dv-observer-text').text_content())
 
                     # No secret may ever reach the rendered values.
                     shown=page.locator('#dv-math').text_content()

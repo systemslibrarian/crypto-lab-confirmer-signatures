@@ -200,7 +200,7 @@ async function dvObserver(proofObject){
 }
 $('dv-key').onclick=()=>run('dv-key-status',async()=>{
  clearDv();dvKey=await createVerifierKey();actor('bob');
- status('dv-key-status','Your verifier key is registered with a proof of knowledge of its secret. Section 7 of the paper requires exactly that: a verifier who could not forge could not be designated.','pass');
+ status('dv-key-status','Your verifier key passed this lab\'s Schnorr/Fiat–Shamir registration check. Section 7 requires actual knowledge of the secret; this executable check is the lab\'s adaptation, not a security theorem.','pass');
  $('dv-observer-text').textContent='nothing yet; no proof has been created.';
  status('dv-status','Ask Alice for a proof, or make the same proof yourself.');
 });
@@ -232,7 +232,7 @@ $('dv-simulate').onclick=()=>run('dv-status',async()=>{
  $('dv-verifier-d').textContent='d = 0x'+dvVerifierProof.d.toString(16).slice(0,24)+'…';
  dvShow(dvVerifierProof,'PROOF MADE BY YOU, USING ONLY YOUR VERIFIER SECRET');
  await dvObserver(dvVerifierProof);
- status('dv-status','Both proofs pass the same check. That is why showing either one to anybody else establishes nothing.','warn');
+ status('dv-status','Both proofs pass the same check. From the transcript alone, an outsider can establish neither statement truth nor which permitted origin produced it.','warn');
 });
 $('dv-false').onclick=()=>run('dv-status',async()=>{
  actor('bob');
@@ -249,23 +249,23 @@ $('dv-false').onclick=()=>run('dv-status',async()=>{
  $('dv-verifier-d').textContent='d = 0x'+forged.d.toString(16).slice(0,24)+'…';
  dvShow(forged,'PROOF OF A FALSE STATEMENT, MADE BY YOU');
  $('dv-observer-text').textContent='the equations hold for a statement that is false. '+view.doesNotEstablish[0];
- status('dv-status','Accepted, for a statement Alice never signed. An accepting proof therefore tells an outsider nothing about the claim.','warn');
+ status('dv-status','Accepted, for a statement Alice never signed. The transcript alone therefore does not establish the claim\'s truth to an outsider.','warn');
 });
 $('dv-public').onclick=()=>run('dv-status',async()=>{
  actor(dvRole()==='confirmer'?'carol':'alice');
  try{dvPublicProof=await provePublicTransferable({publicData:dvData(),role:dvRole(),witness:dvWitness(),context:DV_CONTEXT});}
  catch(e){dvPublicProof=null;status('dv-status','No public proof was produced: '+e.message,'warn');return;}
  const verdict=await verifyPublicTransferable({publicData:dvData(),role:dvRole(),proof:dvPublicProof,context:DV_CONTEXT});
- dvShow(dvPublicProof,'PUBLIC TRANSFERABLE PROOF OF THE SAME STATEMENT',{designated:false});
- $('dv-observer-text').textContent='everything. This proof carries no verifier key and no blinding, so anyone who reads it is convinced. That is exactly what designation removes.';
- status('dv-status',verdict.accepted?'Accepted, and transferable: this one convinces anybody, which is the property the designated proof gives up.':'Rejected; inspect the values.',verdict.accepted?'pass':'reject');
+ dvShow(dvPublicProof,'PUBLICLY VERIFIABLE PROOF OF THE SAME STATEMENT',{designated:false});
+ $('dv-observer-text').textContent='a publicly recomputable, equation-valid transcript. Interpreting it as evidence of witness knowledge requires a security theorem and assumptions this lab does not supply.';
+ status('dv-status',verdict.accepted?'Accepted by the public verifier: any reader can recompute both equations, which is the transferability contrast.':'Rejected; inspect the values.',verdict.accepted?'pass':'reject');
 });
 $('dv-public-forge').onclick=()=>run('dv-status',async()=>{
  actor('bob');
  try{await provePublicTransferable({publicData:dvData(),role:dvRole(),witness:dvKey.secret,context:DV_CONTEXT});
   status('dv-status','Unexpected: a public proof was produced without the branch secret. Inspect the research checks.','reject');}
- catch(e){status('dv-status','Refused. Your verifier secret forges the designated proof but is worthless here: '+e.message,'pass');}
- $('dv-observer-text').textContent='the public proof cannot be forged with a verifier secret, which is why it stays convincing to third parties.';
+ catch(e){status('dv-status','Refused. Your verifier secret is not the selected branch witness: '+e.message,'pass');}
+ $('dv-observer-text').textContent='the honest-prover path rejected this verifier secret because it is not a branch witness. That is a concrete negative control, not an unforgeability theorem.';
 });
 
 render();

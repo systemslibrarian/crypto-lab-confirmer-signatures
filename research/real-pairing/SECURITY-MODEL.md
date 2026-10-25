@@ -77,7 +77,7 @@ Those equalities hold and are independently verified by the research code. This 
 3. Confirmation failure is **not** affirmative disavowal; a separate inequality witness relation is needed, and the published Fig. remains under review.
 4. A mathematically passing transcript does not prove a live honest verifier selected its challenge. The simulator explicitly demonstrates this even with **real** BLS12-381 arithmetic.
 5. A valid signature does not mean the document's assertion is factually true.
-6. A proof can be built so that only one named person can draw any conclusion from it, because anyone else knows that person could have written it. That is a different mechanism from the interactive exchange, and it is not the same thing as a publicly transferable proof.
+6. A designated verifier can interpret an equation-valid proof using private knowledge of whether they produced it. From the transcript alone, an outsider cannot establish statement truth or proof origin because that verifier could have written it. This differs from both the interactive exchange and the publicly verifiable contrast.
 
 ## Go / no-go gate
 

@@ -50,9 +50,10 @@
  *     security this repository records as unestablished.
  *
  * A proof produced here is meaningful ONLY to the holder of x_B, and only
- * because that holder knows it did not make the proof itself. It establishes
- * nothing to anyone else. This is inspectable research code; it is not an
- * audited library and must not carry real signatures or documents.
+ * because that holder knows whether it made the proof itself. To anyone else,
+ * the transcript alone establishes neither statement truth nor proof origin.
+ * This is inspectable research code; it is not an audited library and must not
+ * carry real signatures or documents.
  */
 import {
  Q, G1, G2, SCOPE, mod, randomFieldScalar, randomScalar, invertNonzero,
@@ -323,7 +324,7 @@ export async function provePublicTransferable({ publicData, role, witness, conte
  const safeContext = checkedContext(context);
  const { statement, branch } = await openStatement(publicData, role);
  if (!isBranchWitness(statement, branch, witness)) {
-  throw new Error('No witness for this branch; a publicly transferable proof cannot be made without one');
+  throw new Error('No witness for this branch; this honest-prover path requires the branch witness');
  }
  const t = randomness ? randomness.t : randomFieldScalar();
  if (!fieldScalar(t)) throw new RangeError('Prover randomness outside the scalar field');
@@ -356,11 +357,11 @@ export async function verifyPublicTransferable({ publicData, role, proof, contex
    checks: Object.freeze(checks),
    challenge,
    reason: accepted
-     ? 'Both equations hold against a challenge nobody can blind: anyone who reads this proof is convinced'
+     ? 'Both equations hold against the public hash challenge; any reader can recompute that result'
      : 'At least one verification equation failed',
    model: DV_MODEL,
    transferable: true,
-   scope: 'PUBLICLY TRANSFERABLE PROOF of the same statement, shown for contrast. ' + SCOPE,
+   scope: 'PUBLICLY VERIFIABLE PROOF of the same statement, shown as the transferability contrast. Equation validity is checked; no proof-of-knowledge or soundness theorem is supplied. ' + SCOPE,
   });
  } catch { return refuse('Verification refused a malformed input'); }
 }

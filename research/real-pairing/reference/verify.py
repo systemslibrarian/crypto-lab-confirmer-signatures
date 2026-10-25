@@ -158,7 +158,7 @@ def verify_designated(vector):
         return False
 
 def verify_public_transferable(vector):
-    """The ordinary Fiat-Shamir proof of the SAME statement: anyone is convinced."""
+    """The ordinary Fiat-Shamir proof: any reader can recompute its equations."""
     try:
         A,B,C=statement(json.dumps(vector['publicData'],sort_keys=True))
         Bj,Cj,base,group=dv_branch(A,B,C,vector['role'])

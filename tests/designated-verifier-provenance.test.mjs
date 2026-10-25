@@ -61,14 +61,18 @@ test('the exact strength of the origin claim is stated, not softened or overstat
 
 test('the three proof modes stay distinguished, and the interactive exchange is not claimed to become this by hashing', () => {
   const note = read('research/real-pairing/DESIGNATED-VERIFIER.md');
-  assert.match(note, /Hashing the interactive exchange would not\s*produce this object/);
+  const app = read('research/real-pairing/app.mjs');
+  assert.match(note, /Hashing the interactive exchange would not\s+produce\s+this object/);
   assert.match(note, /Interactive exchange \(`confirmation\.mjs`\)/);
   assert.match(note, /Designated-verifier proof \(here\)/);
-  assert.match(note, /Public transferable proof \(here, for contrast\)/);
+  assert.match(note, /Publicly verifiable proof \(here, for contrast\)/);
   const page = read('research/real-pairing/index.html');
   assert.match(page, /either &Theta; is true, or I am Bob/);
   assert.match(page, /Definition 1, <strong>not<\/strong> the Appendix/);
   assert.match(page, /designated-verifier <em>proof<\/em>, not a designated-verifier signature/);
+  assert.match(page, /no proof-of-knowledge, soundness or unforgeability theorem/);
+  assert.match(app, /not an unforgeability theorem/);
+  assert.match(note, /no lab-supplied proof-of-knowledge or soundness theorem/);
 });
 
 test('the lesson claims no change to the repository standing position on full DCS security', () => {

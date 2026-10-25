@@ -94,12 +94,12 @@ computational — and `simulatorRandomnessOfProof()` exposes the map so the test
 can check the correspondence by reproducing proofs byte for byte, rather than
 sampling transcripts and calling that a theorem.
 
-An accepting proof therefore establishes, to anyone but the designated verifier,
-only: *either the statement holds, or the holder of x_B produced this*. Since
-that holder can produce an accepting proof of **any** statement, including a
-false one, nothing about the statement follows. The designated verifier is
-convinced for a reason found nowhere in the transcript: he knows he did not
-make it.
+The executable conclusion for an outside observer is deliberately narrower:
+the equations hold, and the object could have come either from the role witness
+or from the holder of `x_B`. Since that holder can produce an accepting proof
+of **any** statement, including a false one, the transcript alone establishes
+neither statement truth nor proof origin. The designated verifier interprets it
+using information found nowhere in the transcript: whether he made it himself.
 
 Boundaries of that claim:
 
@@ -116,21 +116,24 @@ Boundaries of that claim:
 
 | | Messages | Why the verifier believes it | What a third party learns |
 |---|---|---|---|
-| Interactive exchange (`confirmation.mjs`) | three | the verifier chose the challenge after the commitment was fixed | nothing: a recording can be fabricated, which the Eve experiment demonstrates |
-| Designated-verifier proof (here) | one | only the designated verifier could have forged it | nothing: he could have forged it |
-| Public transferable proof (here, for contrast) | one | nobody without the branch witness can produce it | everything: it convinces any reader |
+| Interactive exchange (`confirmation.mjs`) | three | the verifier sampled a challenge after the commitment was fixed | the equations in a recording alone do not establish a live exchange |
+| Designated-verifier proof (here) | one | the holder knows whether he used the registered verifier secret | the equation-valid transcript alone establishes neither truth nor origin |
+| Publicly verifiable proof (here, for contrast) | one | any reader can recompute both relation equations | an equation-valid public transcript; witness knowledge needs a security theorem and assumptions not supplied here |
 
-The interactive exchange and the designated proof are both non-transferable, for
-**different reasons**, and they hide different things: the interactive OR
-exchange hides *which role* proved, while the designated proof names the role
-and hides *who produced the object*. Hashing the interactive exchange would not
-produce this object, and this lesson does not claim otherwise.
+The interactive exchange and the designated proof are designed to be
+non-transferable for **different reasons**, and they hide different things: the
+interactive OR exchange hides *which role* proved, while the designated proof
+names the role and hides *who produced the object*. This lab demonstrates those
+distinct transcript mechanisms; it does not supply a full security theorem for
+either surrounding protocol. Hashing the interactive exchange would not produce
+this object, and this lesson does not claim otherwise.
 
-The public transferable proof is the same Chaum–Pedersen statement with an
+The publicly verifiable contrast is the same Chaum–Pedersen statement with an
 ordinary Fiat–Shamir challenge and no trap-door commitment. The two verifiers
-use separate hash domains and neither accepts the other's proofs; the designated
-verifier's trapdoor is useless for producing a public proof, which the tests
-check in both directions.
+use separate hash domains and neither accepts the other's proofs. Supplying the
+designated verifier secret to the honest-prover API fails its branch-witness
+check; that demonstrates that this trapdoor does not directly satisfy the
+public statement, **not** a general unforgeability or proof-of-knowledge theorem.
 
 ## Deviations from the paper, none of them silent
 
@@ -141,7 +144,7 @@ check in both directions.
 | D3 | **Verifier key registration.** A Schnorr proof of knowledge of `x_B` travels with `y_B`. §7 requires the knowledge; this protocol for it is ours. |
 | D4 | **Definition 1 only.** No probabilistic encryption of the transcript, so no strong-designated-verifier claim. |
 | D5 | **No multiple designated verifiers** (§6 not implemented). |
-| D6 | **No security theorem.** The paper proves none for §5, and neither does this lab. The identical-distribution statement above is exact algebra about this construction, not a security proof of the surrounding scheme. |
+| D6 | **No security theorem.** The paper proves none for §5, and neither does this lab. The identical-distribution statement above is exact algebra about this construction, not a security proof of the surrounding scheme. The publicly verifiable contrast likewise comes with no lab-supplied proof-of-knowledge or soundness theorem. |
 
 One implementation choice is worth naming because it could have been made
 dishonestly: zero masks are legal values, so a commitment can be the group
@@ -158,8 +161,9 @@ standard compressed infinity octet string for its group.
 3. A **confirmer signature** is this repository's subject: who may run the
    verification protocol. This is a mode of *proving* the confirmation
    statement, not a different signature object.
-4. An **ordinary publicly transferable proof** is implemented alongside, purely
-   as the contrast.
+4. An **ordinary publicly verifiable proof** is implemented alongside, purely
+   as the transferability contrast; the lab checks its equations and does not
+   prove a proof-of-knowledge or soundness theorem for it.
 5. An **interactive transcript that happens to be simulatable** is the lab's
    existing Eve recording. Simulatability of a recording is not designation.
 

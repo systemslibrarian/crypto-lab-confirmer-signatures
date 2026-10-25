@@ -46,6 +46,7 @@ The source writes a symmetric bilinear map e:G×G→Gₜ. BLS12-381 is an asymme
 | Signed ElGamal | Wang–Xia–Zhao (2011), §4 and Xia (2013), Ch. 5 | Actual issuance, format validation, Carol decryption, independently checked pairing | Proof its Type-3 adaptation meets the paper's security model |
 | Unified OR confirmation | 2011 paper's Figs. 2–3, Xia (2013) Figs. 5.1–5.2 | Both role secrets yield accepted five-equation public checks; false claim is refused | Malicious-verifier/concurrent-ZK compiler and proof security |
 | Disavowal | 2011 paper's Figs. 4–5, Xia (2013) Figs. 5.3–5.4 | Source contradiction is regression-tested; candidate inequality relation has kernel-checked field-model completeness and OR special soundness, a sampling theorem, real-group extraction and adversarial tests | Author reconciliation, concrete-group/code refinement, full OR distribution and malicious/concurrent ZK/non-transferability proofs, independent review |
+| Non-interactive designated-verifier proof | Jakobsson–Sako–Impagliazzo (1996), §5 (pp. 149–150), Definitions 1–2, §7 | Both allowed origins produce proofs one verifier accepts; the origin bijection is checked exactly; a second library recomputes every equation; eight mutations are killed by named tests | Definition 3 (strong designated verifier), §6 multiple verifiers, a ROM theorem the paper does not give, and independent review. See [DESIGNATED-VERIFIER.md](DESIGNATED-VERIFIER.md) |
 | Recorded transcript | Sigma-protocol HVZK/simulation concepts and formal DCS definitions | Public-only simulators produce accepting math for false/true statements when they choose their own challenges | **No claim** that the actual browser interaction implements the original paper's full non-transferability security |
 | 2016 full verification | Xia et al. (2016), a DIFFERENT commitment + labeled CCA2 encryption construction | Separate 2016-oriented toy research under research/ | Not interchangeable; never mix implementation claims |
 
@@ -76,6 +77,7 @@ Those equalities hold and are independently verified by the research code. This 
 3. Confirmation failure is **not** affirmative disavowal; a separate inequality witness relation is needed, and the published Fig. remains under review.
 4. A mathematically passing transcript does not prove a live honest verifier selected its challenge. The simulator explicitly demonstrates this even with **real** BLS12-381 arithmetic.
 5. A valid signature does not mean the document's assertion is factually true.
+6. A proof can be built so that only one named person can draw any conclusion from it, because anyone else knows that person could have written it. That is a different mechanism from the interactive exchange, and it is not the same thing as a publicly transferable proof.
 
 ## Go / no-go gate
 

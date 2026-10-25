@@ -172,7 +172,7 @@ class RealPairingBrowser(unittest.TestCase):
 
                     # The publicly verifiable contrast and honest-prover refusal.
                     page.locator('#dv-public').click()
-                    expect(page.locator('#dv-status')).to_contain_text('transferable',timeout=60000)
+                    expect(page.locator('#dv-status')).to_contain_text('public verifier',timeout=60000)
                     self.assertIn('PUBLICLY VERIFIABLE PROOF',page.locator('#dv-math').text_content())
                     page.locator('#dv-public-forge').click()
                     expect(page.locator('#dv-status')).to_contain_text('Refused',timeout=60000)

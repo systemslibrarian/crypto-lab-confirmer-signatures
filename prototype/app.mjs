@@ -33,6 +33,8 @@ function refreshButtons() {
   dom['verify-bob'].disabled = pending || !signature;
   dom['verify-dave'].disabled = pending || !signature;
   dom.tamper.disabled = pending || !signature;
+  dom.tamper.textContent = signature && dom.statement.value !== signedMessage
+    ? 'Restore signed message' : 'Change signed message';
   dom.reset.disabled = pending;
 }
 function discardSignature(reason) {
@@ -93,13 +95,24 @@ dom['verify-dave'].addEventListener('click', () => perform(() => verifyPerson('d
 
 dom.tamper.addEventListener('click', () => {
   if (!signature || pending) return;
-  const original = dom.statement.value;
-  dom.statement.value = original === signedMessage ? `${original.replace(/delivered/i, 'withheld')} [changed]` : signedMessage;
+  const restoring = dom.statement.value !== signedMessage;
+  if (restoring) {
+    dom.statement.value = signedMessage;
+  } else {
+    const changed = signedMessage.replace(/delivered/i, 'withheld') + ' [changed]';
+    // A message at the textarea limit still needs a valid, different signed-input candidate.
+    const first = String.fromCodePoint(signedMessage.codePointAt(0));
+    dom.statement.value = changed.length <= dom.statement.maxLength ? changed :
+      (first === 'X' ? 'Y' : 'X') + signedMessage.slice(first.length);
+  }
   clearVerdicts();
-  status('MESSAGE CHANGED', 'No new signature was created. Bob and Dave will now verify the changed message against Alice’s original signature.');
+  refreshButtons();
+  if (restoring) status('SIGNED MESSAGE RESTORED', 'The original message and signature are back. Bob and Dave can verify them again.');
+  else status('MESSAGE CHANGED', 'The original signature is still displayed. Bob and Dave can check it against the edited message.');
 });
 dom.statement.addEventListener('input', () => {
   clearVerdicts();
+  refreshButtons();
   if (signature) status('VERDICTS RETIRED', 'The message changed. Re-run Bob and Dave’s independent verification, or sign again.');
 });
 dom.reset.addEventListener('click', () => {
@@ -115,6 +128,6 @@ if (!supported) {
   status('WEB CRYPTO UNAVAILABLE', 'Use HTTPS or a localhost development server. No signing or verification has occurred.', 'bad');
   dom.generate.disabled = true;
 } else {
-  status('READY TO START', `${experiment.algorithm}. Generate Alice’s private key to start. No DCS functions are implemented.`);
+  status('READY TO START', `${experiment.algorithm}. Generate Alice’s private key to start. This chapter checks ordinary signatures using the public key.`);
   refreshButtons();
 }

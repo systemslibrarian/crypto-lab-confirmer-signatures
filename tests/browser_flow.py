@@ -36,6 +36,28 @@ class BrowserFlow(unittest.TestCase):
         cls.pw.stop()
         cls.server.shutdown()
 
+    def test_restore_and_maximum_length_message(self):
+        page = self.browser.new_page()
+        try:
+            page.goto(self.origin)
+            page.locator('#statement').fill('📚' + 'a' * 1998)
+            page.locator('#generate').click()
+            page.locator('#sign').click()
+            page.locator('#verify-bob').click()
+            page.locator('#bob-result[data-verdict="pass"]').wait_for()
+            page.get_by_role('button', name='Change signed message').click()
+            page.locator('#verify-bob').click()
+            page.locator('#bob-result[data-verdict="reject"]').wait_for()
+            page.get_by_role('button', name='Restore signed message').click()
+            page.get_by_text('SIGNED MESSAGE RESTORED', exact=True).wait_for()
+            self.assertEqual(page.locator('#statement').input_value(), '📚' + 'a' * 1998)
+            self.assertEqual(page.locator('#bob-result').inner_text(), 'NOT TESTED')
+            page.locator('#verify-dave').click()
+            page.locator('#dave-result[data-verdict="pass"]').wait_for()
+            self.assertEqual(page.locator('[aria-label="Research status"] a[href="./real/"]').count(), 1)
+        finally:
+            page.close()
+
     def test_actual_public_signature_flow_mobile_and_desktop(self):
         for width in (390, 1350):
             with self.subTest(width=width):

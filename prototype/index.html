@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#07171d">
-  <meta name="description" content="A real WebCrypto ordinary-signature exercise introducing the future Signature Gate designated confirmer research lab.">
+  <meta name="description" content="A real WebCrypto ordinary-signature exercise alongside the Signature Gate designated-confirmer research workbench.">
   <title>Signature Gate · Ordinary Signatures · Crypto Lab Research</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%9C%3C/text%3E%3C/svg%3E" type="image/svg+xml">
   <link rel="stylesheet" href="./style.css">
@@ -34,10 +34,10 @@
 
     <section class="research-note" aria-label="Research status">
       <strong>Chapter 01 is working. The full confirmer protocol is still being built.</strong>
-      <span>This exercise uses real ECDSA to show why anyone can verify an ordinary signature. The separate protocol where Carol proves a signature valid or invalid is <b>not yet implemented</b>; Chapters 02–04 remain unavailable. Use fictional information only.</span>
+      <span>This exercise uses real ECDSA to show why anyone can verify an ordinary signature. The separate protocol where Carol proves a signature valid or invalid is <b>not yet implemented</b> in this ordinary-signature chapter. The <a href="./real/">real-pairing workbench</a> separately demonstrates confirmation and an experimental disavowal proof. The full scheme remains under research review. Use fictional information only.</span>
     </section>
 
-    <nav aria-label="Chapters" class="chapter-nav"><ol>
+    <nav aria-label="Chapters" class="chapter-nav" aria-describedby="chapter-scope"><p id="chapter-scope">These chapter labels describe the ordinary-signature sequence. Chapters 02–04 are planned here. Their research demonstrations are available in the separate workbench linked above.</p><ol>
       <li class="current"><b>01</b><span>Everybody can check</span><small>REAL CRYPTO</small></li>
       <li class="locked"><b>02</b><span>Carol helps Bob check</span><small>NOT IMPLEMENTED</small></li>
       <li class="locked"><b>03</b><span>Prove a forgery is invalid</span><small>NOT IMPLEMENTED</small></li>
@@ -83,7 +83,7 @@
       </div>
       <div class="experiment-strip">
         <div><h3>Now try to cheat.</h3><p>After signing, change the statement. A genuine verifier must reject those different bytes. You can also change the text manually.</p></div>
-        <button id="tamper" type="button" class="outline" disabled>Change one word</button>
+        <button id="tamper" type="button" class="outline" disabled>Change signed message</button>
         <button id="reset" type="button" class="quiet">Reset session</button>
       </div>
       <div class="status" id="overall" role="status" aria-live="polite" data-tone="neutral"><b>READY TO START</b><p>Generate Alice's temporary key pair to begin the real cryptographic experiment.</p></div>
